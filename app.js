@@ -1,5 +1,7 @@
 'use strict';
-require('dotenv').config();
+require('dotenv').config({
+	path: './config.env',
+});
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
@@ -19,7 +21,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.use('/', indexRouter);
+app.use('/', indexRouter);
 app.use('/api/posts', postRouter);
 app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
