@@ -12,7 +12,12 @@ const indexRouter = require('./routes/index');
 const postRouter = require('./routes/post');
 const swaggerUi = require('swagger-ui-express');
 const swaggerFile = require('./swagger-output.json');
-
+const DATABASE =
+	process.env.DATABASE_LOGS?.replace(
+		'<password>',
+		process.env.DATABASE_POST_PASSWORD,
+	) ?? '';
+console.log('🚀 ~ file: app.js ~ line 16 ~ DATABASE', DATABASE);
 const app = express();
 app.use(cors());
 app.use(logger('dev'));
