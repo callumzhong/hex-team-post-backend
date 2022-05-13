@@ -1,14 +1,19 @@
 {
-  "name": "hex-team-post-backend",
-  "version": "0.0.0",
-  "private": true,
-  "scripts": {
-    "start": "node ./bin/www"
-  },
-  "dependencies": {
-    "cookie-parser": "~1.4.4",
-    "debug": "~2.6.9",
-    "express": "~4.16.1",
-    "morgan": "~1.9.1"
-  }
+	"name": "hex-team-post-backend",
+	"version": "0.0.0",
+	"private": true,
+	"scripts": {
+		"start": "node ./bin/www",
+		"start:dev": "nodemon ./bin/www",
+		"swagger": "node swagger.js"
+	},
+	"dependencies": {
+		"cookie-parser": "~1.4.4",
+		"debug": "~2.6.9",
+		"express": "~4.16.1",
+		"mongoose": "^6.3.3",
+		"morgan": "~1.9.1",
+		"swagger-autogen": "^2.5.10",
+		"swagger-ui-express": "^4.4.0"
+	}
 }
