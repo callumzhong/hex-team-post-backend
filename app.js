@@ -1,9 +1,4 @@
 'use strict';
-if (process.env.NODE_ENV !== 'production') {
-	require('dotenv').config({
-		path: './config.dev.env',
-	});
-}
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
