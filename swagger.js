@@ -4,7 +4,7 @@ const doc = {
 		title: 'Meta API',
 		description: 'Rest API documentation',
 	},
-	host: 'https://hex-post-team-api-server.herokuapp.com/',
+	host: 'https://hex-post-team-api-server.herokuapp.com',
 	schemes: ['https'],
 	definitions: {
 		Post: {
