@@ -12,13 +12,272 @@
     "https"
   ],
   "paths": {
-    "/users/": {
+    "/api/posts/": {
       "get": {
-        "description": "",
+        "tags": [
+          "posts"
+        ],
+        "description": "取得依分頁取得貼文",
         "parameters": [],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "取得分頁資料",
+            "schema": {
+              "$ref": "#/definitions/PostPage"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "posts"
+        ],
+        "description": "新增貼文",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "貼文資料",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PostBody"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "新增成功",
+            "schema": {
+              "$ref": "#/definitions/Post"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "posts"
+        ],
+        "description": "刪除全部貼文",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "刪除成功"
+          }
+        }
+      }
+    },
+    "/api/posts/{id}": {
+      "get": {
+        "tags": [
+          "posts"
+        ],
+        "description": "取得指定 ID 貼文",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "取得單筆資料",
+            "schema": {
+              "$ref": "#/definitions/Post"
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "posts"
+        ],
+        "description": "更新貼文",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "貼文 Id"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "貼文資料",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PostBody"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "更新成功",
+            "schema": {
+              "$ref": "#/definitions/Post"
+            }
+          },
+          "404": {
+            "schema": {
+              "type": "string",
+              "example": "查無貼文",
+              "xml": {
+                "name": "main"
+              }
+            },
+            "description": "更新失敗"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "posts"
+        ],
+        "description": "刪除指定 ID 貼文",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "刪除成功"
+          },
+          "404": {
+            "schema": {
+              "type": "string",
+              "example": "查無貼文",
+              "xml": {
+                "name": "main"
+              }
+            },
+            "description": "刪除失敗"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Post": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string",
+          "example": "6274caa22a6bd4d1ecd8af05"
+        },
+        "name": {
+          "type": "string",
+          "example": "Posted by Name"
+        },
+        "tags": {
+          "type": "array",
+          "example": [
+            "旅遊"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "type": {
+          "type": "string",
+          "example": "group"
+        },
+        "image": {
+          "type": "string",
+          "example": "https://unsplash.com/photos/gKXKBY-C-Dk"
+        },
+        "content": {
+          "type": "string",
+          "example": "今天去看貓"
+        },
+        "likes": {
+          "type": "number",
+          "example": 99
+        },
+        "comments": {
+          "type": "number",
+          "example": 1
+        }
+      },
+      "required": [
+        "name",
+        "type",
+        "content"
+      ]
+    },
+    "PostBody": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "Posted by Name"
+        },
+        "tags": {
+          "type": "array",
+          "example": [
+            "旅遊"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "type": {
+          "type": "string",
+          "example": "group"
+        },
+        "image": {
+          "type": "string",
+          "example": "https://unsplash.com/photos/gKXKBY-C-Dk"
+        },
+        "content": {
+          "type": "string",
+          "example": "今天去看貓"
+        },
+        "likes": {
+          "type": "number",
+          "example": 99
+        },
+        "comments": {
+          "type": "number",
+          "example": 1
+        }
+      },
+      "required": [
+        "name",
+        "type",
+        "content"
+      ]
+    },
+    "PostPage": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/Post"
+        },
+        "pagination": {
+          "type": "object",
+          "properties": {
+            "total_pages": {
+              "type": "number",
+              "example": 1
+            },
+            "current_page": {
+              "type": "number",
+              "example": 1
+            },
+            "has_pre": {
+              "type": "boolean",
+              "example": false
+            },
+            "has_next": {
+              "type": "boolean",
+              "example": false
+            }
           }
         }
       }

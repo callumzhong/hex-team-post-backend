@@ -4,10 +4,11 @@ const doc = {
 		title: 'Meta API',
 		description: 'Rest API documentation',
 	},
-	host: 'localhost:3000',
+	host: 'https://hex-post-team-api-server.herokuapp.com/',
 	schemes: ['http', 'https'],
 	definitions: {
-		Posts: {
+		Post: {
+			_id: '6274caa22a6bd4d1ecd8af05',
 			$name: 'Posted by Name',
 			tags: ['旅遊'],
 			$type: 'group',
@@ -15,6 +16,26 @@ const doc = {
 			$content: '今天去看貓',
 			likes: 99,
 			comments: 1,
+		},
+		PostBody: {
+			$name: 'Posted by Name',
+			tags: ['旅遊'],
+			$type: 'group',
+			image: 'https://unsplash.com/photos/gKXKBY-C-Dk',
+			$content: '今天去看貓',
+			likes: 99,
+			comments: 1,
+		},
+		PostPage: {
+			data: {
+				$ref: '#/definitions/Post',
+			},
+			pagination: {
+				total_pages: 1,
+				current_page: 1,
+				has_pre: false,
+				has_next: false,
+			},
 		},
 	},
 };
