@@ -5,7 +5,7 @@ const doc = {
 		description: 'Rest API documentation',
 	},
 	host: 'https://hex-post-team-api-server.herokuapp.com/',
-	schemes: ['http', 'https'],
+	schemes: ['https'],
 	definitions: {
 		Post: {
 			_id: '6274caa22a6bd4d1ecd8af05',
