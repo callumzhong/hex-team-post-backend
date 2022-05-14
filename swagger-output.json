@@ -5,7 +5,7 @@
     "description": "Rest API documentation",
     "version": "1.0.0"
   },
-  "host": "https://hex-post-team-api-server.herokuapp.com",
+  "host": "hex-post-team-api-server.herokuapp.com",
   "basePath": "/",
   "schemes": [
     "https"
