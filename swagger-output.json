@@ -17,7 +17,32 @@
           "posts"
         ],
         "description": "取得依分頁取得貼文",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "分頁數",
+            "type": "string"
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "description": "查詢",
+            "type": "string"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "排序 ( arc || desc ) ",
+            "type": "string"
+          },
+          {
+            "name": "like",
+            "in": "query",
+            "description": "user id 查看我按讚的文章",
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "取得分頁資料",
@@ -156,6 +181,190 @@
               }
             },
             "description": "刪除失敗"
+          }
+        }
+      }
+    },
+    "/api/user/sign-in": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "description": "登入請求",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/user/forgot_password": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "description": "忘記密碼",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/user/reset_password": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "description": "重設密碼",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/user/": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "description": "取得使用者簡易資訊 - 依分頁",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "description": "使用者註冊",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/user/{id}": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "description": "取得使用者詳細資訊",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "user"
+        ],
+        "description": "刪除使用者 (軟刪除)",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/upload/image": {
+      "post": {
+        "tags": [
+          "upload"
+        ],
+        "description": "上傳圖片",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/follow/": {
+      "get": {
+        "tags": [
+          "follow"
+        ],
+        "description": "取得追蹤名單 - 依分頁",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "分頁數",
+            "type": "string"
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "description": "查詢",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/follow/{id}": {
+      "delete": {
+        "tags": [
+          "follow"
+        ],
+        "description": "取消追蹤",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/send_email/": {
+      "post": {
+        "tags": [
+          "send_email"
+        ],
+        "description": "發信服務",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }

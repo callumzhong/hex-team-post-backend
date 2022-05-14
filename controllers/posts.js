@@ -1,7 +1,22 @@
-const PostService = require('../service/postService');
+const PostHandler = require('../service/postHandler');
 module.exports = {
 	getPagination: async (req, res, next) => {
-		const page = req.query?.page ?? 1;
+		/* #swagger.parameters['page'] = {
+				in: 'query',
+				description: '分頁數',
+    }	*/
+		/* #swagger.parameters['q'] = {
+				in: 'query',
+				description: '查詢',
+    }	*/
+		/* #swagger.parameters['sort'] = {
+				in: 'query',
+				description: '排序 ( arc || desc ) ',
+    }	*/
+		/* #swagger.parameters['like'] = {
+				in: 'query',
+				description: 'user id 查看我按讚的文章',
+    }	*/
 		/* #swagger.responses[200] = {
 		  	schema: {"$ref": "#/definitions/PostPage"},
 				description: "取得分頁資料" } */
