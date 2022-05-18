@@ -13,7 +13,7 @@ const uploadRouter = require('./routes/upload');
 const followRouter = require('./routes/follow');
 const indexRouter = require('./routes/index');
 const postRouter = require('./routes/post');
-const sendEmailRouter = require('./routes/send-email');
+const emailRouter = require('./routes/email');
 const swaggerUi = require('swagger-ui-express');
 const swaggerFile = require('./swagger-output.json');
 const app = express();
@@ -30,7 +30,7 @@ app.use('/api/posts', postRouter);
 app.use('/api/user', userRouter);
 app.use('/api/upload', uploadRouter);
 app.use('/api/follow', followRouter);
-app.use('/api/send_email', sendEmailRouter);
+app.use('/api/email', emailRouter);
 app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 module.exports = app;
