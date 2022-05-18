@@ -4,8 +4,8 @@ const doc = {
 		title: 'Meta API',
 		description: 'Rest API documentation',
 	},
-	host: 'hex-post-team-api-server.herokuapp.com',
-	schemes: ['https'],
+	host: 'localhost:3000',
+	schemes: ['http', 'https'],
 	definitions: {
 		Post: {
 			_id: '6274caa22a6bd4d1ecd8af05',
@@ -36,6 +36,12 @@ const doc = {
 				has_pre: false,
 				has_next: false,
 			},
+		},
+		AddEmail: {
+			to: 'test@gmail.com',
+			subject: '主旨',
+			html: '<b>Hello world?</b>',
+			text: 'Hello world?',
 		},
 	},
 };
