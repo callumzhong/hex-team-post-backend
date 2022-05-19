@@ -2,21 +2,31 @@
   "swagger": "2.0",
   "info": {
     "title": "Meta API",
+    "cersion": "1.0.0",
     "description": "Rest API documentation",
     "version": "1.0.0"
   },
-  "host": "hex-post-team-api-server.herokuapp.com",
+  "host": "localhost:3000",
   "basePath": "/",
   "schemes": [
-    "https"
+    "http"
   ],
+  "securityDefinitions": {
+    "apiKeyAuth": {
+      "type": "apiKey",
+      "in": "headers",
+      "name": "authorization",
+      "description": "請加上 API Token"
+    }
+  },
   "paths": {
     "/api/posts/": {
       "get": {
         "tags": [
           "posts"
         ],
-        "description": "取得依分頁取得貼文",
+        "summary": "取得依分頁取得貼文",
+        "description": "",
         "parameters": [
           {
             "name": "page",
@@ -56,8 +66,14 @@
         "tags": [
           "posts"
         ],
-        "description": "新增貼文",
+        "summary": "新增貼文",
+        "description": "",
         "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
           {
             "name": "obj",
             "in": "body",
@@ -75,13 +91,19 @@
               "$ref": "#/definitions/Post"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       },
       "delete": {
         "tags": [
           "posts"
         ],
-        "description": "刪除全部貼文",
+        "summary": "刪除全部貼文",
+        "description": "",
         "parameters": [],
         "responses": {
           "200": {
@@ -95,7 +117,8 @@
         "tags": [
           "posts"
         ],
-        "description": "取得指定 ID 貼文",
+        "summary": "取得指定 ID 貼文",
+        "description": "",
         "parameters": [
           {
             "name": "id",
@@ -117,7 +140,8 @@
         "tags": [
           "posts"
         ],
-        "description": "更新貼文",
+        "summary": "更新貼文",
+        "description": "",
         "parameters": [
           {
             "name": "id",
@@ -159,7 +183,8 @@
         "tags": [
           "posts"
         ],
-        "description": "刪除指定 ID 貼文",
+        "summary": "刪除指定 ID 貼文",
+        "description": "",
         "parameters": [
           {
             "name": "id",
@@ -190,7 +215,96 @@
         "tags": [
           "user"
         ],
-        "description": "登入請求",
+        "summary": "使用者登入",
+        "description": "",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "資料格式",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "123@123.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "12345678"
+                }
+              },
+              "required": [
+                "email",
+                "password"
+              ]
+            }
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/api/user/": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "註冊使用者",
+        "description": "",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "資料格式",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "Ray"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "123@123.com"
+                },
+                "photo": {
+                  "type": "string",
+                  "example": ""
+                },
+                "birthday": {
+                  "type": "string",
+                  "example": "2022-01-01"
+                },
+                "sex": {
+                  "type": "string",
+                  "example": "male || female"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "12345678"
+                },
+                "confirmPassword": {
+                  "type": "string",
+                  "example": "12345678"
+                }
+              },
+              "required": [
+                "name",
+                "email",
+                "password",
+                "confirmPassword"
+              ]
+            }
+          }
+        ],
+        "responses": {}
+      },
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "取得使用者簡易資訊 - 依分頁",
+        "description": "",
         "parameters": [],
         "responses": {
           "200": {
@@ -204,7 +318,8 @@
         "tags": [
           "user"
         ],
-        "description": "忘記密碼",
+        "summary": "忘記密碼",
+        "description": "",
         "parameters": [],
         "responses": {
           "200": {
@@ -218,39 +333,43 @@
         "tags": [
           "user"
         ],
-        "description": "重設密碼",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
+        "summary": "重設密碼",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "資料格式",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "password": {
+                  "type": "string",
+                  "example": "12345678"
+                },
+                "confirmPassword": {
+                  "type": "string",
+                  "example": "12345678"
+                }
+              },
+              "required": [
+                "password",
+                "confirmPassword"
+              ]
+            }
           }
-        }
-      }
-    },
-    "/api/user/": {
-      "get": {
-        "tags": [
-          "user"
         ],
-        "description": "取得使用者簡易資訊 - 依分頁",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
+        "responses": {},
+        "security": [
+          {
+            "apiKeyAuth": []
           }
-        }
-      },
-      "post": {
-        "tags": [
-          "user"
-        ],
-        "description": "使用者註冊",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
+        ]
       }
     },
     "/api/user/{id}": {
@@ -258,7 +377,8 @@
         "tags": [
           "user"
         ],
-        "description": "取得使用者詳細資訊",
+        "summary": "取得使用者詳細資訊",
+        "description": "",
         "parameters": [
           {
             "name": "id",
@@ -272,25 +392,46 @@
             "description": "OK"
           }
         }
-      },
+      }
+    },
+    "/api/user/{email}": {
       "delete": {
         "tags": [
           "user"
         ],
-        "description": "刪除使用者 (軟刪除)",
+        "summary": "刪除使用者 (軟刪除)",
+        "description": "",
         "parameters": [
           {
-            "name": "id",
+            "name": "email",
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "資料格式",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "123@123.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "12345678"
+                }
+              },
+              "required": [
+                "email",
+                "password"
+              ]
+            }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
+        "responses": {}
       }
     },
     "/api/upload/image": {
