@@ -7,7 +7,7 @@ const doc = {
 	},
 	//host: 'hex-post-team-api-server.herokuapp.com',
 	host: 'localhost:3000',
-	schemes: ['http'],
+	schemes: ['http', 'https'],
 	securityDefinitions:{
         apiKeyAuth: {
             type: 'apiKey',
