@@ -9,7 +9,8 @@
   "host": "localhost:3000",
   "basePath": "/",
   "schemes": [
-    "http"
+    "http",
+    "https"
   ],
   "securityDefinitions": {
     "apiKeyAuth": {
@@ -496,18 +497,23 @@
         }
       }
     },
-    "/api/send_email/": {
+    "/api/email/": {
       "post": {
         "tags": [
-          "send_email"
+          "email"
         ],
         "description": "發信服務",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "Add a email template",
+            "schema": {
+              "$ref": "#/definitions/AddEmail"
+            }
           }
-        }
+        ],
+        "responses": {}
       }
     }
   },
@@ -628,6 +634,27 @@
               "example": false
             }
           }
+        }
+      }
+    },
+    "AddEmail": {
+      "type": "object",
+      "properties": {
+        "to": {
+          "type": "string",
+          "example": "test@gmail.com"
+        },
+        "subject": {
+          "type": "string",
+          "example": "主旨"
+        },
+        "html": {
+          "type": "string",
+          "example": "<b>Hello world?</b>"
+        },
+        "text": {
+          "type": "string",
+          "example": "Hello world?"
         }
       }
     }

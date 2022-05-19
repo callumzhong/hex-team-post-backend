@@ -47,6 +47,12 @@ const doc = {
 				has_next: false,
 			},
 		},
+		AddEmail: {
+			to: 'test@gmail.com',
+			subject: '主旨',
+			html: '<b>Hello world?</b>',
+			text: 'Hello world?',
+		},
 	},
 };
 
