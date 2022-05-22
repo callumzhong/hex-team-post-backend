@@ -2,10 +2,20 @@ const swaggerAutogen = require('swagger-autogen')();
 const doc = {
 	info: {
 		title: 'Meta API',
+		cersion: "1.0.0",
 		description: 'Rest API documentation',
 	},
+	//host: 'hex-post-team-api-server.herokuapp.com',
 	host: 'localhost:3000',
 	schemes: ['http', 'https'],
+	securityDefinitions:{
+        apiKeyAuth: {
+            type: 'apiKey',
+            in: 'headers',			
+            name: 'authorization',
+            description: '請加上 API Token'
+        }
+	},
 	definitions: {
 		Post: {
 			_id: '6274caa22a6bd4d1ecd8af05',

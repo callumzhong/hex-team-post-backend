@@ -1,5 +1,5 @@
 // 錯誤處理程序
-const CustomizeError = require('../exception/customizeError');
+const CustomizeError = require('../errors/customizeError');
 const Log = require('../models/logs');
 /**
  * 定義參考
