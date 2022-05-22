@@ -9,8 +9,9 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
 
+
 const userRouter = require('./routes/userRoute');
-const uploadRouter = require('./routes/upload');
+const uploadRouter = require('./routes/uploadRoute');
 const followRouter = require('./routes/follow');
 const indexRouter = require('./routes/index');
 const postRouter = require('./routes/postRoute');

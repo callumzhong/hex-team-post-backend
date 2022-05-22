@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
       select: false
     },
     photo: String,
-    sex:{
+    gender:{
       type: String,
       enum:["male","female"]
     },

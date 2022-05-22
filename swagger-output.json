@@ -9,8 +9,7 @@
   "host": "localhost:3000",
   "basePath": "/",
   "schemes": [
-    "http",
-    "https"
+    "http"
   ],
   "securityDefinitions": {
     "apiKeyAuth": {
@@ -276,7 +275,7 @@
                   "type": "string",
                   "example": "2022-01-01"
                 },
-                "sex": {
+                "gender": {
                   "type": "string",
                   "example": "male || female"
                 },
@@ -321,10 +320,68 @@
         ],
         "summary": "忘記密碼",
         "description": "",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "資料格式",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "123@12333.com"
+                }
+              },
+              "required": [
+                "email"
+              ]
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "OK"
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "true"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "忘記密碼，發送mail成功!"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            },
+            "description": "忘記密碼，發信成功"
+          },
+          "400": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "ERROR"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "smtp 錯誤訊息"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            },
+            "description": "忘記密碼，發信失敗"
           }
         }
       }
@@ -419,15 +476,10 @@
                 "email": {
                   "type": "string",
                   "example": "123@123.com"
-                },
-                "password": {
-                  "type": "string",
-                  "example": "12345678"
                 }
               },
               "required": [
-                "email",
-                "password"
+                "email"
               ]
             }
           }
@@ -440,13 +492,28 @@
         "tags": [
           "upload"
         ],
-        "description": "上傳圖片",
-        "parameters": [],
+        "summary": "上傳圖片",
+        "description": "表單上傳<br/> <pre> <code> &lt;form action=\\\"/api/thisismycourse2/admin/upload\\\" enctype=\\\"multipart/form-data\\\" method=\\\"post\\\"&gt;<br/> &lt;input type=\\\"file\\\" name=\\\"file-to-upload\\\"&gt;<br/> &lt;input type=\\\"submit\\\" value=\\\"Upload\\\"&gt;<br/> &lt;/form&gt; </code> </pre>",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
-            "description": "OK"
+            "schema": {
+              "$ref": "#/definitions/UploadImage"
+            },
+            "description": "上傳成功"
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       }
     },
     "/api/follow/": {
@@ -502,7 +569,8 @@
         "tags": [
           "email"
         ],
-        "description": "發信服務",
+        "summary": "發信服務",
+        "description": "",
         "parameters": [
           {
             "name": "obj",
@@ -655,6 +723,24 @@
         "text": {
           "type": "string",
           "example": "Hello world?"
+        }
+      }
+    },
+    "UploadImage": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "boolean",
+          "example": true
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "imgUrl": {
+              "type": "string",
+              "example": "https://i.imgur.com/w5L5wWI.jpg"
+            }
+          }
         }
       }
     }

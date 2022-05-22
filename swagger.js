@@ -53,6 +53,12 @@ const doc = {
 			html: '<b>Hello world?</b>',
 			text: 'Hello world?',
 		},
+		UploadImage:{
+			"status": true,
+			"data": {
+				"imgUrl": "https://i.imgur.com/w5L5wWI.jpg"
+			}
+		}
 	},
 };
 
