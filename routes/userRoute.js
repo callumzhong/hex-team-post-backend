@@ -16,13 +16,12 @@ router.post('/'
 	 */
 , UsersController.CreateUser);
 
-router.post('/forgot_password', function (req, res, next) {
+router.post('/forgot_password', 
 	/**
 	 * #swagger.tags = ['user']
 	 * #swagger.summary = '忘記密碼'
 	 */
-	res.status(200).json();
-});
+	UsersController.forgotPassword);
 
 router.post('/reset_password',isAuth,
 	/**

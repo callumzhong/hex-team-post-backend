@@ -1,9 +1,11 @@
 const bcrypt = require('bcryptjs/dist/bcrypt');
+const crypto = require('crypto'); 
 const Users=require('../models/usersModel');
 const { generateSendJWT } = require('../service/authService');
 const validator = require('validator');
 const ErrorHandler = require('../service/errorHandler');
 const { Success } = require('../service/appError');
+const emailHandler = require('../service/email/emailHandler');
 
 const users={
     //* #swagger.security = [{ "apiKeyAuth": [] }]
@@ -13,7 +15,7 @@ const users={
          * #swagger.summary = '註冊使用者'
          */
         try{
-            let { email, password,confirmPassword,name,birthday,sex  } = req.body;
+            let { email, password,confirmPassword,name,birthday,gender  } = req.body;
             /* #swagger.parameters['obj'] = {
                     in: 'body',
                     description: '資料格式',
@@ -22,7 +24,7 @@ const users={
                         $email:"123@123.com",
                         photo:"",
                         birthday:"2022-01-01",
-                        sex:"male || female",                            
+                        gender:"male || female",                            
                         $password:"12345678",
                         $confirmPassword:"12345678"
                     }
@@ -52,13 +54,14 @@ const users={
                 password,
                 name,
                 birthday,
-                sex
+                gender
             });
             generateSendJWT(newUser,200,res);            
         }catch(err){
             return ErrorHandler(err,req,res,next);            
         }
     },
+    //登入
     async singin(req,res,next){
          /**
          * #swagger.tags = ['user - 使用者']
@@ -97,8 +100,7 @@ const users={
                     in: 'body',
                     description: '資料格式',
                     schema:{
-                        $email:'123@123.com',
-                        $password:"12345678"                        
+                        $email:'123@123.com'                                             
                     }
                 }*/
            const email=req.params.email;
@@ -139,6 +141,68 @@ const users={
         catch(err){
             return ErrorHandler(err,req,res,next); 
         }
+    },
+    async forgotPassword(req,res,next){
+        try{
+            /* 
+            #swagger.parameters['obj'] = {
+                   in: 'body',
+                   description: '資料格式',
+                   schema:{
+                       $email:'123@12333.com'                                         
+                   }
+               }*/
+           const{email} =req.body;
+           if(!email){
+               return ErrorHandler(new Error("email未填寫！"),req,res,next);
+            }
+            const finduser = await Users.findOne({ email,delflag:false });
+            if(!finduser){
+                return ErrorHandler(new Error("尚未註冊or已經刪除"),req,res,next); 
+            }
+            console.log(email);
+            //產生密碼
+            
+            var pw=await crypto.randomBytes(32).toString('base64').substr(0, 12);
+            console.log(pw);
+            const upduse=await Users.updateOne(
+                {email},
+                {$set:{password:await bcrypt.hash(pw,12)}});
+            //const upduse=true;
+            if(upduse){
+                emailHandler.send({
+                    to:email,
+                    subject: '忘記密碼',
+                    html: `新密碼:${pw}，請<a href='${process.env.FroneEndUrl}'>登入</a>後修改密碼。`
+                },(err, info) => {
+                    console.log(err);
+                    if (err) {
+                        /* #swagger.responses[400] = {
+                            schema:{
+                                status:'ERROR',
+                                message:'smtp 錯誤訊息'
+                    },
+                            description: "忘記密碼，發信失敗" 
+                        }*/
+                        return ErrorHandler(err,req,res,next);                        
+                    }
+                    /* #swagger.responses[200] = {
+                        schema:{
+                            status: 'true',
+                            data: {
+                                message:'忘記密碼，發送mail成功!'
+                            }
+                        },
+                        description: "忘記密碼，發信成功"
+                    } 
+                    */
+                    Success(res,{message:"忘記密碼，發送mail成功!"});                    
+                });
+            }
+       }
+       catch(err){
+           return ErrorHandler(err,req,res,next); 
+       }
     }
     
 
