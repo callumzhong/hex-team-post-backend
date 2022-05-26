@@ -7,10 +7,10 @@ const appError = (httpStatus,errMessage,next)=>{
     next(error);
 };
 const Success= (res, data)=>{
-    res.send({
+      res.status(200).json({
         status: true,
         data
-      }).end();
+      });
 }
 
 module.exports = {appError,Success};

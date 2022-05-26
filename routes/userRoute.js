@@ -1,8 +1,15 @@
 var express = require('express');
 const UsersController=require('../controllers/userController');
-const { isAuth } = require('../service/authService');
+const {isAuth} = require('../service/authService');
 var router = express.Router();
 
+router.get('/check',isAuth,
+	/**
+	 * #swagger.tags = ['user']
+	 * #swagger.summary = '登入權限測試'
+	 * #swagger.security = [{ "apiKeyAuth": [] }]
+	 */
+	UsersController.checkUser);
 router.post('/sign-in'
 	/**
 	 * #swagger.tags = ['user']
@@ -55,5 +62,6 @@ router.delete('/:email',
 	 */
 	UsersController.delUser
 );
+
 
 module.exports = router;
