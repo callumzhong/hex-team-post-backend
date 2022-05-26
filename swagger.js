@@ -6,8 +6,8 @@ const doc = {
 		description: 'Rest API documentation',
 	},
 	//host: 'hex-post-team-api-server.herokuapp.com',
-	host: 'hex-post-team-api-server.herokuapp.com',
-	schemes: ['https'],
+	host: 'localhost:3000',
+	schemes: ['http'],
 	securityDefinitions: {
 		apiKeyAuth: {
 			type: 'apiKey',
@@ -53,12 +53,25 @@ const doc = {
 			html: '<b>Hello world?</b>',
 			text: 'Hello world?',
 		},
-		UploadImage:{
-			"status": true,
-			"data": {
-				"imgUrl": "https://i.imgur.com/w5L5wWI.jpg"
-			}
-		}
+		UploadImage: {
+			status: true,
+			data: {
+				imgUrl: 'https://i.imgur.com/w5L5wWI.jpg',
+			},
+		},
+		Product: {
+			status: 'success',
+			data: [
+				{
+					_id: '628f4384ed7cdd7d4d735444',
+					name: '秘密鑽石',
+					coin: 20,
+					price: 100,
+					discount: 0,
+					tag: '新手入門',
+				},
+			],
+		},
 	},
 };
 

@@ -1,685 +1,861 @@
 {
-	"swagger": "2.0",
-	"info": {
-		"title": "Meta API",
-		"cersion": "1.0.0",
-		"description": "Rest API documentation",
-		"version": "1.0.0"
-	},
-	"host": "hex-post-team-api-server.herokuapp.com",
-	"basePath": "/",
-	"schemes": ["https", "http"],
-	"securityDefinitions": {
-		"apiKeyAuth": {
-			"type": "apiKey",
-			"in": "headers",
-			"name": "authorization",
-			"description": "請加上 API Token"
-		}
-	},
-	"paths": {
-		"/api/posts/": {
-			"get": {
-				"tags": ["posts"],
-				"summary": "取得依分頁取得貼文",
-				"description": "",
-				"parameters": [
-					{
-						"name": "page",
-						"in": "query",
-						"description": "分頁數",
-						"type": "string"
-					},
-					{
-						"name": "q",
-						"in": "query",
-						"description": "查詢",
-						"type": "string"
-					},
-					{
-						"name": "sort",
-						"in": "query",
-						"description": "排序 ( arc || desc ) ",
-						"type": "string"
-					},
-					{
-						"name": "like",
-						"in": "query",
-						"description": "user id 查看我按讚的文章",
-						"type": "string"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "取得分頁資料",
-						"schema": {
-							"$ref": "#/definitions/PostPage"
-						}
-					}
-				}
-			},
-			"post": {
-				"tags": ["posts"],
-				"summary": "新增貼文",
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"type": "string"
-					},
-					{
-						"name": "obj",
-						"in": "body",
-						"description": "貼文資料",
-						"required": true,
-						"schema": {
-							"$ref": "#/definitions/PostBody"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "新增成功",
-						"schema": {
-							"$ref": "#/definitions/Post"
-						}
-					}
-				},
-				"security": [
-					{
-						"apiKeyAuth": []
-					}
-				]
-			},
-			"delete": {
-				"tags": ["posts"],
-				"summary": "刪除全部貼文",
-				"description": "",
-				"parameters": [],
-				"responses": {
-					"200": {
-						"description": "刪除成功"
-					}
-				}
-			}
-		},
-		"/api/posts/{id}": {
-			"get": {
-				"tags": ["posts"],
-				"summary": "取得指定 ID 貼文",
-				"description": "",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"required": true,
-						"type": "string"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "取得單筆資料",
-						"schema": {
-							"$ref": "#/definitions/Post"
-						}
-					}
-				}
-			},
-			"patch": {
-				"tags": ["posts"],
-				"summary": "更新貼文",
-				"description": "",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"required": true,
-						"type": "string",
-						"description": "貼文 Id"
-					},
-					{
-						"name": "obj",
-						"in": "body",
-						"description": "貼文資料",
-						"required": true,
-						"schema": {
-							"$ref": "#/definitions/PostBody"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "更新成功",
-						"schema": {
-							"$ref": "#/definitions/Post"
-						}
-					},
-					"404": {
-						"schema": {
-							"type": "string",
-							"example": "查無貼文",
-							"xml": {
-								"name": "main"
-							}
-						},
-						"description": "更新失敗"
-					}
-				}
-			},
-			"delete": {
-				"tags": ["posts"],
-				"summary": "刪除指定 ID 貼文",
-				"description": "",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"required": true,
-						"type": "string"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "刪除成功"
-					},
-					"404": {
-						"schema": {
-							"type": "string",
-							"example": "查無貼文",
-							"xml": {
-								"name": "main"
-							}
-						},
-						"description": "刪除失敗"
-					}
-				}
-			}
-		},
-		"/api/user/sign-in": {
-			"post": {
-				"tags": ["user"],
-				"summary": "使用者登入",
-				"description": "",
-				"parameters": [
-					{
-						"name": "obj",
-						"in": "body",
-						"description": "資料格式",
-						"schema": {
-							"type": "object",
-							"properties": {
-								"email": {
-									"type": "string",
-									"example": "123@123.com"
-								},
-								"password": {
-									"type": "string",
-									"example": "12345678"
-								}
-							},
-							"required": ["email", "password"]
-						}
-					}
-				],
-				"responses": {}
-			}
-		},
-		"/api/user/": {
-			"post": {
-				"tags": ["user"],
-				"summary": "註冊使用者",
-				"description": "",
-				"parameters": [
-					{
-						"name": "obj",
-						"in": "body",
-						"description": "資料格式",
-						"schema": {
-							"type": "object",
-							"properties": {
-								"name": {
-									"type": "string",
-									"example": "Ray"
-								},
-								"email": {
-									"type": "string",
-									"example": "123@123.com"
-								},
-								"photo": {
-									"type": "string",
-									"example": ""
-								},
-								"birthday": {
-									"type": "string",
-									"example": "2022-01-01"
-								},
-								"gender": {
-									"type": "string",
-									"example": "male || female"
-								},
-								"password": {
-									"type": "string",
-									"example": "12345678"
-								},
-								"confirmPassword": {
-									"type": "string",
-									"example": "12345678"
-								}
-							},
-							"required": ["name", "email", "password", "confirmPassword"]
-						}
-					}
-				],
-				"responses": {}
-			},
-			"get": {
-				"tags": ["user"],
-				"summary": "取得使用者簡易資訊 - 依分頁",
-				"description": "",
-				"parameters": [],
-				"responses": {
-					"200": {
-						"description": "OK"
-					}
-				}
-			}
-		},
-		"/api/user/forgot_password": {
-			"post": {
-				"tags": ["user"],
-				"summary": "忘記密碼",
-				"description": "",
-				"parameters": [
-					{
-						"name": "obj",
-						"in": "body",
-						"description": "資料格式",
-						"schema": {
-							"type": "object",
-							"properties": {
-								"email": {
-									"type": "string",
-									"example": "123@12333.com"
-								}
-							},
-							"required": ["email"]
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"schema": {
-							"type": "object",
-							"properties": {
-								"status": {
-									"type": "string",
-									"example": "true"
-								},
-								"data": {
-									"type": "object",
-									"properties": {
-										"message": {
-											"type": "string",
-											"example": "忘記密碼，發送mail成功!"
-										}
-									}
-								}
-							},
-							"xml": {
-								"name": "main"
-							}
-						},
-						"description": "忘記密碼，發信成功"
-					},
-					"400": {
-						"schema": {
-							"type": "object",
-							"properties": {
-								"status": {
-									"type": "string",
-									"example": "ERROR"
-								},
-								"message": {
-									"type": "string",
-									"example": "smtp 錯誤訊息"
-								}
-							},
-							"xml": {
-								"name": "main"
-							}
-						},
-						"description": "忘記密碼，發信失敗"
-					}
-				}
-			}
-		},
-		"/api/user/reset_password": {
-			"post": {
-				"tags": ["user"],
-				"summary": "重設密碼",
-				"description": "",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"type": "string"
-					},
-					{
-						"name": "obj",
-						"in": "body",
-						"description": "資料格式",
-						"schema": {
-							"type": "object",
-							"properties": {
-								"password": {
-									"type": "string",
-									"example": "12345678"
-								},
-								"confirmPassword": {
-									"type": "string",
-									"example": "12345678"
-								}
-							},
-							"required": ["password", "confirmPassword"]
-						}
-					}
-				],
-				"responses": {},
-				"security": [
-					{
-						"apiKeyAuth": []
-					}
-				]
-			}
-		},
-		"/api/user/{id}": {
-			"get": {
-				"tags": ["user"],
-				"summary": "取得使用者詳細資訊",
-				"description": "",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"required": true,
-						"type": "string"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					}
-				}
-			}
-		},
-		"/api/user/{email}": {
-			"delete": {
-				"tags": ["user"],
-				"summary": "刪除使用者 (軟刪除)",
-				"description": "",
-				"parameters": [
-					{
-						"name": "email",
-						"in": "path",
-						"required": true,
-						"type": "string"
-					},
-					{
-						"name": "obj",
-						"in": "body",
-						"description": "資料格式",
-						"schema": {
-							"type": "object",
-							"properties": {
-								"email": {
-									"type": "string",
-									"example": "123@123.com"
-								}
-							},
-							"required": ["email"]
-						}
-					}
-				],
-				"responses": {}
-			}
-		},
-		"/api/upload/image": {
-			"post": {
-				"tags": ["upload"],
-				"summary": "上傳圖片",
-				"description": "表單上傳<br/> <pre> <code> &lt;form action=\\\"/api/thisismycourse2/admin/upload\\\" enctype=\\\"multipart/form-data\\\" method=\\\"post\\\"&gt;<br/> &lt;input type=\\\"file\\\" name=\\\"file-to-upload\\\"&gt;<br/> &lt;input type=\\\"submit\\\" value=\\\"Upload\\\"&gt;<br/> &lt;/form&gt; </code> </pre>",
-				"parameters": [
-					{
-						"name": "authorization",
-						"in": "header",
-						"type": "string"
-					}
-				],
-				"responses": {
-					"200": {
-						"schema": {
-							"$ref": "#/definitions/UploadImage"
-						},
-						"description": "上傳成功"
-					}
-				},
-				"security": [
-					{
-						"apiKeyAuth": []
-					}
-				]
-			}
-		},
-		"/api/follow/": {
-			"get": {
-				"tags": ["follow"],
-				"description": "取得追蹤名單 - 依分頁",
-				"parameters": [
-					{
-						"name": "page",
-						"in": "query",
-						"description": "分頁數",
-						"type": "string"
-					},
-					{
-						"name": "q",
-						"in": "query",
-						"description": "查詢",
-						"type": "string"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					}
-				}
-			}
-		},
-		"/api/follow/{id}": {
-			"delete": {
-				"tags": ["follow"],
-				"description": "取消追蹤",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"required": true,
-						"type": "string"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK"
-					}
-				}
-			}
-		},
-		"/api/email/": {
-			"post": {
-				"tags": ["email"],
-				"summary": "發信服務",
-				"description": "",
-				"parameters": [
-					{
-						"name": "obj",
-						"in": "body",
-						"description": "Add a email template",
-						"schema": {
-							"$ref": "#/definitions/AddEmail"
-						}
-					}
-				],
-				"responses": {}
-			}
-		}
-	},
-	"definitions": {
-		"Post": {
-			"type": "object",
-			"properties": {
-				"_id": {
-					"type": "string",
-					"example": "6274caa22a6bd4d1ecd8af05"
-				},
-				"name": {
-					"type": "string",
-					"example": "Posted by Name"
-				},
-				"tags": {
-					"type": "array",
-					"example": ["旅遊"],
-					"items": {
-						"type": "string"
-					}
-				},
-				"type": {
-					"type": "string",
-					"example": "group"
-				},
-				"image": {
-					"type": "string",
-					"example": "https://unsplash.com/photos/gKXKBY-C-Dk"
-				},
-				"content": {
-					"type": "string",
-					"example": "今天去看貓"
-				},
-				"likes": {
-					"type": "number",
-					"example": 99
-				},
-				"comments": {
-					"type": "number",
-					"example": 1
-				}
-			},
-			"required": ["name", "type", "content"]
-		},
-		"PostBody": {
-			"type": "object",
-			"properties": {
-				"name": {
-					"type": "string",
-					"example": "Posted by Name"
-				},
-				"tags": {
-					"type": "array",
-					"example": ["旅遊"],
-					"items": {
-						"type": "string"
-					}
-				},
-				"type": {
-					"type": "string",
-					"example": "group"
-				},
-				"image": {
-					"type": "string",
-					"example": "https://unsplash.com/photos/gKXKBY-C-Dk"
-				},
-				"content": {
-					"type": "string",
-					"example": "今天去看貓"
-				},
-				"likes": {
-					"type": "number",
-					"example": 99
-				},
-				"comments": {
-					"type": "number",
-					"example": 1
-				}
-			},
-			"required": ["name", "type", "content"]
-		},
-		"PostPage": {
-			"type": "object",
-			"properties": {
-				"data": {
-					"$ref": "#/definitions/Post"
-				},
-				"pagination": {
-					"type": "object",
-					"properties": {
-						"total_pages": {
-							"type": "number",
-							"example": 1
-						},
-						"current_page": {
-							"type": "number",
-							"example": 1
-						},
-						"has_pre": {
-							"type": "boolean",
-							"example": false
-						},
-						"has_next": {
-							"type": "boolean",
-							"example": false
-						}
-					}
-				}
-			}
-		},
-		"AddEmail": {
-			"type": "object",
-			"properties": {
-				"to": {
-					"type": "string",
-					"example": "test@gmail.com"
-				},
-				"subject": {
-					"type": "string",
-					"example": "主旨"
-				},
-				"html": {
-					"type": "string",
-					"example": "<b>Hello world?</b>"
-				},
-				"text": {
-					"type": "string",
-					"example": "Hello world?"
-				}
-			}
-		},
-		"UploadImage": {
-			"type": "object",
-			"properties": {
-				"status": {
-					"type": "boolean",
-					"example": true
-				},
-				"data": {
-					"type": "object",
-					"properties": {
-						"imgUrl": {
-							"type": "string",
-							"example": "https://i.imgur.com/w5L5wWI.jpg"
-						}
-					}
-				}
-			}
-		}
-	}
+  "swagger": "2.0",
+  "info": {
+    "title": "Meta API",
+    "cersion": "1.0.0",
+    "description": "Rest API documentation",
+    "version": "1.0.0"
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "securityDefinitions": {
+    "apiKeyAuth": {
+      "type": "apiKey",
+      "in": "headers",
+      "name": "authorization",
+      "description": "請加上 API Token"
+    }
+  },
+  "paths": {
+    "/api/posts/": {
+      "get": {
+        "tags": [
+          "posts"
+        ],
+        "summary": "取得依分頁取得貼文",
+        "description": "",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "分頁數",
+            "type": "string"
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "description": "查詢",
+            "type": "string"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "排序 ( arc || desc ) ",
+            "type": "string"
+          },
+          {
+            "name": "like",
+            "in": "query",
+            "description": "user id 查看我按讚的文章",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "取得分頁資料",
+            "schema": {
+              "$ref": "#/definitions/PostPage"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "posts"
+        ],
+        "summary": "新增貼文",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "貼文資料",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PostBody"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "新增成功",
+            "schema": {
+              "$ref": "#/definitions/Post"
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "posts"
+        ],
+        "summary": "刪除全部貼文",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "刪除成功"
+          }
+        }
+      }
+    },
+    "/api/posts/{id}": {
+      "get": {
+        "tags": [
+          "posts"
+        ],
+        "summary": "取得指定 ID 貼文",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "取得單筆資料",
+            "schema": {
+              "$ref": "#/definitions/Post"
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "posts"
+        ],
+        "summary": "更新貼文",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "貼文 Id"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "貼文資料",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PostBody"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "更新成功",
+            "schema": {
+              "$ref": "#/definitions/Post"
+            }
+          },
+          "404": {
+            "schema": {
+              "type": "string",
+              "example": "查無貼文",
+              "xml": {
+                "name": "main"
+              }
+            },
+            "description": "更新失敗"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "posts"
+        ],
+        "summary": "刪除指定 ID 貼文",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "刪除成功"
+          },
+          "404": {
+            "schema": {
+              "type": "string",
+              "example": "查無貼文",
+              "xml": {
+                "name": "main"
+              }
+            },
+            "description": "刪除失敗"
+          }
+        }
+      }
+    },
+    "/api/user/sign-in": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "使用者登入",
+        "description": "",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "資料格式",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "123@123.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "12345678"
+                }
+              },
+              "required": [
+                "email",
+                "password"
+              ]
+            }
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/api/user/": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "註冊使用者",
+        "description": "",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "資料格式",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "Ray"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "123@123.com"
+                },
+                "photo": {
+                  "type": "string",
+                  "example": ""
+                },
+                "birthday": {
+                  "type": "string",
+                  "example": "2022-01-01"
+                },
+                "gender": {
+                  "type": "string",
+                  "example": "male || female"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "12345678"
+                },
+                "confirmPassword": {
+                  "type": "string",
+                  "example": "12345678"
+                }
+              },
+              "required": [
+                "name",
+                "email",
+                "password",
+                "confirmPassword"
+              ]
+            }
+          }
+        ],
+        "responses": {}
+      },
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "取得使用者簡易資訊 - 依分頁",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/user/forgot_password": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "忘記密碼",
+        "description": "",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "資料格式",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "123@12333.com"
+                }
+              },
+              "required": [
+                "email"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "true"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "忘記密碼，發送mail成功!"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            },
+            "description": "忘記密碼，發信成功"
+          },
+          "400": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "ERROR"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "smtp 錯誤訊息"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            },
+            "description": "忘記密碼，發信失敗"
+          }
+        }
+      }
+    },
+    "/api/user/reset_password": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "重設密碼",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "資料格式",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "password": {
+                  "type": "string",
+                  "example": "12345678"
+                },
+                "confirmPassword": {
+                  "type": "string",
+                  "example": "12345678"
+                }
+              },
+              "required": [
+                "password",
+                "confirmPassword"
+              ]
+            }
+          }
+        ],
+        "responses": {},
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/user/{id}": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "取得使用者詳細資訊",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/user/{email}": {
+      "delete": {
+        "tags": [
+          "user"
+        ],
+        "summary": "刪除使用者 (軟刪除)",
+        "description": "",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "資料格式",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "123@123.com"
+                }
+              },
+              "required": [
+                "email"
+              ]
+            }
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/api/upload/image": {
+      "post": {
+        "tags": [
+          "upload"
+        ],
+        "summary": "上傳圖片",
+        "description": "表單上傳<br/> <pre> <code> &lt;form action=\\\"/api/thisismycourse2/admin/upload\\\" enctype=\\\"multipart/form-data\\\" method=\\\"post\\\"&gt;<br/> &lt;input type=\\\"file\\\" name=\\\"file-to-upload\\\"&gt;<br/> &lt;input type=\\\"submit\\\" value=\\\"Upload\\\"&gt;<br/> &lt;/form&gt; </code> </pre>",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/UploadImage"
+            },
+            "description": "上傳成功"
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/follow/": {
+      "get": {
+        "tags": [
+          "follow"
+        ],
+        "description": "取得追蹤名單 - 依分頁",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "分頁數",
+            "type": "string"
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "description": "查詢",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/follow/{id}": {
+      "delete": {
+        "tags": [
+          "follow"
+        ],
+        "description": "取消追蹤",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/email/": {
+      "post": {
+        "tags": [
+          "email"
+        ],
+        "summary": "發信服務",
+        "description": "",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "Add a email template",
+            "schema": {
+              "$ref": "#/definitions/AddEmail"
+            }
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/api/payment/": {
+      "get": {
+        "tags": [
+          "payment"
+        ],
+        "summary": "跳轉付款頁面",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "prod",
+            "in": "query",
+            "description": "產品ID",
+            "type": "string"
+          }
+        ],
+        "responses": {},
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/products/": {
+      "get": {
+        "tags": [
+          "products"
+        ],
+        "summary": "取得所有產品",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Product"
+            }
+          }
+        }
+      }
+    },
+    "/api/wallet/": {
+      "get": {
+        "tags": [
+          "wallet"
+        ],
+        "summary": "取得當前餘額",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "Post": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string",
+          "example": "6274caa22a6bd4d1ecd8af05"
+        },
+        "name": {
+          "type": "string",
+          "example": "Posted by Name"
+        },
+        "tags": {
+          "type": "array",
+          "example": [
+            "旅遊"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "type": {
+          "type": "string",
+          "example": "group"
+        },
+        "image": {
+          "type": "string",
+          "example": "https://unsplash.com/photos/gKXKBY-C-Dk"
+        },
+        "content": {
+          "type": "string",
+          "example": "今天去看貓"
+        },
+        "likes": {
+          "type": "number",
+          "example": 99
+        },
+        "comments": {
+          "type": "number",
+          "example": 1
+        }
+      },
+      "required": [
+        "name",
+        "type",
+        "content"
+      ]
+    },
+    "PostBody": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "Posted by Name"
+        },
+        "tags": {
+          "type": "array",
+          "example": [
+            "旅遊"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "type": {
+          "type": "string",
+          "example": "group"
+        },
+        "image": {
+          "type": "string",
+          "example": "https://unsplash.com/photos/gKXKBY-C-Dk"
+        },
+        "content": {
+          "type": "string",
+          "example": "今天去看貓"
+        },
+        "likes": {
+          "type": "number",
+          "example": 99
+        },
+        "comments": {
+          "type": "number",
+          "example": 1
+        }
+      },
+      "required": [
+        "name",
+        "type",
+        "content"
+      ]
+    },
+    "PostPage": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/Post"
+        },
+        "pagination": {
+          "type": "object",
+          "properties": {
+            "total_pages": {
+              "type": "number",
+              "example": 1
+            },
+            "current_page": {
+              "type": "number",
+              "example": 1
+            },
+            "has_pre": {
+              "type": "boolean",
+              "example": false
+            },
+            "has_next": {
+              "type": "boolean",
+              "example": false
+            }
+          }
+        }
+      }
+    },
+    "AddEmail": {
+      "type": "object",
+      "properties": {
+        "to": {
+          "type": "string",
+          "example": "test@gmail.com"
+        },
+        "subject": {
+          "type": "string",
+          "example": "主旨"
+        },
+        "html": {
+          "type": "string",
+          "example": "<b>Hello world?</b>"
+        },
+        "text": {
+          "type": "string",
+          "example": "Hello world?"
+        }
+      }
+    },
+    "UploadImage": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "boolean",
+          "example": true
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "imgUrl": {
+              "type": "string",
+              "example": "https://i.imgur.com/w5L5wWI.jpg"
+            }
+          }
+        }
+      }
+    },
+    "Product": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "_id": {
+                "type": "string",
+                "example": "628f4384ed7cdd7d4d735444"
+              },
+              "name": {
+                "type": "string",
+                "example": "秘密鑽石"
+              },
+              "coin": {
+                "type": "number",
+                "example": 20
+              },
+              "price": {
+                "type": "number",
+                "example": 100
+              },
+              "discount": {
+                "type": "number",
+                "example": 0
+              },
+              "tag": {
+                "type": "string",
+                "example": "新手入門"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }
