@@ -40,13 +40,13 @@ const shaHash = (encrypted) => {
 };
 
 module.exports = {
-	getFormParams: (amount, desc, email) => {
+	setTradeInfo: ({ amount, desc, email }) => {
 		const data = {
 			MerchantID: merchantID, // 商店代號
 			RespondType: 'JSON', // 回傳格式
 			TimeStamp: Date.now(), // 時間戳記
 			Version: 2.0, // 串接程式版本
-			MerchantOrderNo: Date.now(), // 商店訂單編號
+			MerchantOrderNo: +Date.now(), // 商店訂單編號
 			Amt: amount, // 訂單金額
 			ItemDesc: desc, // 產品名稱
 			ReturnURL: returnURL, // 支付完成返回商店網址
