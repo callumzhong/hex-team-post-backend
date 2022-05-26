@@ -6,18 +6,23 @@ const productSchema = new mongoose.Schema(
 			type: String,
 			required: [true, '請輸入品名'],
 		},
-		originalPrice: {
+		coin: {
 			type: Number,
-			required: [true, '請輸入原價'],
+			required: [true, '請輸入代幣'],
+			unique: true,
 		},
-		specialPrice: {
+		price: {
 			type: Number,
-			required: [true, '請輸入優惠價'],
+			required: [true, '請輸入價錢'],
+		},
+		discount: {
+			type: Number,
+			required: [true, '請輸入折扣'],
 			default: 0,
 		},
 		tag: {
 			type: String,
-			required: [true, '請輸入品項標註'],
+			default: '',
 		},
 	},
 	{

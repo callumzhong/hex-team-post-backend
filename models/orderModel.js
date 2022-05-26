@@ -10,6 +10,13 @@ const orderSchema = new mongoose.Schema(
 		payment: {
 			type: mongoose.Types.ObjectId,
 			ref: 'payment',
+			select: 'status',
+		},
+		serialNumber: {
+			type: String,
+			required: [true, '請輸入流水號'],
+			unique: true,
+			max: 20,
 		},
 		type: {
 			type: String,

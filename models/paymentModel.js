@@ -10,7 +10,7 @@ const paymentSchema = new mongoose.Schema(
 		/** 藍新金流交易回傳 status 欄位 */
 		code: {
 			type: String,
-			required: [true, '請輸入錯誤代碼'],
+			max: 10,
 		},
 		/** 藍新金流交易回傳交易狀態訊息 */
 		message: {
@@ -19,18 +19,20 @@ const paymentSchema = new mongoose.Schema(
 		},
 		/** 藍新金流交易回傳交易序號 */
 		tradeNo: {
-			type: Boolean,
-			required: [true, '請輸入交易序號'],
+			type: String,
+			max: 20,
 		},
 		/** 藍新金流交易回傳訂單編號 (可用於找尋資料) */
 		merchantOrderNo: {
-			type: Date,
+			type: String,
 			required: [true, '請輸入訂單編號'],
+			unique: true,
+			max: 30,
 		},
 		/** 藍新金流交易回傳交易完成時間*/
 		payTime: {
-			type: Number,
-			required: [true, '請輸入交易完成時間'],
+			type: Date,
+			default: '',
 		},
 	},
 	{
