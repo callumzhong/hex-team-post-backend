@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs/dist/bcrypt');
 const crypto = require('crypto'); 
 const Users=require('../models/usersModel');
-const { generateSendJWT } = require('../service/authService');
+const  {generateSendJWT}  = require('../service/authService');
 const validator = require('validator');
 const ErrorHandler = require('../service/errorHandler');
 const { Success } = require('../service/appError');
@@ -15,7 +15,7 @@ const users={
          * #swagger.summary = '註冊使用者'
          */
         try{
-            let { email, password,confirmPassword,name,birthday,gender  } = req.body;
+            let { email, password,confirmPassword,name,birthday,gender,photo  } = req.body;
             /* #swagger.parameters['obj'] = {
                     in: 'body',
                     description: '資料格式',
@@ -54,7 +54,8 @@ const users={
                 password,
                 name,
                 birthday,
-                gender
+                gender,
+                photo
             });
             generateSendJWT(newUser,200,res);            
         }catch(err){
@@ -76,6 +77,7 @@ const users={
                         $password:"12345678"                        
                     }
                 }*/
+               
             const {email,password}=req.body;
             if(!email||!password){
                 return ErrorHandler(new Error("帳號密碼不可為空"),req,res,next);
@@ -88,7 +90,9 @@ const users={
             if(!auth){
                 return ErrorHandler(new Error("您的密碼不正確"),req,res,next);                
             }
+            console.log(user);
             generateSendJWT(user,200,res);
+            
         }catch(err){
             return ErrorHandler(err,req,res,next); 
         }
@@ -203,11 +207,28 @@ const users={
        catch(err){
            return ErrorHandler(err,req,res,next); 
        }
+    },
+    async checkUser(req,res,next){
+        try{
+            
+            // let token;
+            // if (req.headers.authorization ){
+            // token = req.headers.authorization;
+            // }
+            // if(req.headers.authorization.toUpperCase().startsWith('Bearer')
+            // ) {
+            // token = req.headers.authorization?.split(' ')[1];
+            // }
+             console.log(req.user);
+            if(req.user){
+                Success(res,{message:"已經授權!"});        
+            }
+        }
+        catch(err){
+            //return ErrorHandler(err,req,res,next); 
+            return ErrorHandler(new Error("尚未授權"),req,res,next);
+        }
     }
-    
-
-
-
 }
 
 module.exports=users;
