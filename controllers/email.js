@@ -2,7 +2,6 @@ const EmailHandler = require('../service/email/emailHandler');
 
 module.exports = {
 	send: ({ body }, res, next) => {
-		console.log(body);
 		EmailHandler.send(body, (err, info) => {
 			if (err) {
 				/* #swagger.responses[400] = {

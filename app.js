@@ -9,16 +9,23 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
 
-
 const userRouter = require('./routes/userRoute');
 const uploadRouter = require('./routes/uploadRoute');
 const followRouter = require('./routes/follow');
 const indexRouter = require('./routes/index');
 const postRouter = require('./routes/postRoute');
 const emailRouter = require('./routes/email');
+const paymentRouter = require('./routes/payment');
+const productRouter = require('./routes/products');
+const walletRouter = require('./routes/wallet');
 const swaggerUi = require('swagger-ui-express');
 const swaggerFile = require('./swagger-output.json');
+const Order = require('./models/orderModel');
 const app = express();
+
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
 
 app.use(cors());
 app.use(logger('dev'));
@@ -33,59 +40,62 @@ app.use('/api/user', userRouter);
 app.use('/api/upload', uploadRouter);
 app.use('/api/follow', followRouter);
 app.use('/api/email', emailRouter);
+app.use('/api/payment', paymentRouter);
+app.use('/api/products', productRouter);
+app.use('/api/wallet', walletRouter);
 app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 // 404 錯誤
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
 	res.status(404).json({
-	  status: 'error',
-	  message: "無此路由資訊",
-	});
-  });
-  
-  // express 錯誤處理
-  // 自己設定的 err 錯誤 
-  const resErrorProd = (err, res) => {
-	if (err.isOperational) {
-	  res.status(err.statusCode).json({
-		message: err.message
-	  });
-	} else {
-	  // log 紀錄
-	  console.error('出現重大錯誤', err);
-	  // 送出罐頭預設訊息
-	  res.status(500).json({
 		status: 'error',
-		message: '系統錯誤，請恰系統管理員'
-	  });
-	}
-  };
-  // 開發環境錯誤
-  const resErrorDev = (err, res) => {
-	res.status(err.statusCode).json({
-	  message: err.message,
-	  error: err,
-	  stack: err.stack
+		message: '無此路由資訊',
 	});
-  };
-  // 錯誤處理
-  app.use(function(err, req, res, next) {
+});
+
+// express 錯誤處理
+// 自己設定的 err 錯誤
+const resErrorProd = (err, res) => {
+	if (err.isOperational) {
+		res.status(err.statusCode).json({
+			message: err.message,
+		});
+	} else {
+		// log 紀錄
+		console.error('出現重大錯誤', err);
+		// 送出罐頭預設訊息
+		res.status(500).json({
+			status: 'error',
+			message: '系統錯誤，請恰系統管理員',
+		});
+	}
+};
+// 開發環境錯誤
+const resErrorDev = (err, res) => {
+	res.status(err.statusCode).json({
+		message: err.message,
+		error: err,
+		stack: err.stack,
+	});
+};
+// 錯誤處理
+app.use(function (err, req, res, next) {
 	// dev
 	err.statusCode = err.statusCode || 500;
 	if (process.env.NODE_ENV === 'dev') {
-	  return resErrorDev(err, res);
-	} 
-	// production
-	if (err.name === 'ValidationError'){
-	  err.message = "資料欄位未填寫正確，請重新輸入！"
-	  err.isOperational = true;
-	  return resErrorProd(err, res)
+		return resErrorDev(err, res);
 	}
-	resErrorProd(err, res)
-  });
-  
-  // 未捕捉到的 catch 
-  process.on('unhandledRejection', (err, promise) => {
+	// production
+	if (err.name === 'ValidationError') {
+		err.message = '資料欄位未填寫正確，請重新輸入！';
+		err.isOperational = true;
+		return resErrorProd(err, res);
+	}
+	resErrorProd(err, res);
+});
+
+// 未捕捉到的 catch
+process.on('unhandledRejection', (err, promise) => {
 	console.error('未捕捉到的 rejection：', promise, '原因：', err);
-  });
+});
 module.exports = app;
