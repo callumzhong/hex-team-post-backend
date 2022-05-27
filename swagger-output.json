@@ -6,10 +6,11 @@
     "description": "Rest API documentation",
     "version": "1.0.0"
   },
-  "host": "localhost:3000",
+
+  "host": "hex-post-team-api-server.herokuapp.com",
   "basePath": "/",
   "schemes": [
-    "http"
+    "https"
   ],
   "securityDefinitions": {
     "apiKeyAuth": {
@@ -208,6 +209,29 @@
             "description": "刪除失敗"
           }
         }
+      }
+    },
+
+    "/api/user/check": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "登入權限測試",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {},
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       }
     },
     "/api/user/sign-in": {
@@ -655,6 +679,7 @@
           }
         ]
       }
+
     }
   },
   "definitions": {
