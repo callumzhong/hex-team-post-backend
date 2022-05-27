@@ -6,6 +6,7 @@
     "description": "Rest API documentation",
     "version": "1.0.0"
   },
+
   "host": "hex-post-team-api-server.herokuapp.com",
   "basePath": "/",
   "schemes": [
@@ -210,6 +211,7 @@
         }
       }
     },
+
     "/api/user/check": {
       "get": {
         "tags": [
@@ -605,6 +607,79 @@
         ],
         "responses": {}
       }
+    },
+    "/api/payment/": {
+      "get": {
+        "tags": [
+          "payment"
+        ],
+        "summary": "跳轉付款頁面",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "prod",
+            "in": "query",
+            "description": "產品ID",
+            "type": "string"
+          }
+        ],
+        "responses": {},
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/products/": {
+      "get": {
+        "tags": [
+          "products"
+        ],
+        "summary": "取得所有產品",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Product"
+            }
+          }
+        }
+      }
+    },
+    "/api/wallet/": {
+      "get": {
+        "tags": [
+          "wallet"
+        ],
+        "summary": "取得當前餘額",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+
     }
   },
   "definitions": {
@@ -761,6 +836,47 @@
             "imgUrl": {
               "type": "string",
               "example": "https://i.imgur.com/w5L5wWI.jpg"
+            }
+          }
+        }
+      }
+    },
+    "Product": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "_id": {
+                "type": "string",
+                "example": "628f4384ed7cdd7d4d735444"
+              },
+              "name": {
+                "type": "string",
+                "example": "秘密鑽石"
+              },
+              "coin": {
+                "type": "number",
+                "example": 20
+              },
+              "price": {
+                "type": "number",
+                "example": 100
+              },
+              "discount": {
+                "type": "number",
+                "example": 0
+              },
+              "tag": {
+                "type": "string",
+                "example": "新手入門"
+              }
             }
           }
         }

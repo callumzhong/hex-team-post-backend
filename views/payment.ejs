@@ -1,0 +1,28 @@
+<h2
+	style="
+		position: absolute;
+		top: 40%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	"
+>
+	交易過程中請勿關閉視窗..
+</h2>
+
+<form
+	id="newebpay"
+	name="Newebpay"
+	action="<%= model.PayGateWay %>"
+	method="POST"
+	hidden
+>
+	<input type="text" name="MerchantID" value="<%= model.MerchantID %>" />
+	<input type="text" name="TradeInfo" value="<%= model.TradeInfo %>" />
+	<input type="text" name="TradeSha" value="<%= model.TradeSha %>" />
+	<input type="text" name="Version" value="<%= model.Version %>" />
+</form>
+
+<script>
+	var form = document.querySelector('#newebpay');
+	form.submit();
+</script>
