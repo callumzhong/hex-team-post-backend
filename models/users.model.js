@@ -9,8 +9,8 @@ const userSchema = new mongoose.Schema({
       type: String,
       required: [true, '請輸入您的 Email'],
       unique: true,
-      lowercase: true,
-      select: false
+      lowercase: true
+      
     },
     photo: String,
     gender:{
@@ -32,9 +32,18 @@ const userSchema = new mongoose.Schema({
       default:false
     }
   },{
-    versionKey: false,
-    timestamps: true,
-  });
+		versionKey: false,
+		timestamps: true,
+		toJSON: {virtuals:true},
+		toObject: {virtuals:true},
+	}
+  );
+
+  userSchema.virtual('posts', {
+    ref: 'Post',
+    foreignField: 'user',
+    localField: '_id'
+    });
 // User
 const User = PostConn.model('user', userSchema);
 

@@ -1,12 +1,14 @@
 const bcrypt = require('bcryptjs/dist/bcrypt');
 
 const crypto = require('crypto'); 
-const Users=require('../models/usersModel');
+const Users=require('../models/users.model');
 const  {generateSendJWT}  = require('../service/authService');
 const validator = require('validator');
 const ErrorHandler = require('../service/errorHandler');
 const { Success } = require('../service/appError');
 const emailHandler = require('../service/email/emailHandler');
+const postService = require('../service/post.Service');
+const followService = require('../service/follow.service');
 
 
 const users={
@@ -17,6 +19,10 @@ const users={
          * #swagger.summary = '註冊使用者'
          */
         try{
+            const UserCount=await Users.find().count();
+            if(UserCount===500){
+                return ErrorHandler(new Error('超過會員上限!'), req, res, next);
+            }
             let { email, password,confirmPassword,name,birthday,gender,photo  } = req.body;
             /* #swagger.parameters['obj'] = {
                     in: 'body',
@@ -200,19 +206,51 @@ const users={
     },
     async checkUser(req,res,next){
         try{
-            
-            // let token;
-            // if (req.headers.authorization ){
-            // token = req.headers.authorization;
-            // }
-            // if(req.headers.authorization.toUpperCase().startsWith('Bearer')
-            // ) {
-            // token = req.headers.authorization?.split(' ')[1];
-            // }
-             console.log(req.user);
             if(req.user){
                 Success(res,{message:"已經授權!"});        
             }
+        }
+        catch(err){
+            //return ErrorHandler(err,req,res,next); 
+            return ErrorHandler(new Error("尚未授權"),req,res,next);
+        }
+    },
+    async GetUser(req,res,next){
+        try{
+           const userdata=await Users.findOne({ _id: req.user.id})
+           .populate({
+            path: 'posts',
+            select: 'type content image likes pay tags'
+          });;
+           /* #swagger.responses[200] = {
+		  	schema: {
+                    "status": true,
+                    "data": {
+                        "user": {
+                        "_id": "628f8c9bb1e02d4b681c8fe9",
+                        "name": "Ray",
+                        "email": "123@123.com",
+                        "photo": "123",
+                        "gender": "male",
+                        "birthday": "2022-01-01T00:00:00.000Z",
+                        "delflag": false,
+                        "createdAt": "2022-05-26T14:20:11.616Z",
+                        "updatedAt": "2022-05-26T14:20:11.616Z"
+                        },
+                        "postCount": 0,
+                        "follow": 0,
+                        "privatepost": 0,
+                        "order": 0
+                    }
+                    },
+				description: "取得個人頁面資料" } */
+           const result={
+               user:userdata,
+               postCounts: await postService.getPostCountbyGroup(req),
+               follows:await followService.getUserFollowCount(req),
+               privateposts: await postService.getPostCountbyGroup(req),
+               likes:0};
+           Success(res,result);
         }
         catch(err){
             //return ErrorHandler(err,req,res,next); 

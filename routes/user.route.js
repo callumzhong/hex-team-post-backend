@@ -1,5 +1,5 @@
 var express = require('express');
-const UsersController=require('../controllers/userController');
+const UsersController=require('../controllers/users.controller');
 const {isAuth} = require('../service/authService');
 var router = express.Router();
 
@@ -10,6 +10,14 @@ router.get('/check',isAuth,
 	 * #swagger.security = [{ "apiKeyAuth": [] }]
 	 */
 	UsersController.checkUser);
+router.get('/',isAuth, 
+		/**
+		 * #swagger.tags = ['user']
+		 * #swagger.summary = '取得個人頁面-設定(對應設計18頁)
+		 * #swagger.security = [{ "apiKeyAuth": [] }]
+		 */
+		UsersController.GetUser
+		);
 router.post('/sign-in'
 	/**
 	 * #swagger.tags = ['user']
@@ -39,13 +47,7 @@ router.post('/reset_password',isAuth,
 	UsersController.updatePassword
 );
 
-router.get('/', function (req, res, next) {
-	/**
-	 * #swagger.tags = ['user']
-	 * #swagger.summary = '取得使用者簡易資訊 - 依分頁'
-	 */
-	res.status(200).json();
-});
+
 
 router.get('/:id', function (req, res, next) {
 	/**

@@ -3,14 +3,15 @@ const PostConn = require('../connections/postConn');
 
 const PostSchema = new mongoose.Schema(
 	{
-		name: {
-			type: String,
-			required: [true, '姓名未填寫'],
+		user:{
+			type: mongoose.Schema.ObjectId,
+			ref: "user",
+			required:[true,'貼文ID未填寫']
 		},
 		tags: [
 			{
 				type: String,
-				required: [true, '標籤 tags 未填寫'],
+				default:'',
 			},
 		],
 		type: {
@@ -21,30 +22,44 @@ const PostSchema = new mongoose.Schema(
 		image: {
 			type: String,
 			default: '',
-		},
-		createdAt: {
-			type: Date,
-			default: Date.now,
-			select: false,
-		},
+		},		
 		content: {
 			type: String,
 			required: [true, 'Content 未填寫'],
 		},
-		likes: {
+		likes: [{ 
+			type: mongoose.Schema.ObjectId, 
+			ref: 'User' 
+		  }],		
+		//售價
+		pay:{
 			type: Number,
-			default: 0,
-		},
-		comments: {
-			type: Number,
-			default: 0,
-		},
+			required: [true, '售價未填寫'],
+		}
 	},
 	{
 		versionKey: false,
 		timestamps: true,
+		toJSON: {virtuals:true},
+		toObject: {virtuals:true},
 	},
 );
+
+PostSchema.virtual('comments', {
+	ref: 'Comment',
+	foreignField: 'post',
+	localField: '_id'
+  });
+
+  PostSchema.pre(/^find/, function(next) {
+    this.populate({
+      path: 'comments',
+      select: 'comment'
+    });
+  
+    next();
+  });
+
 
 const Post = PostConn.model('Post', PostSchema);
 

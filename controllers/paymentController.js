@@ -1,4 +1,4 @@
-const User = require('../models/usersModel');
+const User = require('../models/users.model');
 const PaymentService = require('../service/paymentService');
 module.exports = {
 	getPayment: async (req, res, next) => {

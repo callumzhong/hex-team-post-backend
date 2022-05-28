@@ -19,8 +19,7 @@ const doc = {
 	},
 	definitions: {
 		Post: {
-			_id: '6274caa22a6bd4d1ecd8af05',
-			$name: 'Posted by Name',
+			_id: '6274caa22a6bd4d1ecd8af05',			
 			tags: ['旅遊'],
 			$type: 'group',
 			image: 'https://unsplash.com/photos/gKXKBY-C-Dk',
@@ -29,7 +28,6 @@ const doc = {
 			comments: 1,
 		},
 		PostBody: {
-			$name: 'Posted by Name',
 			tags: ['旅遊'],
 			$type: 'group',
 			image: 'https://unsplash.com/photos/gKXKBY-C-Dk',

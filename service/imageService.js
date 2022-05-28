@@ -9,8 +9,9 @@ const upload = multer({
     if (ext !== '.jpg' && ext !== '.png' && ext !== '.jpeg') {
       cb(new Error("檔案格式錯誤，僅限上傳 jpg、jpeg 與 png 格式。"));
     }
-    cb(null, true);
+    cb(null, 'public/uploads/');
   },
 }).any();
+
 
 module.exports = upload 
