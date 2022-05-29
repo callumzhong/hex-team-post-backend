@@ -66,7 +66,7 @@
         "tags": [
           "posts"
         ],
-        "summary": "新增貼文",
+        "summary": "新增一般貼文 (對應設計8頁)OK",
         "description": "",
         "parameters": [
           {
@@ -77,19 +77,94 @@
           {
             "name": "obj",
             "in": "body",
-            "description": "貼文資料",
-            "required": true,
+            "description": "新增貼文",
             "schema": {
-              "$ref": "#/definitions/PostBody"
+              "type": "object",
+              "properties": {
+                "tags": {
+                  "type": "string",
+                  "example": ""
+                },
+                "image": {
+                  "type": "string",
+                  "example": "https://i.imgur.com/ffCSS4H_d.webp?maxwidth=520&shape=thumb&fidelity=high"
+                },
+                "content": {
+                  "type": "string",
+                  "example": "新增貼文"
+                }
+              },
+              "required": [
+                "content"
+              ]
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "新增成功",
             "schema": {
-              "$ref": "#/definitions/Post"
-            }
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "type": "string",
+                      "example": "628f8c9bb1e02d4b681c8fe9"
+                    },
+                    "tags": {
+                      "type": "array",
+                      "example": [
+                        ""
+                      ],
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "person"
+                    },
+                    "image": {
+                      "type": "string",
+                      "example": "https://i.imgur.com/ffCSS4H_d.webp?maxwidth=520&shape=thumb&fidelity=high"
+                    },
+                    "content": {
+                      "type": "string",
+                      "example": "https://i.imgur.com/ffCSS4H_d.webp?maxwidth=520&shape=thumb&fidelity=high"
+                    },
+                    "likes": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "comments": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "_id": {
+                      "type": "string",
+                      "example": "6290ef2bbb78cbd2b7693e5c"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2022-05-27T15:32:59.325Z"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "example": "2022-05-27T15:32:59.325Z"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            },
+            "description": "新增成功"
           }
         },
         "security": [
@@ -102,14 +177,21 @@
         "tags": [
           "posts"
         ],
-        "summary": "刪除全部貼文",
+        "summary": "刪除全部貼文OK",
         "description": "",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "刪除成功"
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
           }
-        }
+        ],
+        "responses": {},
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       }
     },
     "/api/posts/{id}": {
@@ -117,7 +199,7 @@
         "tags": [
           "posts"
         ],
-        "summary": "取得指定 ID 貼文",
+        "summary": "取得指定 ID 貼文 OK",
         "description": "",
         "parameters": [
           {
@@ -127,63 +209,64 @@
             "type": "string"
           }
         ],
-        "responses": {
-          "200": {
-            "description": "取得單筆資料",
-            "schema": {
-              "$ref": "#/definitions/Post"
-            }
-          }
-        }
+        "responses": {}
       },
-      "patch": {
+      "put": {
         "tags": [
           "posts"
         ],
-        "summary": "更新貼文",
+        "summary": "更新貼文OK",
         "description": "",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string",
-            "description": "貼文 Id"
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
           },
           {
             "name": "obj",
             "in": "body",
-            "description": "貼文資料",
-            "required": true,
+            "description": "新增貼文",
             "schema": {
-              "$ref": "#/definitions/PostBody"
+              "type": "object",
+              "properties": {
+                "tags": {
+                  "type": "string",
+                  "example": ""
+                },
+                "image": {
+                  "type": "string",
+                  "example": "https://i.imgur.com/ffCSS4H_d.webp?maxwidth=520&shape=thumb&fidelity=high"
+                },
+                "content": {
+                  "type": "string",
+                  "example": "新增貼文"
+                }
+              },
+              "required": [
+                "content"
+              ]
             }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "更新成功",
-            "schema": {
-              "$ref": "#/definitions/Post"
-            }
-          },
-          "404": {
-            "schema": {
-              "type": "string",
-              "example": "查無貼文",
-              "xml": {
-                "name": "main"
-              }
-            },
-            "description": "更新失敗"
+        "responses": {},
+        "security": [
+          {
+            "apiKeyAuth": []
           }
-        }
+        ]
       },
       "delete": {
         "tags": [
           "posts"
         ],
-        "summary": "刪除指定 ID 貼文",
+        "summary": "刪除指定 ID 貼文OK",
         "description": "",
         "parameters": [
           {
@@ -191,23 +274,159 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {},
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/posts/UserAll": {
+      "get": {
+        "tags": [
+          "posts"
+        ],
+        "summary": "取得指定 ID 貼文 OK",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {},
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/posts/private": {
+      "post": {
+        "tags": [
+          "posts"
+        ],
+        "summary": "新增私密貼文(對應設計11頁)OK",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "新增貼文",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "tags": {
+                  "type": "string",
+                  "example": ""
+                },
+                "image": {
+                  "type": "string",
+                  "example": "https://i.imgur.com/ffCSS4H_d.webp?maxwidth=520&shape=thumb&fidelity=high"
+                },
+                "content": {
+                  "type": "string",
+                  "example": "新增貼文"
+                },
+                "pay": {
+                  "type": "number",
+                  "example": 5
+                }
+              },
+              "required": [
+                "content",
+                "pay"
+              ]
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "刪除成功"
-          },
-          "404": {
             "schema": {
-              "type": "string",
-              "example": "查無貼文",
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "type": "string",
+                      "example": "628f8c9bb1e02d4b681c8fe9"
+                    },
+                    "tags": {
+                      "type": "array",
+                      "example": [
+                        ""
+                      ],
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "person"
+                    },
+                    "image": {
+                      "type": "string",
+                      "example": "https://i.imgur.com/ffCSS4H_d.webp?maxwidth=520&shape=thumb&fidelity=high"
+                    },
+                    "content": {
+                      "type": "string",
+                      "example": "https://i.imgur.com/ffCSS4H_d.webp?maxwidth=520&shape=thumb&fidelity=high"
+                    },
+                    "likes": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "comments": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "_id": {
+                      "type": "string",
+                      "example": "6290ef2bbb78cbd2b7693e5c"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2022-05-27T15:32:59.325Z"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "example": "2022-05-27T15:32:59.325Z"
+                    }
+                  }
+                }
+              },
               "xml": {
                 "name": "main"
               }
             },
-            "description": "刪除失敗"
+            "description": "新增成功"
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       }
     },
     "/api/user/check": {
@@ -232,41 +451,105 @@
         ]
       }
     },
-    "/api/user/sign-in": {
-      "post": {
+    "/api/user/": {
+      "get": {
         "tags": [
           "user"
         ],
-        "summary": "使用者登入",
+        "summary": "取得個人頁面-設定(對應設計18頁)   *",
         "description": "",
         "parameters": [
           {
-            "name": "obj",
-            "in": "body",
-            "description": "資料格式",
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
             "schema": {
               "type": "object",
               "properties": {
-                "email": {
-                  "type": "string",
-                  "example": "123@123.com"
+                "status": {
+                  "type": "boolean",
+                  "example": true
                 },
-                "password": {
-                  "type": "string",
-                  "example": "12345678"
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "type": "object",
+                      "properties": {
+                        "_id": {
+                          "type": "string",
+                          "example": "628f8c9bb1e02d4b681c8fe9"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "Ray"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "123@123.com"
+                        },
+                        "photo": {
+                          "type": "string",
+                          "example": "123"
+                        },
+                        "gender": {
+                          "type": "string",
+                          "example": "male"
+                        },
+                        "birthday": {
+                          "type": "string",
+                          "example": "2022-01-01T00:00:00.000Z"
+                        },
+                        "delflag": {
+                          "type": "boolean",
+                          "example": false
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "example": "2022-05-26T14:20:11.616Z"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "example": "2022-05-26T14:20:11.616Z"
+                        }
+                      }
+                    },
+                    "postCount": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "follow": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "privatepost": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "order": {
+                      "type": "number",
+                      "example": 0
+                    }
+                  }
                 }
               },
-              "required": [
-                "email",
-                "password"
-              ]
-            }
+              "xml": {
+                "name": "main"
+              }
+            },
+            "description": "取得個人頁面資料"
           }
-        ],
-        "responses": {}
-      }
-    },
-    "/api/user/": {
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      },
       "post": {
         "tags": [
           "user"
@@ -320,19 +603,40 @@
           }
         ],
         "responses": {}
-      },
-      "get": {
+      }
+    },
+    "/api/user/sign-in": {
+      "post": {
         "tags": [
           "user"
         ],
-        "summary": "取得使用者簡易資訊 - 依分頁",
+        "summary": "使用者登入",
         "description": "",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "資料格式",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "123@123.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "12345678"
+                }
+              },
+              "required": [
+                "email",
+                "password"
+              ]
+            }
           }
-        }
+        ],
+        "responses": {}
       }
     },
     "/api/user/forgot_password": {
@@ -509,6 +813,79 @@
         "responses": {}
       }
     },
+    "/api/comment/{PostId}/comment": {
+      "post": {
+        "tags": [
+          "comment"
+        ],
+        "summary": "文章留言",
+        "description": "",
+        "parameters": [
+          {
+            "name": "PostId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "資料格式",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "comment": {
+                  "type": "string",
+                  "example": "留言"
+                }
+              },
+              "required": [
+                "comment"
+              ]
+            }
+          }
+        ],
+        "responses": {},
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/comment/{id}": {
+      "delete": {
+        "tags": [
+          "comment"
+        ],
+        "summary": "文章留言刪除",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {},
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
     "/api/upload/image": {
       "post": {
         "tags": [
@@ -516,6 +893,31 @@
         ],
         "summary": "上傳圖片",
         "description": "表單上傳<br/> <pre> <code> &lt;form action=\\\"/api/thisismycourse2/admin/upload\\\" enctype=\\\"multipart/form-data\\\" method=\\\"post\\\"&gt;<br/> &lt;input type=\\\"file\\\" name=\\\"file-to-upload\\\"&gt;<br/> &lt;input type=\\\"submit\\\" value=\\\"Upload\\\"&gt;<br/> &lt;/form&gt; </code> </pre>",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/UploadImage"
+            },
+            "description": "上傳成功"
+          }
+        }
+      }
+    },
+    "/api/upload/img": {
+      "post": {
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/api/follow/": {
+      "get": {
+        "tags": [
+          "follow"
+        ],
+        "summary": "取得個人追蹤名單",
+        "description": "",
         "parameters": [
           {
             "name": "authorization",
@@ -526,9 +928,159 @@
         "responses": {
           "200": {
             "schema": {
-              "$ref": "#/definitions/UploadImage"
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "_id": {
+                        "type": "string",
+                        "example": "6291e520cbbe05860f8d8c15"
+                      },
+                      "user": {
+                        "type": "string",
+                        "example": "628f8c9bb1e02d4b681c8fe9"
+                      },
+                      "followuser": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "_id": {
+                              "type": "string",
+                              "example": "628f8b08634ef4666583501b"
+                            },
+                            "name": {
+                              "type": "string",
+                              "example": "Ray"
+                            },
+                            "photo": {
+                              "type": "string",
+                              "example": "1"
+                            },
+                            "createdAt": {
+                              "type": "string",
+                              "example": "2022-05-26T14:13:28.064Z"
+                            }
+                          }
+                        }
+                      },
+                      "createdAt": {
+                        "type": "string",
+                        "example": "2022-05-28T09:02:24.177Z"
+                      },
+                      "__v": {
+                        "type": "number",
+                        "example": 0
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
             },
-            "description": "上傳成功"
+            "description": "取得所有個人追蹤"
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "follow"
+        ],
+        "summary": "加入追蹤(對應設計4頁)",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "schema": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "example": "6291e520cbbe05860f8d8c15"
+                    },
+                    "user": {
+                      "type": "string",
+                      "example": "628f8c9bb1e02d4b681c8fe9"
+                    },
+                    "followuser": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "_id": {
+                            "type": "string",
+                            "example": "628f8b08634ef4666583501b"
+                          },
+                          "name": {
+                            "type": "string",
+                            "example": "Ray"
+                          },
+                          "photo": {
+                            "type": "string",
+                            "example": "1"
+                          },
+                          " ": {
+                            "type": "string",
+                            "example": "2022-05-26T14:13:28.064Z"
+                          }
+                        }
+                      }
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2022-05-28T09:02:24.177Z"
+                    },
+                    "__v": {
+                      "type": "number",
+                      "example": 0
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            },
+            "description": "建立個人追蹤"
           }
         },
         "security": [
@@ -538,39 +1090,13 @@
         ]
       }
     },
-    "/api/follow/": {
-      "get": {
-        "tags": [
-          "follow"
-        ],
-        "description": "取得追蹤名單 - 依分頁",
-        "parameters": [
-          {
-            "name": "page",
-            "in": "query",
-            "description": "分頁數",
-            "type": "string"
-          },
-          {
-            "name": "q",
-            "in": "query",
-            "description": "查詢",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/api/follow/{id}": {
-      "delete": {
+      "post": {
         "tags": [
           "follow"
         ],
-        "description": "取消追蹤",
+        "summary": "取得某人追蹤名單",
+        "description": "",
         "parameters": [
           {
             "name": "id",
@@ -581,9 +1107,158 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "_id": {
+                        "type": "string",
+                        "example": "6291e520cbbe05860f8d8c15"
+                      },
+                      "user": {
+                        "type": "string",
+                        "example": "628f8c9bb1e02d4b681c8fe9"
+                      },
+                      "followuser": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "_id": {
+                              "type": "string",
+                              "example": "628f8b08634ef4666583501b"
+                            },
+                            "name": {
+                              "type": "string",
+                              "example": "Ray"
+                            },
+                            "photo": {
+                              "type": "string",
+                              "example": "1"
+                            },
+                            "createdAt": {
+                              "type": "string",
+                              "example": "2022-05-26T14:13:28.064Z"
+                            }
+                          }
+                        }
+                      },
+                      "createdAt": {
+                        "type": "string",
+                        "example": "2022-05-28T09:02:24.177Z"
+                      },
+                      "__v": {
+                        "type": "number",
+                        "example": 0
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            },
+            "description": "取得某個人追蹤"
           }
         }
+      }
+    },
+    "/api/follow/{followuser}": {
+      "delete": {
+        "tags": [
+          "follow"
+        ],
+        "summary": "取消追蹤",
+        "description": "",
+        "parameters": [
+          {
+            "name": "followuser",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "example": "6291e520cbbe05860f8d8c15"
+                    },
+                    "user": {
+                      "type": "string",
+                      "example": "628f8c9bb1e02d4b681c8fe9"
+                    },
+                    "followuser": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "_id": {
+                            "type": "string",
+                            "example": "628f8b08634ef4666583501b"
+                          },
+                          "name": {
+                            "type": "string",
+                            "example": "Ray"
+                          },
+                          "photo": {
+                            "type": "string",
+                            "example": "1"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "example": "2022-05-26T14:13:28.064Z"
+                          }
+                        }
+                      }
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2022-05-28T09:02:24.177Z"
+                    },
+                    "__v": {
+                      "type": "number",
+                      "example": 0
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            },
+            "description": "刪除追蹤"
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       }
     },
     "/api/email/": {
@@ -687,10 +1362,6 @@
           "type": "string",
           "example": "6274caa22a6bd4d1ecd8af05"
         },
-        "name": {
-          "type": "string",
-          "example": "Posted by Name"
-        },
         "tags": {
           "type": "array",
           "example": [
@@ -722,7 +1393,6 @@
         }
       },
       "required": [
-        "name",
         "type",
         "content"
       ]
@@ -730,10 +1400,6 @@
     "PostBody": {
       "type": "object",
       "properties": {
-        "name": {
-          "type": "string",
-          "example": "Posted by Name"
-        },
         "tags": {
           "type": "array",
           "example": [
@@ -765,7 +1431,6 @@
         }
       },
       "required": [
-        "name",
         "type",
         "content"
       ]

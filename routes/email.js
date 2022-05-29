@@ -6,7 +6,7 @@ router.post(
 	'/',
 	/**
 	 * #swagger.tags = ['email']
-	 * #swagger.summary = '發信服務'
+	 * #swagger.summary = '發信服務OK'
 	 */
 	/* #swagger.parameters['obj'] = {
 			in: 'body',
