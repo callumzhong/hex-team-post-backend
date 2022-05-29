@@ -35,7 +35,7 @@ const uploadImg={
                 schema: {"$ref": "#/definitions/UploadImage"},
                 description: "上傳成功"
             } */
-            Success(res,{imgUrl:response.data.link,imggmUrl:responsebygm.data.link});
+            Success(res,{imgUrl:response.data.link});
         }catch(err){
             return ErrorHandler(err,req,res,next);            
         }

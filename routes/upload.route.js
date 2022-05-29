@@ -5,7 +5,7 @@ const { isAuth } = require('../service/authService');
 const { Success } = require('../service/appError');
 var router = express.Router();
 
-router.post('/image', upload,
+router.post('/image', isAuth, upload,
 	/**
 	 * #swagger.tags = ['upload']
 	 * #swagger.summary = '上傳圖片'
