@@ -240,19 +240,66 @@ const users = {
                     }
                     },
 				description: "取得個人頁面資料" } */
-			const result = {
-				user: userdata,
-				postCounts: await postService.getPostCountbyGroup(req),
-				follows: await followService.getUserFollowCount(req),
-				privateposts: await postService.getPostCountbyGroup(req),
-				likes: 0,
-			};
-			Success(res, result);
-		} catch (err) {
-			//return ErrorHandler(err,req,res,next);
-			return ErrorHandler(new Error('尚未授權'), req, res, next);
-		}
-	},
-};
+           const result={
+               user:userdata,
+               postCounts: await postService.getPostCountbyGroup(req.user.id),
+               follows:await followService.getUserFollowCount(req.user.id),
+               privateposts: await postService.getPostCountbyGroup(req.user.id),
+               likes:0};
+           Success(res,result);
+        }
+        catch(err){
+            //return ErrorHandler(err,req,res,next); 
+            return ErrorHandler(new Error("尚未授權"),req,res,next);
+        }
+    },
+    async GetUserById(req,res,next){
+        try{
+            const _id=req.params.id;
+            if (!_id) {
+				return ErrorHandler(new Error('使用者ID未輸入'), req, res, next);
+			}
+           const userdata=await Users.findOne({ _id})
+           .populate({
+            path: 'posts',
+            select: 'type content image likes pay tags'
+          });;
+           /* #swagger.responses[200] = {
+		  	schema: {
+                    "status": true,
+                    "data": {
+                        "user": {
+                        "_id": "628f8c9bb1e02d4b681c8fe9",
+                        "name": "Ray",
+                        "email": "123@123.com",
+                        "photo": "123",
+                        "gender": "male",
+                        "birthday": "2022-01-01T00:00:00.000Z",
+                        "delflag": false,
+                        "createdAt": "2022-05-26T14:20:11.616Z",
+                        "updatedAt": "2022-05-26T14:20:11.616Z"
+                        },
+                        "postCount": 0,
+                        "follow": 0,
+                        "privatepost": 0,
+                        "order": 0
+                    }
+                    },
+				description: "取得個人頁面資料" } */
+           const result={
+               user:userdata,
+               postCounts: await postService.getPostCountbyGroup(_id),
+               follows:await followService.getUserFollowCount(_id),
+               privateposts: await postService.getPostCountbyGroup(_id),
+               likes:0};
+           Success(res,result);
+        }
+        catch(err){
+            //return ErrorHandler(err,req,res,next); 
+            return ErrorHandler(new Error("尚未授權"),req,res,next);
+        }
+    }
+}
+
 
 module.exports = users;
