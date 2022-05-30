@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get(
 	'/',
-	// isAuth,
+	isAuth,
 	/**
 	 * #swagger.tags = ['payment']
 	 * #swagger.summary = '跳轉付款頁面'
