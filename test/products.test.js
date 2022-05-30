@@ -3,7 +3,6 @@ require('dotenv').config();
 process.env.NODE_ENV = 'test';
 
 const mongoose = require('mongoose');
-const Product = require('../models/product.model');
 
 //Require the dev-dependencies
 const chai = require('chai');
