@@ -1,8 +1,8 @@
 const { Types } = require('mongoose');
 const { setTradeInfo, getDecryptTradeInfo } = require('../configs/newebpay');
-const Order = require('../models/orderModel');
-const Payment = require('../models/paymentModel');
-const Product = require('../models/productModel');
+const Order = require('../models/order.model');
+const Payment = require('../models/payment.model');
+const Product = require('../models/product.model');
 
 module.exports = {
 	createdPayment: async (productId, user) => {
