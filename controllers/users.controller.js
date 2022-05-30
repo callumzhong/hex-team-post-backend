@@ -2,11 +2,11 @@ const bcrypt = require('bcryptjs/dist/bcrypt');
 
 const crypto = require('crypto');
 const Users = require('../models/users.model');
-const { generateSendJWT } = require('../service/authService');
+const { generateSendJWT } = require('../service/auth.service');
 const validator = require('validator');
 const ErrorHandler = require('../service/errorHandler');
 const { Success } = require('../service/appError');
-const emailHandler = require('../service/email/emailHandler');
+const emailService = require('../service/email/email.service');
 const postService = require('../service/post.service');
 const followService = require('../service/follow.service');
 
@@ -166,7 +166,7 @@ const users = {
 			);
 			//const upduse=true;
 			if (upduse) {
-				emailHandler.send(
+				emailService.send(
 					{
 						to: email,
 						subject: '忘記密碼',

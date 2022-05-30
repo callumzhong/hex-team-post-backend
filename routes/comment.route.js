@@ -1,15 +1,17 @@
 var express = require('express');
 const commentController = require('../controllers/comment.controller');
-const { isAuth } = require('../service/authService');
+const { isAuth } = require('../service/auth.service');
 var router = express.Router();
 
-router.post('/:PostId/comment',isAuth,
-/**
+router.post(
+	'/:PostId/comment',
+	isAuth,
+	/**
 	 * #swagger.tags = ['comment']
 	 * #swagger.summary = '文章留言 OK'
-     * #swagger.security = [{ "apiKeyAuth": [] }]
+	 * #swagger.security = [{ "apiKeyAuth": [] }]
 	 */
-    /**
+	/**
              * 
              * #swagger.parameters['obj'] = {
                     in: 'body',
@@ -18,14 +20,16 @@ router.post('/:PostId/comment',isAuth,
                         $comment:'留言'
                     }
                 }*/
-commentController.created
+	commentController.created,
 );
-router.delete('/:id',isAuth,
-/**
+router.delete(
+	'/:id',
+	isAuth,
+	/**
 	 * #swagger.tags = ['comment']
 	 * #swagger.summary = '文章留言刪除 OK'
-     * #swagger.security = [{ "apiKeyAuth": [] }]
+	 * #swagger.security = [{ "apiKeyAuth": [] }]
 	 */
-commentController.delete
+	commentController.delete,
 );
 module.exports = router;

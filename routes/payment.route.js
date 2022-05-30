@@ -1,6 +1,6 @@
 const express = require('express');
-const paymentController = require('../controllers/paymentController');
-const { isAuth } = require('../service/authService');
+const paymentController = require('../controllers/payment.controller');
+const { isAuth } = require('../service/auth.service');
 const router = express.Router();
 
 router.get(

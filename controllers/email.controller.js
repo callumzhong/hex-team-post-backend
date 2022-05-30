@@ -1,8 +1,8 @@
-const EmailHandler = require('../service/email/emailHandler');
+const EmailService = require('../service/email/email.service');
 
 module.exports = {
 	send: ({ body }, res, next) => {
-		EmailHandler.send(body, (err, info) => {
+		EmailService.send(body, (err, info) => {
 			if (err) {
 				/* #swagger.responses[400] = {
 					schema:"{

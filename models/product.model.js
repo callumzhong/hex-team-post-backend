@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const PostConn = require('../connections/postConn');
+const PostConn = require('../connections/post.connection');
 const productSchema = new mongoose.Schema(
 	{
 		name: {

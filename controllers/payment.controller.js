@@ -1,5 +1,5 @@
 const User = require('../models/users.model');
-const PaymentService = require('../service/paymentService');
+const PaymentService = require('../service/payment.service');
 module.exports = {
 	getPayment: async (req, res, next) => {
 		if (!req.query.prod) {

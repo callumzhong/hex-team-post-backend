@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const PostConn = require('../connections/postConn');
+const PostConn = require('../connections/post.connection');
 const paymentSchema = new mongoose.Schema(
 	{
 		/** 判斷 code 錯誤代碼定義 true or false */
