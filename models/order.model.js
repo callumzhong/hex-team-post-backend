@@ -10,7 +10,6 @@ const OrderSchema = new mongoose.Schema(
 		payment: {
 			type: mongoose.Types.ObjectId,
 			ref: 'payment',
-			select: 'status',
 		},
 		product: {
 			type: mongoose.Types.ObjectId,
@@ -50,6 +49,9 @@ OrderSchema.pre(/^find/, function (next) {
 	this.populate({
 		path: 'product',
 		select: 'name price discount',
+	}).populate({
+		path: 'payment',
+		select: 'status message',
 	});
 
 	next();

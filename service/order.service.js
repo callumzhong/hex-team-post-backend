@@ -1,5 +1,6 @@
 const Order = require('../models/order.model');
 const Product = require('../models/product.model');
+const Payment = require('../models/payment.model');
 
 module.exports = {
 	created: async (productId, user) => {
@@ -48,6 +49,10 @@ module.exports = {
 			serialNumber: serialNumber,
 		});
 
+		return order;
+	},
+	getStatus: async (orderId) => {
+		const order = await Order.findById(orderId);
 		return order;
 	},
 };
