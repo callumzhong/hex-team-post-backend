@@ -5,12 +5,12 @@ const router = express.Router();
 
 router.get(
 	'/',
-	isAuth,
+	// isAuth,
 	/**
 	 * #swagger.tags = ['payment']
 	 * #swagger.summary = '跳轉付款頁面'
 	 * #swagger.security = [{ "apiKeyAuth": [] }]
-   * #swagger.parameters['order'] = {
+   * #swagger.parameters['orderId'] = {
 				in: 'query',
 				description: '訂單ID',
      }
@@ -24,6 +24,14 @@ router.post(
 	 * #swagger.ignore = true
 	 */
 	paymentController.postPaymentCallback,
+);
+
+router.get(
+	'/result',
+	/**
+	 * #swagger.ignore = true
+	 */
+	paymentController.getPaymentResult,
 );
 
 module.exports = router;

@@ -6,28 +6,30 @@ const Product = require('../models/product.model');
 
 module.exports = {
 	createdPayment: async (orderId) => {
-		const order = Order.findById(orderId).populate({
-			path: 'comments',
-			select: 'comment user',
-		});
+		const order = await Order.findById(orderId);
 		if (!order) {
-			return { status: 404, message: '找不到訂單' };
+			return '查無訂單';
 		}
-		console.log(order);
-		return order;
-		// const tradeInfo = setTradeInfo({
-		// 	amount: order.product.price - order.product.discount,
-		// 	desc: product.name,
-		// 	email: '',
-		// });
+		if (order.payment) {
+			return '已有付款紀錄';
+		}
+		const tradeInfo = setTradeInfo({
+			amount: order.product.price - order.product.discount,
+			desc: order.product.name,
+			email: '',
+		});
 
-		// const payment = await Payment.create({
-		// 	status: false,
-		// 	message: '初始化',
-		// 	merchantOrderNo: tradeInfo.MerchantOrderNo,
-		// });
+		const payment = await Payment.create({
+			status: false,
+			message: '初始化',
+			merchantOrderNo: tradeInfo.MerchantOrderNo,
+		});
 
-		// return tradeInfo;
+		await Order.findByIdAndUpdate(order._id, {
+			payment: payment._id,
+		});
+
+		return tradeInfo;
 	},
 
 	detectPayment: async (result) => {
