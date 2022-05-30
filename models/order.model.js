@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const PostConn = require('../connections/post.connection');
-const orderSchema = new mongoose.Schema(
+const OrderSchema = new mongoose.Schema(
 	{
 		user: {
 			type: mongoose.Types.ObjectId,
@@ -11,6 +11,10 @@ const orderSchema = new mongoose.Schema(
 			type: mongoose.Types.ObjectId,
 			ref: 'payment',
 			select: 'status',
+		},
+		product: {
+			type: mongoose.Types.ObjectId,
+			ref: 'product',
 		},
 		serialNumber: {
 			type: String,
@@ -41,5 +45,15 @@ const orderSchema = new mongoose.Schema(
 		timestamps: true,
 	},
 );
-const Order = PostConn.model('order', orderSchema);
+
+OrderSchema.pre(/^find/, function (next) {
+	this.populate({
+		path: 'product',
+		select: 'name price discount',
+	});
+
+	next();
+});
+
+const Order = PostConn.model('order', OrderSchema);
 module.exports = Order;
