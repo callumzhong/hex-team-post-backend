@@ -25,9 +25,14 @@
         "tags": [
           "posts"
         ],
-        "summary": "取得依分頁取得貼文",
+        "summary": "取得依分頁取得貼文OK",
         "description": "",
         "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
           {
             "name": "page",
             "in": "query",
@@ -43,7 +48,7 @@
           {
             "name": "sort",
             "in": "query",
-            "description": "排序 ( arc || desc ) ",
+            "description": "請輸入 ( asc || desc ) 兩種排序",
             "type": "string"
           },
           {
@@ -55,12 +60,17 @@
         ],
         "responses": {
           "200": {
-            "description": "取得分頁資料",
             "schema": {
               "$ref": "#/definitions/PostPage"
-            }
+            },
+            "description": "取得分頁資料"
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -92,10 +102,15 @@
                 "content": {
                   "type": "string",
                   "example": "新增貼文"
+                },
+                "contentType": {
+                  "type": "string",
+                  "example": "photography ,article"
                 }
               },
               "required": [
-                "content"
+                "content",
+                "contentType"
               ]
             }
           }
@@ -343,6 +358,10 @@
                   "type": "string",
                   "example": "新增貼文"
                 },
+                "contentType": {
+                  "type": "string",
+                  "example": "photography ,article"
+                },
                 "pay": {
                   "type": "number",
                   "example": 5
@@ -350,6 +369,7 @@
               },
               "required": [
                 "content",
+                "contentType",
                 "pay"
               ]
             }
@@ -456,7 +476,7 @@
         "tags": [
           "user"
         ],
-        "summary": "取得個人頁面-設定(對應設計18頁)  *",
+        "summary": "取得個人頁面-設定(對應設計18頁)   *",
         "description": "",
         "parameters": [
           {
@@ -761,7 +781,7 @@
         "tags": [
           "user"
         ],
-        "summary": "取得使用者詳細資訊",
+        "summary": "取得使用者詳細資訊 OK",
         "description": "",
         "parameters": [
           {
@@ -773,7 +793,81 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "type": "object",
+                      "properties": {
+                        "_id": {
+                          "type": "string",
+                          "example": "628f8c9bb1e02d4b681c8fe9"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "Ray"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "123@123.com"
+                        },
+                        "photo": {
+                          "type": "string",
+                          "example": "123"
+                        },
+                        "gender": {
+                          "type": "string",
+                          "example": "male"
+                        },
+                        "birthday": {
+                          "type": "string",
+                          "example": "2022-01-01T00:00:00.000Z"
+                        },
+                        "delflag": {
+                          "type": "boolean",
+                          "example": false
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "example": "2022-05-26T14:20:11.616Z"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "example": "2022-05-26T14:20:11.616Z"
+                        }
+                      }
+                    },
+                    "postCount": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "follow": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "privatepost": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "order": {
+                      "type": "number",
+                      "example": 0
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            },
+            "description": "取得個人頁面資料"
           }
         }
       }
@@ -1008,13 +1102,15 @@
             "type": "string"
           },
           {
-            "name": "body",
+            "name": "obj",
             "in": "body",
+            "description": "新增貼文",
             "schema": {
               "type": "object",
               "properties": {
-                "schema": {
-                  "example": "any"
+                "followuser": {
+                  "type": "string",
+                  "example": "6291e520cbbe05860f8d8c15"
                 }
               }
             }
@@ -1090,7 +1186,7 @@
       }
     },
     "/api/follow/{id}": {
-      "post": {
+      "get": {
         "tags": [
           "follow"
         ],
@@ -1169,6 +1265,24 @@
             "description": "取得某個人追蹤"
           }
         }
+      }
+    },
+    "/api/follow/{id}/Follows": {
+      "get": {
+        "tags": [
+          "follow"
+        ],
+        "summary": "取得某人追蹤數OK",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
       }
     },
     "/api/follow/{followuser}": {

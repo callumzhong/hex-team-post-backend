@@ -30,7 +30,15 @@ const userSchema = new mongoose.Schema({
     delflag:{
       type:Boolean,
       default:false
-    }
+    }, 
+    following:[{ 
+      type: mongoose.Schema.ObjectId, 
+      ref: 'user' 
+    }],
+    followers: [{ 
+      type: mongoose.Schema.ObjectId, 
+      ref: 'user' 
+    }],
   },{
 		versionKey: false,
 		timestamps: true,

@@ -12,14 +12,22 @@ router.get('/',isAuth,
 	 */
 	followController.getAll
 	);
-
-router.post('/:id',
+	router.get('/:id',
 /**
 	 * #swagger.tags = ['follow']
 	 * #swagger.summary = '取得某人追蹤名單OK'
 	 */
 followController.getOne
 );
+router.get('/:id/Follows',
+	/**
+	 * #swagger.tags = ['follow']
+	 * #swagger.summary = '取得某人追蹤數OK'
+	 */
+	followController.getUserFollowCount
+	);
+
+
 router.post('/',isAuth,
 /**
 	 * #swagger.tags = ['follow']

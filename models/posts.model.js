@@ -19,13 +19,18 @@ const PostSchema = new mongoose.Schema(
 			enum: ['group', 'person'],
 			required: [true, '類型 type 未填寫'],
 		},
+		contentType:{
+			type:String,
+			enum:['photography','article'],
+			required: [true, '類型 contentType 未填寫'],
+		},
 		image: {
 			type: String,
 			default: '',
 		},		
 		content: {
 			type: String,
-			required: [true, 'Content 未填寫'],
+			default: '',
 		},
 		likes: [{ 
 			type: mongoose.Schema.ObjectId, 
@@ -35,6 +40,10 @@ const PostSchema = new mongoose.Schema(
 		pay:{
 			type: Number,
 			required: [true, '售價未填寫'],
+		},
+		createdAt: {
+			type: Date,
+			default: Date.now,
 		}
 	},
 	{

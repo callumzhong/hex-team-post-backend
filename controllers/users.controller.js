@@ -214,10 +214,11 @@ const users = {
 	},
 	async GetUser(req, res, next) {
 		try {
-			const userdata = await Users.findOne({ _id: req.user.id }).populate({
-				path: 'posts',
-				select: 'type content image likes pay tags',
-			});
+			const userdata = await Users.findOne({ _id: req.user.id });
+			// .populate({
+			// 	path: 'posts',
+			// 	select: 'type content image likes pay tags createdAt',
+			// });
 			/* #swagger.responses[200] = {
 		  	schema: {
                     "status": true,

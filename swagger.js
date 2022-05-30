@@ -6,9 +6,9 @@ const doc = {
 		description: 'Rest API documentation',
 	},
 	host: 'hex-post-team-api-server.herokuapp.com',
-	// host: 'localhost:3000',
-	// schemes: ['http'],
 	schemes: ['https'],
+	// host: 'localhost:3000',
+	// schemes: ['http'],	
 	securityDefinitions: {
 		apiKeyAuth: {
 			type: 'apiKey',

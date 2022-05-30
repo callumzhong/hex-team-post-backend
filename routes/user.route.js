@@ -52,7 +52,7 @@ router.post('/reset_password',isAuth,
 router.get('/:id', 
 	/**
 	 * #swagger.tags = ['user']
-	 * #swagger.summary = '取得使用者詳細資訊'
+	 * #swagger.summary = '取得使用者詳細資訊 OK'
 	 */
 	UsersController.GetUserById
 );

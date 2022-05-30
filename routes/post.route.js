@@ -4,10 +4,11 @@ const PostController = require('../controllers/posts.controller');
 const { isAuth } = require('../service/authService');
 
 router.get(
-	'/',
+	'/',isAuth,
 	/**
 	 * #swagger.tags = ['posts']
-	 * #swagger.summary = '取得依分頁取得貼文'
+	 * #swagger.summary = '取得依分頁取得貼文OK'
+	 * #swagger.security = [{ "apiKeyAuth": [] }]
 	 */
 	PostController.getPagination,
 );
