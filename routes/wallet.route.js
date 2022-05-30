@@ -1,6 +1,6 @@
 const express = require('express');
-const walletController = require('../controllers/walletController');
-const { isAuth } = require('../service/authService');
+const walletController = require('../controllers/wallet.controller');
+const { isAuth } = require('../service/auth.service');
 const router = express.Router();
 
 router.get(

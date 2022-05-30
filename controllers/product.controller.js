@@ -1,4 +1,4 @@
-const ProductService = require('../service/productService');
+const ProductService = require('../service/product.service');
 module.exports = {
 	getAll: async (req, res, next) => {
 		/* #swagger.responses[200] = {

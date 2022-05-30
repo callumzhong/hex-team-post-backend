@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const PostController = require('../controllers/posts.controller');
-const { isAuth } = require('../service/authService');
+const { isAuth } = require('../service/auth.service');
 
 router.get(
 	'/',
@@ -12,7 +12,8 @@ router.get(
 	PostController.getPagination,
 );
 router.get(
-	'/UserAll',isAuth,
+	'/UserAll',
+	isAuth,
 	/**
 	 * #swagger.tags = ['posts']
 	 * #swagger.summary = '取得指定 ID 貼文 OK'
@@ -50,7 +51,8 @@ router.post(
 	PostController.createdPrivate,
 );
 router.put(
-	'/:id',isAuth,
+	'/:id',
+	isAuth,
 	/**
 	 * #swagger.tags = ['posts']
 	 * #swagger.summary = '更新貼文OK'
@@ -59,7 +61,8 @@ router.put(
 	PostController.updated,
 );
 router.delete(
-	'/',isAuth,
+	'/',
+	isAuth,
 	/**
 	 * #swagger.tags = ['posts']
 	 * #swagger.summary = '刪除全部貼文OK'
@@ -68,7 +71,8 @@ router.delete(
 	PostController.deleteAll,
 );
 router.delete(
-	'/:id',isAuth,
+	'/:id',
+	isAuth,
 	/**
 	 * #swagger.tags = ['posts']
 	 * #swagger.summary = '刪除指定 ID 貼文OK'

@@ -1,6 +1,6 @@
 const { Types } = require('mongoose');
-const Order = require('../models/orderModel');
-const Payment = require('../models/paymentModel');
+const Order = require('../models/order.model');
+const Payment = require('../models/payment.model');
 module.exports = {
 	getCurrentWallet: async (userId) => {
 		const UserAddCoins = await Order.aggregate([

@@ -14,14 +14,13 @@ const uploadRouter = require('./routes/upload.route');
 const followRouter = require('./routes/follow.route');
 const indexRouter = require('./routes/index');
 const postRouter = require('./routes/post.route');
-const commendRouter=require('./routes/comment.route');
-const emailRouter = require('./routes/email');
-const paymentRouter = require('./routes/payment');
-const productRouter = require('./routes/products');
-const walletRouter = require('./routes/wallet');
+const commendRouter = require('./routes/comment.route');
+const emailRouter = require('./routes/email.route');
+const paymentRouter = require('./routes/payment.route');
+const productRouter = require('./routes/products.route');
+const walletRouter = require('./routes/wallet.route');
 const swaggerUi = require('swagger-ui-express');
 const swaggerFile = require('./swagger-output.json');
-const Order = require('./models/orderModel');
 const app = express();
 
 // view engine setup
