@@ -10,9 +10,9 @@ router.get(
 	 * #swagger.tags = ['payment']
 	 * #swagger.summary = '跳轉付款頁面'
 	 * #swagger.security = [{ "apiKeyAuth": [] }]
-   * #swagger.parameters['prod'] = {
+   * #swagger.parameters['order'] = {
 				in: 'query',
-				description: '產品ID',
+				description: '訂單ID',
      }
 	 */
 	paymentController.getPayment,
