@@ -49,13 +49,13 @@ router.post('/reset_password',isAuth,
 
 
 
-router.get('/:id', function (req, res, next) {
+router.get('/:id', 
 	/**
 	 * #swagger.tags = ['user']
 	 * #swagger.summary = '取得使用者詳細資訊'
 	 */
-	res.status(200).json();
-});
+	UsersController.GetUserById
+);
 
 router.delete('/:email', 
 	/**

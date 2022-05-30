@@ -66,12 +66,12 @@ module.exports = {
 	deleteOne: async (req) => {
 		return await Post.deleteMany({user:req.user.id,_id:req.params.id});
 	},
-	getPostCountbyGroup: async(req)=>{
+	getPostCountbyGroup: async(user)=>{
 		//取得個人貼文
-		return await Post.find({user:req.user.id,type:'group'}).count();
+		return await Post.find({user,type:'group'}).count();
 	},
-	getPostCountbyPerson: async(req)=>{
+	getPostCountbyPerson: async(user)=>{
 		//取得個人貼文
-		return await Post.find({user:req.user.id,type:'person'}).count();
+		return await Post.find({user,type:'person'}).count();
 	}
 };

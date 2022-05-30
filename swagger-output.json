@@ -194,6 +194,28 @@
         ]
       }
     },
+    "/api/posts/UserAll": {
+      "get": {
+        "tags": [
+          "posts"
+        ],
+        "summary": "取得指定 ID 貼文 OK",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {},
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
     "/api/posts/{id}": {
       "get": {
         "tags": [
@@ -275,28 +297,6 @@
             "required": true,
             "type": "string"
           },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {},
-        "security": [
-          {
-            "apiKeyAuth": []
-          }
-        ]
-      }
-    },
-    "/api/posts/UserAll": {
-      "get": {
-        "tags": [
-          "posts"
-        ],
-        "summary": "取得指定 ID 貼文 OK",
-        "description": "",
-        "parameters": [
           {
             "name": "authorization",
             "in": "header",
@@ -818,7 +818,7 @@
         "tags": [
           "comment"
         ],
-        "summary": "文章留言",
+        "summary": "文章留言 OK",
         "description": "",
         "parameters": [
           {
@@ -863,7 +863,7 @@
         "tags": [
           "comment"
         ],
-        "summary": "文章留言刪除",
+        "summary": "文章留言刪除 OK",
         "description": "",
         "parameters": [
           {
@@ -893,7 +893,13 @@
         ],
         "summary": "上傳圖片",
         "description": "表單上傳<br/> <pre> <code> &lt;form action=\\\"/api/thisismycourse2/admin/upload\\\" enctype=\\\"multipart/form-data\\\" method=\\\"post\\\"&gt;<br/> &lt;input type=\\\"file\\\" name=\\\"file-to-upload\\\"&gt;<br/> &lt;input type=\\\"submit\\\" value=\\\"Upload\\\"&gt;<br/> &lt;/form&gt; </code> </pre>",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "schema": {
@@ -904,19 +910,12 @@
         }
       }
     },
-    "/api/upload/img": {
-      "post": {
-        "description": "",
-        "parameters": [],
-        "responses": {}
-      }
-    },
     "/api/follow/": {
       "get": {
         "tags": [
           "follow"
         ],
-        "summary": "取得個人追蹤名單",
+        "summary": "取得個人追蹤名單OK",
         "description": "",
         "parameters": [
           {
@@ -1000,7 +999,7 @@
         "tags": [
           "follow"
         ],
-        "summary": "加入追蹤(對應設計4頁)",
+        "summary": "加入追蹤(對應設計4頁)OK",
         "description": "",
         "parameters": [
           {
@@ -1095,7 +1094,7 @@
         "tags": [
           "follow"
         ],
-        "summary": "取得某人追蹤名單",
+        "summary": "取得某人追蹤名單OK",
         "description": "",
         "parameters": [
           {
@@ -1177,7 +1176,7 @@
         "tags": [
           "follow"
         ],
-        "summary": "取消追蹤",
+        "summary": "取消追蹤OK",
         "description": "",
         "parameters": [
           {
@@ -1266,7 +1265,7 @@
         "tags": [
           "email"
         ],
-        "summary": "發信服務",
+        "summary": "發信服務OK",
         "description": "",
         "parameters": [
           {
