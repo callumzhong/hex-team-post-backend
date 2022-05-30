@@ -30,9 +30,9 @@ module.exports = {
             ,{new:true}
         );
     },
-	getUserFollowCount: async(req)=>{
+	getUserFollowCount: async(user)=>{
         //取得某個人的追蹤數
-        return await follow.find({user:req.user.id}).count();
+        return await follow.find({user}).count();
     }
 
 };
