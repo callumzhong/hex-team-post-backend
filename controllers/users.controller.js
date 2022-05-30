@@ -83,7 +83,6 @@ const users = {
 			if (!auth) {
 				return ErrorHandler(new Error('您的密碼不正確'), req, res, next);
 			}
-			console.log(user);
 			generateSendJWT(user, 200, res);
 		} catch (err) {
 			return ErrorHandler(err, req, res, next);
@@ -240,31 +239,30 @@ const users = {
                     }
                     },
 				description: "取得個人頁面資料" } */
-           const result={
-               user:userdata,
-               postCounts: await postService.getPostCountbyGroup(req.user.id),
-               follows:await followService.getUserFollowCount(req.user.id),
-               privateposts: await postService.getPostCountbyGroup(req.user.id),
-               likes:0};
-           Success(res,result);
-        }
-        catch(err){
-            //return ErrorHandler(err,req,res,next); 
-            return ErrorHandler(new Error("尚未授權"),req,res,next);
-        }
-    },
-    async GetUserById(req,res,next){
-        try{
-            const _id=req.params.id;
-            if (!_id) {
+			const result = {
+				user: userdata,
+				postCounts: await postService.getPostCountbyGroup(req.user.id),
+				follows: await followService.getUserFollowCount(req.user.id),
+				privateposts: await postService.getPostCountbyGroup(req.user.id),
+				likes: 0,
+			};
+			Success(res, result);
+		} catch (err) {
+			//return ErrorHandler(err,req,res,next);
+			return ErrorHandler(new Error('尚未授權'), req, res, next);
+		}
+	},
+	async GetUserById(req, res, next) {
+		try {
+			const _id = req.params.id;
+			if (!_id) {
 				return ErrorHandler(new Error('使用者ID未輸入'), req, res, next);
 			}
-           const userdata=await Users.findOne({ _id})
-           .populate({
-            path: 'posts',
-            select: 'type content image likes pay tags'
-          });;
-           /* #swagger.responses[200] = {
+			const userdata = await Users.findOne({ _id }).populate({
+				path: 'posts',
+				select: 'type content image likes pay tags',
+			});
+			/* #swagger.responses[200] = {
 		  	schema: {
                     "status": true,
                     "data": {
@@ -286,20 +284,19 @@ const users = {
                     }
                     },
 				description: "取得個人頁面資料" } */
-           const result={
-               user:userdata,
-               postCounts: await postService.getPostCountbyGroup(_id),
-               follows:await followService.getUserFollowCount(_id),
-               privateposts: await postService.getPostCountbyGroup(_id),
-               likes:0};
-           Success(res,result);
-        }
-        catch(err){
-            //return ErrorHandler(err,req,res,next); 
-            return ErrorHandler(new Error("尚未授權"),req,res,next);
-        }
-    }
-}
-
+			const result = {
+				user: userdata,
+				postCounts: await postService.getPostCountbyGroup(_id),
+				follows: await followService.getUserFollowCount(_id),
+				privateposts: await postService.getPostCountbyGroup(_id),
+				likes: 0,
+			};
+			Success(res, result);
+		} catch (err) {
+			//return ErrorHandler(err,req,res,next);
+			return ErrorHandler(new Error('尚未授權'), req, res, next);
+		}
+	},
+};
 
 module.exports = users;
