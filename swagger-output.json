@@ -773,7 +773,81 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "type": "object",
+                      "properties": {
+                        "_id": {
+                          "type": "string",
+                          "example": "628f8c9bb1e02d4b681c8fe9"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "Ray"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "123@123.com"
+                        },
+                        "photo": {
+                          "type": "string",
+                          "example": "123"
+                        },
+                        "gender": {
+                          "type": "string",
+                          "example": "male"
+                        },
+                        "birthday": {
+                          "type": "string",
+                          "example": "2022-01-01T00:00:00.000Z"
+                        },
+                        "delflag": {
+                          "type": "boolean",
+                          "example": false
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "example": "2022-05-26T14:20:11.616Z"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "example": "2022-05-26T14:20:11.616Z"
+                        }
+                      }
+                    },
+                    "postCount": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "follow": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "privatepost": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "order": {
+                      "type": "number",
+                      "example": 0
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            },
+            "description": "取得個人頁面資料"
           }
         }
       }
