@@ -1,20 +1,19 @@
 const User = require('../models/users.model');
+const ErrorHandler = require('../service/errorHandler');
 const PaymentService = require('../service/payment.service');
+const CustomizeError = require('../errors/customizeError');
 module.exports = {
 	getPayment: async (req, res, next) => {
-		if (!req.query.prod) {
-			res.redirect(process.env.FroneEndUrl);
+		if (!req.query.orderId) {
+			ErrorHandler(new CustomizeError('請輸入訂單編號'), req, res, next);
 			return;
 		}
-		const formParams = await PaymentService.createdPayment(
-			req.query.prod,
-			req.user,
-		);
-		if (!formParams) {
-			res.redirect(process.env.FroneEndUrl);
+		const formParams = await PaymentService.createdPayment(req.query.orderId);
+		if (typeof formParams === 'string') {
+			ErrorHandler(new CustomizeError(formParams), req, res, next);
 			return;
 		}
-		res.render('payment', {
+		return res.render('payment', {
 			model: {
 				PayGateWay: formParams.PayGateWay,
 				MerchantID: formParams.MerchantID,
@@ -25,16 +24,23 @@ module.exports = {
 		});
 	},
 	postPaymentCallback: async (req, res, next) => {
-		if (req.query.from === 'ReturnURL') {
-			return res.redirect(process.env.FroneEndUrl);
-		}
 		const payment = await PaymentService.detectPayment(req.body.TradeInfo);
+		if (req.query.from === 'ReturnURL') {
+			return res.redirect(`/api/payment/result?message=${payment.message}`);
+		}
 		if (!payment.status && payment.message !== '初始化') {
 			console.error(
 				'付款錯誤:',
 				`編號${payment.merchantOrderNo} 訊息${payment.message}`,
 			);
 		}
-		return res.redirect(process.env.FroneEndUrl);
+		return res.redirect(`/api/payment/result?message=${payment.message}`);
+	},
+	getPaymentResult: (req, res, next) => {
+		return res.render('paymentCallback', {
+			model: {
+				message: req.query.message,
+			},
+		});
 	},
 };
