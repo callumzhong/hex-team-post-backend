@@ -13,7 +13,7 @@ module.exports = {
     }	*/
 		/* #swagger.parameters['sort'] = {
 				in: 'query',
-				description: '排序 ( arc || desc ) ',
+				description: '請輸入 ( asc || desc ) 兩種排序',
     }	*/
 		/* #swagger.parameters['like'] = {
 				in: 'query',
@@ -22,7 +22,18 @@ module.exports = {
 		/* #swagger.responses[200] = {
 		  	schema: {"$ref": "#/definitions/PostPage"},
 				description: "取得分頁資料" } */
-		res.status(200).json();
+				
+				try{
+					const Post=await postService.getPagination(req);
+					if(Post){
+						Success(res,Post);
+					}else {
+						return ErrorHandler(new Error("取得文章失敗"),req,res,next);
+					}
+				}
+				catch(err){
+					return ErrorHandler(err,req,res,next); 
+				}
 	},
 	getOne: async(req, res, next) => {
 		/* #swagger.responses[200] = {
@@ -46,8 +57,12 @@ module.exports = {
 	getUserAll: async(req, res, next) => {
 		/* #swagger.responses[200] = {
 		  	schema: {"$ref": "#/definitions/Post"},
-				description: "取得單筆資料" } */
-				try{					
+				description: "取得使用者前10筆資料" } */
+				try{			
+					const userid=req.params.Userid;	
+					if(userid==undefined){
+						return ErrorHandler(new Error("userid有誤"),req,res,next);
+					}	
 					const Post=await postService.getUserAll(req);
 					if(Post){
 						Success(res,Post);
@@ -66,7 +81,8 @@ module.exports = {
                     schema:{
                         tags:'',
                         image:'https://i.imgur.com/ffCSS4H_d.webp?maxwidth=520&shape=thumb&fidelity=high',
-						$content:'新增貼文'
+						$content:'新增貼文',
+						$contentType:'photography ,article'
                     }
                 }*/
 		/* #swagger.responses[200] = {
@@ -90,9 +106,12 @@ module.exports = {
 				description: "新增成功"
 		} */
 		try{
-		const{content}=req.body;
-		if(content==undefined){
-			return next(appError(400,"你沒有填寫 content 資料",next));
+		const{content,contentType,image}=req.body;
+		if(content==undefined || image==undefined){
+			return next(appError(400,"你沒有填寫 content or image 資料",next));
+		}
+		if(contentType==undefined ){
+			return next(appError(400,"你沒有填寫 contentType 資料",next));
 		}
 		const newPost=await postService.AddPost(req);
 		Success(res,newPost);
@@ -109,6 +128,7 @@ module.exports = {
                         tags:'',
                         image:'https://i.imgur.com/ffCSS4H_d.webp?maxwidth=520&shape=thumb&fidelity=high',
 						$content:'新增貼文',
+						$contentType:'photography ,article',
 						$pay:5
                     }
                 }*/
@@ -133,9 +153,12 @@ module.exports = {
 				description: "新增成功"
 		} */
 		try{
-		const{content,pay}=req.body;
-		if(content==undefined){
-			return next(appError(400,"你沒有填寫 content 資料",next));
+		const{content,image,pay,contentType}=req.body;
+		if(content==undefined|| image==undefined){
+			return next(appError(400,"你沒有填寫 content 或 image 資料",next));
+		}
+		if(contentType==undefined ){
+			return next(appError(400,"你沒有填寫 contentType 資料",next));
 		}
 		if(pay==undefined){
 			return next(appError(400,"售價未填寫",next));
@@ -158,9 +181,12 @@ module.exports = {
                     }
                 }*/
 			try{
-			const{content}=req.body;
+			const{content,contentType}=req.body;
 			if(content==undefined){
 				return next(appError(400,"你沒有填寫 content 資料",next));
+			}
+			if(contentType==undefined ){
+				return next(appError(400,"你沒有填寫 contentType 資料",next));
 			}
 			if(req.params.id==undefined){
 				return ErrorHandler(new Error("文章id有誤"),req,res,next);

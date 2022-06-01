@@ -83,6 +83,7 @@ const users = {
 			if (!auth) {
 				return ErrorHandler(new Error('您的密碼不正確'), req, res, next);
 			}
+			//console.log(user);
 			generateSendJWT(user, 200, res);
 		} catch (err) {
 			return ErrorHandler(err, req, res, next);
@@ -213,10 +214,11 @@ const users = {
 	},
 	async GetUser(req, res, next) {
 		try {
-			const userdata = await Users.findOne({ _id: req.user.id }).populate({
-				path: 'posts',
-				select: 'type content image likes pay tags',
-			});
+			const userdata = await Users.findOne({ _id: req.user.id });
+			// .populate({
+			// 	path: 'posts',
+			// 	select: 'type content image likes pay tags createdAt',
+			// });
 			/* #swagger.responses[200] = {
 		  	schema: {
                     "status": true,

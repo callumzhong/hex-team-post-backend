@@ -68,6 +68,13 @@ module.exports = {
        }
     },
 	created: async (req,res,next) => {
+    /* #swagger.parameters['obj'] = {
+                    in: 'body',
+                    description: '新增貼文',
+                    schema:{
+                       followuser:'6291e520cbbe05860f8d8c15'
+                    }
+                }*/
 		 /* #swagger.responses[200] = {
 		  	schema: {
   "status": true,
@@ -91,6 +98,9 @@ module.exports = {
             const {followuser} =req.body;
             if(followuser==undefined){
                 return ErrorHandler(new Error("追蹤使用者id有誤"),req,res,next);
+            }
+            if (followuser === req.user.id) {
+              return next(errorHandle(401,'您無法追蹤自己',next));
             }
             const follow=await followService.created(req);
             Success(res,follow);
@@ -120,8 +130,12 @@ module.exports = {
 },
 				description: "刪除追蹤" } */
         try{
-            if(req.params.followuser==undefined){
+          const userID=req.params.followuser ; 
+            if(userID==undefined){
                 return ErrorHandler(new Error("追蹤使用者id有誤"),req,res,next);
+            }
+            if (userID === req.user.id) {
+              return next(errorHandle(401,'您無法取消追蹤自己',next));
             }
             
             const follow=await followService.delete(req);
@@ -135,8 +149,11 @@ module.exports = {
         //取得某個人的追蹤數
         try{
             
-            const followCount=followService.getUserFollowCount(req);
-            Success(res,{followCount});
+                if(req.params.id==undefined){
+                  return ErrorHandler(new Error("使用者id有誤"),req,res,next);
+              }
+            const followCount=await followService.getUserFollowCount(req.params.id);
+            Success(res,followCount);
            
       }catch(err){
        return ErrorHandler(err,req,res,next); 
