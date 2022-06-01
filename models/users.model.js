@@ -1,5 +1,5 @@
 mongoose = require('mongoose');
-const PostConn = require('../connections/postConn');
+const PostConn = require('../connections/post.connection');
 const userSchema = new mongoose.Schema({
     name: {
       type: String,
@@ -23,6 +23,7 @@ const userSchema = new mongoose.Schema({
       minlength: 8,
       select: false
     },
+    memo: String,
     birthday:{
       type:Date,
       required: [true,'請輸入生日'],

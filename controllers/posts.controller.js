@@ -35,6 +35,39 @@ module.exports = {
 					return ErrorHandler(err,req,res,next); 
 				}
 	},
+	getPaginationBynormal: async (req, res, next) => {
+		/* #swagger.parameters['page'] = {
+				in: 'query',
+				description: '分頁數',
+    }	*/
+		/* #swagger.parameters['q'] = {
+				in: 'query',
+				description: '查詢',
+    }	*/
+		/* #swagger.parameters['sort'] = {
+				in: 'query',
+				description: '請輸入 ( asc || desc ) 兩種排序',
+    }	*/
+		/* #swagger.parameters['like'] = {
+				in: 'query',
+				description: 'user id 查看我按讚的文章',
+    }	*/
+		/* #swagger.responses[200] = {
+		  	schema: {"$ref": "#/definitions/PostPage"},
+				description: "取得分頁資料" } */
+				
+				try{
+					const Post=await postService.getPaginationbynormal(req);
+					if(Post){
+						Success(res,Post);
+					}else {
+						return ErrorHandler(new Error("取得文章失敗"),req,res,next);
+					}
+				}
+				catch(err){
+					return ErrorHandler(err,req,res,next); 
+				}
+	},
 	getOne: async(req, res, next) => {
 		/* #swagger.responses[200] = {
 		  	schema: {"$ref": "#/definitions/Post"},
@@ -169,7 +202,38 @@ module.exports = {
 		catch(err){
 			return ErrorHandler(err,req,res,next); 
 		}
-	},		
+	},	
+	getPrivatebyAuth: async (req, res, next) => {
+		
+		try{
+			let user=req.user.id;
+			
+		
+			const Post=await postService.getPrivatebyUserID(user);
+			if(Post){
+				Success(res,Post);
+			}
+		
+		}
+		catch(err){
+			return ErrorHandler(err,req,res,next); 
+		}
+	},	
+	getPrivatebyUserID: async (req, res, next) => {
+		
+		try{
+			let user=req.params.id;	
+		
+			const Post=await postService.getPrivatebyUserID(user);
+			if(Post){
+				Success(res,Post);
+			}
+		
+		}
+		catch(err){
+			return ErrorHandler(err,req,res,next); 
+		}
+	},	
 	updated: async (req, res, next) => {
 		/* #swagger.parameters['obj'] = {
                     in: 'body',

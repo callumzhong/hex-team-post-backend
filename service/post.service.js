@@ -13,7 +13,33 @@ module.exports = {
 		else sort=(sort=='asc')?1:-1;
 		if(search == undefined) search = '';
 		
-		let query={user};
+		let query={user,type:{$in:['group']}};
+		if(search !== '') {
+			query['content']={$regex: search};
+		}
+		if(like !== undefined)
+			query['likes']={$in: [like]};
+
+		const data = await Post.find(query).sort({createdAt:sort})
+			.populate({
+				path: 'user',
+				select: 'name photo gender'
+			}).skip((page-1) * 10).limit(10);	
+		
+		return data;
+	},
+	getPaginationbynormal: async (req) => {		
+		let page=req.query.page;
+		let search=req.query.q;
+		let sort=req.query.sort;
+		let like=req.query.like;
+		
+		if(page == undefined) page = 1;
+		if(sort == undefined) sort = -1;
+		else sort=(sort=='asc')?1:-1;
+		if(search == undefined) search = '';
+		
+		let query={type:{$in:['group']}};
 		if(search !== '') {
 			query['content']={$regex: search};
 		}
@@ -31,7 +57,7 @@ module.exports = {
 	getAll: async () => {},
 	getUserAll: async (req) => {
 		const user=req.params.Userid;
-		return await Post.find({user}).populate({
+		return await Post.find({user,type:{$in:['group']}}).populate({
 			path: 'comments',
 			select: 'comment user'
 		  }).sort({createdAt:-1}).limit(10);
@@ -98,10 +124,18 @@ module.exports = {
 	},
 	getPostCountbyGroup: async(user)=>{
 		//取得個人貼文
-		return await Post.find({user,type:'group'}).count();
+		return await Post.find({user,type:{$in:['group']}}).count();
 	},
 	getPostCountbyPerson: async(user)=>{
 		//取得個人貼文
-		return await Post.find({user,type:'person'}).count();
-	}
+		return await Post.find({user,type:{$in:['person']}}).count();
+	},
+	getPrivatebyUserID:async(user)=>{
+		//取得個人貼文
+		const posts=await Post.find({user,type:{$in:['person']}}).sort({createdAt:-1}).limit(10);
+		posts.forEach(post=>{
+			post.image=process.env.mockimage;
+		});
+		return posts;
+	},
 };

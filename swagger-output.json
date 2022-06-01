@@ -209,12 +209,55 @@
         ]
       }
     },
+    "/api/posts/normal": {
+      "get": {
+        "tags": [
+          "posts"
+        ],
+        "summary": "取得一般貼文的前10筆文章 不須登入",
+        "description": "",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "分頁數",
+            "type": "string"
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "description": "查詢",
+            "type": "string"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "請輸入 ( asc || desc ) 兩種排序",
+            "type": "string"
+          },
+          {
+            "name": "like",
+            "in": "query",
+            "description": "user id 查看我按讚的文章",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/PostPage"
+            },
+            "description": "取得分頁資料"
+          }
+        }
+      }
+    },
     "/api/posts/{Userid}": {
       "get": {
         "tags": [
           "posts"
         ],
-        "summary": "取得指定 ID 貼文 OK",
+        "summary": "一般帶入使用者ID，取得前10筆貼文 OK2",
         "description": "",
         "parameters": [
           {
@@ -308,6 +351,46 @@
             "required": true,
             "type": "string"
           },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {},
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/posts/private/{id}": {
+      "get": {
+        "tags": [
+          "posts"
+        ],
+        "summary": "取得一般私密貼文 OK",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/api/posts/private/": {
+      "get": {
+        "tags": [
+          "posts"
+        ],
+        "summary": "取得個人私密貼文 OK",
+        "description": "",
+        "parameters": [
           {
             "name": "authorization",
             "in": "header",
@@ -607,6 +690,10 @@
                 "confirmPassword": {
                   "type": "string",
                   "example": "12345678"
+                },
+                "memo": {
+                  "type": "string",
+                  "example": "test"
                 }
               },
               "required": [

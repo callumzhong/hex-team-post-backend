@@ -13,10 +13,28 @@ router.get(
 	PostController.getPagination,
 );
 router.get(
+	'/normal',
+	/**
+	 * #swagger.tags = ['posts']
+	 * #swagger.summary = '取得一般貼文的(前10筆)不須登入'	 *
+	 */
+	PostController.getPaginationBynormal,
+);
+router.get(
+	'/private/',
+	isAuth,
+	/**
+	 * #swagger.tags = ['posts']
+	 * #swagger.summary = '取得個人私密貼文(前10筆) OK'
+	 * #swagger.security = [{ "apiKeyAuth": [] }]
+	 */
+	PostController.getPrivatebyAuth,
+);
+router.get(
 	'/:Userid',
 	/**
 	 * #swagger.tags = ['posts']
-	 * #swagger.summary = '取得指定 ID 貼文 OK'
+	 * #swagger.summary = '一般帶入使用者ID(前10筆) OK2'
 	 * 
 	 */
 	PostController.getUserAll,
@@ -25,10 +43,19 @@ router.get(
 	'/:id',
 	/**
 	 * #swagger.tags = ['posts']
-	 * #swagger.summary = '取得指定 ID 貼文 OK'
+	 * #swagger.summary = '取得指定 ID 貼文(前10筆) OK'
 	 */
 	PostController.getOne,
 );
+router.get(
+	'/private/:id',	
+	/**
+	 * #swagger.tags = ['posts']
+	 * #swagger.summary = '取得一般私密貼文(前10筆) OK'
+	 */
+	PostController.getPrivatebyUserID,
+);
+
 
 router.post(
 	'/',
