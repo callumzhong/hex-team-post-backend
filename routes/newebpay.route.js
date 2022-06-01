@@ -10,12 +10,12 @@ router.post(
 	paymentController.postPaymentCallback,
 );
 
-router.get(
+router.post(
 	'/blank',
 	/**
 	 * #swagger.ignore = true
 	 */
-	paymentController.getPaymentBlank,
+	paymentController.postPaymentBlank,
 );
 
 module.exports = router;

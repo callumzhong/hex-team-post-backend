@@ -33,7 +33,7 @@ module.exports = {
 		}
 		return res.status(200).json();
 	},
-	getPaymentBlank: (req, res, next) => {
+	postPaymentBlank: (req, res, next) => {
 		return res.render('paymentCallback');
 	},
 };
