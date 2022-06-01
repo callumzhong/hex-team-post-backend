@@ -6,9 +6,9 @@ const doc = {
 		description: 'Rest API documentation',
 	},
 	host: 'hex-post-team-api-server.herokuapp.com',
+	schemes: ['https'],
 	// host: 'localhost:3000',
 	// schemes: ['http'],
-	schemes: ['https'],
 	securityDefinitions: {
 		apiKeyAuth: {
 			type: 'apiKey',
@@ -19,7 +19,7 @@ const doc = {
 	},
 	definitions: {
 		Post: {
-			_id: '6274caa22a6bd4d1ecd8af05',			
+			_id: '6274caa22a6bd4d1ecd8af05',
 			tags: ['旅遊'],
 			$type: 'group',
 			image: 'https://unsplash.com/photos/gKXKBY-C-Dk',
