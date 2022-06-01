@@ -50,7 +50,6 @@ const doc = {
 			to: 'test@gmail.com',
 			subject: '主旨',
 			html: '<b>Hello world?</b>',
-			text: 'Hello world?',
 		},
 		UploadImage: {
 			status: true,

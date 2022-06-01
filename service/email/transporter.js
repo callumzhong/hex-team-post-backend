@@ -1,11 +1,10 @@
 const nodemailer = require('nodemailer');
 const transporter = nodemailer.createTransport({
-	host: 'smtp.office365.com',
-	port: 587,
-	secure: false, // upgrade later with STARTTLS
+	host: 'smtp.gmail.com',
+	port: 465,
 	auth: {
-		user: process.env.OUTLOOK_EMAIL_USER,
-		pass: process.env.OUTLOOK_EMAIL_PASS,
+		user: process.env.EMAIL_USER,
+		pass: process.env.EMAIL_PASS,
 	},
 });
 
