@@ -6,10 +6,10 @@
     "description": "Rest API documentation",
     "version": "1.0.0"
   },
-  "host": "localhost:3000",
+  "host": "hex-post-team-api-server.herokuapp.com",
   "basePath": "/",
   "schemes": [
-    "http"
+    "https"
   ],
   "securityDefinitions": {
     "apiKeyAuth": {
@@ -214,7 +214,7 @@
         "tags": [
           "posts"
         ],
-        "summary": "取得一般貼文的前10筆文章 不須登入",
+        "summary": "取得一般貼文的(前10筆)不須登入",
         "description": "",
         "parameters": [
           {
@@ -252,12 +252,34 @@
         }
       }
     },
+    "/api/posts/private/": {
+      "get": {
+        "tags": [
+          "posts"
+        ],
+        "summary": "取得個人私密貼文(前10筆) OK",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {},
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
     "/api/posts/{Userid}": {
       "get": {
         "tags": [
           "posts"
         ],
-        "summary": "一般帶入使用者ID，取得前10筆貼文 OK2",
+        "summary": "一般帶入使用者ID(前10筆) OK2",
         "description": "",
         "parameters": [
           {
@@ -275,7 +297,7 @@
         "tags": [
           "posts"
         ],
-        "summary": "取得指定 ID 貼文 OK",
+        "summary": "取得指定 ID 貼文(前10筆) OK",
         "description": "",
         "parameters": [
           {
@@ -370,7 +392,7 @@
         "tags": [
           "posts"
         ],
-        "summary": "取得一般私密貼文 OK",
+        "summary": "取得一般私密貼文(前10筆) OK",
         "description": "",
         "parameters": [
           {
@@ -381,28 +403,6 @@
           }
         ],
         "responses": {}
-      }
-    },
-    "/api/posts/private/": {
-      "get": {
-        "tags": [
-          "posts"
-        ],
-        "summary": "取得個人私密貼文 OK",
-        "description": "",
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {},
-        "security": [
-          {
-            "apiKeyAuth": []
-          }
-        ]
       }
     },
     "/api/posts/private": {
@@ -555,7 +555,7 @@
         "tags": [
           "user"
         ],
-        "summary": "取得個人頁面-設定(對應設計18頁)   *",
+        "summary": "取得個人頁面-設定(對應設計18頁)  *",
         "description": "",
         "parameters": [
           {
