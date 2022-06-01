@@ -22,7 +22,7 @@ const users = {
 			if (UserCount === 500) {
 				return ErrorHandler(new Error('超過會員上限!'), req, res, next);
 			}
-			let { email, password, confirmPassword, name, birthday, gender, photo } =
+			let { email, password, confirmPassword, name, birthday, gender, photo,memo } =
 				req.body;
 			/* #swagger.parameters['obj'] = {
                     in: 'body',
@@ -34,7 +34,8 @@ const users = {
                         birthday:"2022-01-01",
                         gender:"male || female",                            
                         $password:"12345678",
-                        $confirmPassword:"12345678"
+                        $confirmPassword:"12345678",
+						memo:'test'
                     }
                 }*/
 
@@ -47,6 +48,7 @@ const users = {
 				birthday,
 				gender,
 				photo,
+				memo
 			});
 			generateSendJWT(newUser, 200, res);
 		} catch (err) {
@@ -83,6 +85,7 @@ const users = {
 			if (!auth) {
 				return ErrorHandler(new Error('您的密碼不正確'), req, res, next);
 			}
+			//console.log(user);
 			generateSendJWT(user, 200, res);
 		} catch (err) {
 			return ErrorHandler(err, req, res, next);
@@ -213,10 +216,11 @@ const users = {
 	},
 	async GetUser(req, res, next) {
 		try {
-			const userdata = await Users.findOne({ _id: req.user.id }).populate({
-				path: 'posts',
-				select: 'type content image likes pay tags',
-			});
+			const userdata = await Users.findOne({ _id: req.user.id });
+			// .populate({
+			// 	path: 'posts',
+			// 	select: 'type content image likes pay tags createdAt',
+			// });
 			/* #swagger.responses[200] = {
 		  	schema: {
                     "status": true,
@@ -296,7 +300,7 @@ const users = {
 			//return ErrorHandler(err,req,res,next);
 			return ErrorHandler(new Error('尚未授權'), req, res, next);
 		}
-	},
+	}
 };
 
 module.exports = users;

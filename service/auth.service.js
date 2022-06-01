@@ -50,6 +50,7 @@ const generateSendJWT = (user, statusCode, res) => {
 			token,
 			name: user.name,
 			photo: user.photo,
+			_id: user._id
 		},
 	});
 };

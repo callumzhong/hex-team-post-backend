@@ -19,7 +19,7 @@ const commentSchema = new mongoose.Schema(
 		},
 	},
 	{
-		versionKey: false,
+		//versionKey: false,
 		timestamps: true,
 		toJSON: { virtuals: true },
 		toObject: { virtuals: true },

@@ -8,7 +8,7 @@ const appError = (httpStatus,errMessage,next)=>{
 };
 const Success= (res, data)=>{
       res.status(200).json({
-        status: true,
+        status: 'success',
         data
       });
 }

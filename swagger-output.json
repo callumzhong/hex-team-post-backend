@@ -6,10 +6,10 @@
     "description": "Rest API documentation",
     "version": "1.0.0"
   },
-  "host": "hex-post-team-api-server.herokuapp.com",
+  "host": "localhost:3000",
   "basePath": "/",
   "schemes": [
-    "https"
+    "http"
   ],
   "securityDefinitions": {
     "apiKeyAuth": {
@@ -25,9 +25,14 @@
         "tags": [
           "posts"
         ],
-        "summary": "取得依分頁取得貼文",
+        "summary": "取得依分頁取得貼文OK",
         "description": "",
         "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
           {
             "name": "page",
             "in": "query",
@@ -43,7 +48,7 @@
           {
             "name": "sort",
             "in": "query",
-            "description": "排序 ( arc || desc ) ",
+            "description": "請輸入 ( asc || desc ) 兩種排序",
             "type": "string"
           },
           {
@@ -55,12 +60,17 @@
         ],
         "responses": {
           "200": {
-            "description": "取得分頁資料",
             "schema": {
               "$ref": "#/definitions/PostPage"
-            }
+            },
+            "description": "取得分頁資料"
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -92,10 +102,15 @@
                 "content": {
                   "type": "string",
                   "example": "新增貼文"
+                },
+                "contentType": {
+                  "type": "string",
+                  "example": "photography ,article"
                 }
               },
               "required": [
-                "content"
+                "content",
+                "contentType"
               ]
             }
           }
@@ -194,26 +209,65 @@
         ]
       }
     },
-    "/api/posts/UserAll": {
+    "/api/posts/normal": {
       "get": {
         "tags": [
           "posts"
         ],
-        "summary": "取得指定 ID 貼文 OK",
+        "summary": "取得一般貼文的前10筆文章 不須登入",
         "description": "",
         "parameters": [
           {
-            "name": "authorization",
-            "in": "header",
+            "name": "page",
+            "in": "query",
+            "description": "分頁數",
+            "type": "string"
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "description": "查詢",
+            "type": "string"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "請輸入 ( asc || desc ) 兩種排序",
+            "type": "string"
+          },
+          {
+            "name": "like",
+            "in": "query",
+            "description": "user id 查看我按讚的文章",
             "type": "string"
           }
         ],
-        "responses": {},
-        "security": [
-          {
-            "apiKeyAuth": []
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/PostPage"
+            },
+            "description": "取得分頁資料"
           }
-        ]
+        }
+      }
+    },
+    "/api/posts/{Userid}": {
+      "get": {
+        "tags": [
+          "posts"
+        ],
+        "summary": "一般帶入使用者ID，取得前10筆貼文 OK2",
+        "description": "",
+        "parameters": [
+          {
+            "name": "Userid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
       }
     },
     "/api/posts/{id}": {
@@ -311,6 +365,46 @@
         ]
       }
     },
+    "/api/posts/private/{id}": {
+      "get": {
+        "tags": [
+          "posts"
+        ],
+        "summary": "取得一般私密貼文 OK",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/api/posts/private/": {
+      "get": {
+        "tags": [
+          "posts"
+        ],
+        "summary": "取得個人私密貼文 OK",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {},
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
     "/api/posts/private": {
       "post": {
         "tags": [
@@ -343,6 +437,10 @@
                   "type": "string",
                   "example": "新增貼文"
                 },
+                "contentType": {
+                  "type": "string",
+                  "example": "photography ,article"
+                },
                 "pay": {
                   "type": "number",
                   "example": 5
@@ -350,6 +448,7 @@
               },
               "required": [
                 "content",
+                "contentType",
                 "pay"
               ]
             }
@@ -456,7 +555,7 @@
         "tags": [
           "user"
         ],
-        "summary": "取得個人頁面-設定(對應設計18頁)  *",
+        "summary": "取得個人頁面-設定(對應設計18頁)   *",
         "description": "",
         "parameters": [
           {
@@ -591,6 +690,10 @@
                 "confirmPassword": {
                   "type": "string",
                   "example": "12345678"
+                },
+                "memo": {
+                  "type": "string",
+                  "example": "test"
                 }
               },
               "required": [
@@ -761,7 +864,7 @@
         "tags": [
           "user"
         ],
-        "summary": "取得使用者詳細資訊",
+        "summary": "取得使用者詳細資訊 OK",
         "description": "",
         "parameters": [
           {
@@ -1082,13 +1185,15 @@
             "type": "string"
           },
           {
-            "name": "body",
+            "name": "obj",
             "in": "body",
+            "description": "新增貼文",
             "schema": {
               "type": "object",
               "properties": {
-                "schema": {
-                  "example": "any"
+                "followuser": {
+                  "type": "string",
+                  "example": "6291e520cbbe05860f8d8c15"
                 }
               }
             }
@@ -1164,7 +1269,7 @@
       }
     },
     "/api/follow/{id}": {
-      "post": {
+      "get": {
         "tags": [
           "follow"
         ],
@@ -1243,6 +1348,24 @@
             "description": "取得某個人追蹤"
           }
         }
+      }
+    },
+    "/api/follow/{id}/Follows": {
+      "get": {
+        "tags": [
+          "follow"
+        ],
+        "summary": "取得某人追蹤數OK",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
       }
     },
     "/api/follow/{followuser}": {
