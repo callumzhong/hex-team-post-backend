@@ -25,18 +25,15 @@ module.exports = {
 	},
 	postPaymentCallback: async (req, res, next) => {
 		const payment = await PaymentService.detectPayment(req.body.TradeInfo);
-		if (req.query.from === 'ReturnURL') {
-			return res.redirect(`/api/payment/result`);
-		}
 		if (!payment.status && payment.message !== '初始化') {
 			console.error(
 				'付款錯誤:',
 				`編號${payment.merchantOrderNo} 訊息${payment.message}`,
 			);
 		}
-		return res.redirect(`/api/payment/result`);
+		return res.status(200).json();
 	},
-	getPaymentResult: (req, res, next) => {
+	getPaymentBlank: (req, res, next) => {
 		return res.render('paymentCallback');
 	},
 };

@@ -18,20 +18,4 @@ router.get(
 	paymentController.getPayment,
 );
 
-router.post(
-	'/callback',
-	/**
-	 * #swagger.ignore = true
-	 */
-	paymentController.postPaymentCallback,
-);
-
-router.get(
-	'/result',
-	/**
-	 * #swagger.ignore = true
-	 */
-	paymentController.getPaymentResult,
-);
-
 module.exports = router;

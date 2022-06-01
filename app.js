@@ -23,6 +23,7 @@ const paymentRouter = require('./routes/payment.route');
 const productRouter = require('./routes/products.route');
 const walletRouter = require('./routes/wallet.route');
 const orderRouter = require('./routes/order.route');
+const newebpayRouter = require('./routes/newebpay.route.js');
 const swaggerUi = require('swagger-ui-express');
 const swaggerFile = require('./swagger-output.json');
 const app = express();
@@ -45,6 +46,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use('/newebpay', newebpayRouter);
 app.use('/api/posts', postRouter);
 app.use('/api/user', userRouter);
 app.use('/api/comment', commendRouter);
