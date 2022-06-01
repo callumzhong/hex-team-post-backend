@@ -57,8 +57,12 @@ module.exports = {
 	getUserAll: async(req, res, next) => {
 		/* #swagger.responses[200] = {
 		  	schema: {"$ref": "#/definitions/Post"},
-				description: "取得單筆資料" } */
-				try{					
+				description: "取得使用者前10筆資料" } */
+				try{			
+					const userid=req.params.Userid;	
+					if(userid==undefined){
+						return ErrorHandler(new Error("userid有誤"),req,res,next);
+					}	
 					const Post=await postService.getUserAll(req);
 					if(Post){
 						Success(res,Post);

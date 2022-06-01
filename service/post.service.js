@@ -30,11 +30,11 @@ module.exports = {
 	},
 	getAll: async () => {},
 	getUserAll: async (req) => {
-		const user=req.user.id;
+		const user=req.params.Userid;
 		return await Post.find({user}).populate({
 			path: 'comments',
 			select: 'comment user'
-		  });
+		  }).sort({createdAt:-1}).limit(10);
 	},
 	getOne: async (req) => {
 		return await Post.findOne({_id:req.params.id}).populate({

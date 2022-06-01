@@ -50,7 +50,8 @@ const ErrorHandler = require('./errorHandler');
       user:{
         token,
         name: user.name,
-        photo: user.photo
+        photo: user.photo,
+        id: user._id
       }
     });
   }

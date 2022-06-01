@@ -6,10 +6,10 @@
     "description": "Rest API documentation",
     "version": "1.0.0"
   },
-  "host": "hex-post-team-api-server.herokuapp.com",
+  "host": "localhost:3000",
   "basePath": "/",
   "schemes": [
-    "https"
+    "http"
   ],
   "securityDefinitions": {
     "apiKeyAuth": {
@@ -209,7 +209,7 @@
         ]
       }
     },
-    "/api/posts/UserAll": {
+    "/api/posts/{Userid}": {
       "get": {
         "tags": [
           "posts"
@@ -218,17 +218,13 @@
         "description": "",
         "parameters": [
           {
-            "name": "authorization",
-            "in": "header",
+            "name": "Userid",
+            "in": "path",
+            "required": true,
             "type": "string"
           }
         ],
-        "responses": {},
-        "security": [
-          {
-            "apiKeyAuth": []
-          }
-        ]
+        "responses": {}
       }
     },
     "/api/posts/{id}": {

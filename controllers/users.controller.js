@@ -83,7 +83,7 @@ const users = {
 			if (!auth) {
 				return ErrorHandler(new Error('您的密碼不正確'), req, res, next);
 			}
-			console.log(user);
+			//console.log(user);
 			generateSendJWT(user, 200, res);
 		} catch (err) {
 			return ErrorHandler(err, req, res, next);

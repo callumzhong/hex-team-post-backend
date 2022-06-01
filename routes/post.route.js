@@ -13,11 +13,11 @@ router.get(
 	PostController.getPagination,
 );
 router.get(
-	'/UserAll',isAuth,
+	'/:Userid',
 	/**
 	 * #swagger.tags = ['posts']
 	 * #swagger.summary = '取得指定 ID 貼文 OK'
-	 * #swagger.security = [{ "apiKeyAuth": [] }]
+	 * 
 	 */
 	PostController.getUserAll,
 );

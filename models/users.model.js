@@ -40,7 +40,7 @@ const userSchema = new mongoose.Schema({
       ref: 'user' 
     }],
   },{
-		versionKey: false,
+		//versionKey: false,
 		timestamps: true,
 		toJSON: {virtuals:true},
 		toObject: {virtuals:true},
