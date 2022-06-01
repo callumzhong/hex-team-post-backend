@@ -16,18 +16,14 @@ module.exports = {
 			}
 		});
 
-		const _template = {
-			from: '"MetaWall " <test.garyn1@outlook.com>', // sender address
-			to: template.to, // list of receivers
-			subject: template.subject, // Subject line
-		};
-		if (template.html) {
-			_template.html = template.html;
-		}
-		if (!template.html && template.text) {
-			_template.text = template.text;
-		}
-
-		transporter.sendMail(_template, callback);
+		transporter.sendMail(
+			{
+				from: `"MetaWall " <${process.env.EMAIL_USER}>`, // sender address
+				to: template.to, // list of receivers
+				subject: template.subject, // Subject line
+				html: template.html,
+			},
+			callback,
+		);
 	},
 };

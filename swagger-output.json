@@ -1687,10 +1687,6 @@
         "html": {
           "type": "string",
           "example": "<b>Hello world?</b>"
-        },
-        "text": {
-          "type": "string",
-          "example": "Hello world?"
         }
       }
     },
