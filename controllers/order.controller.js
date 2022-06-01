@@ -65,10 +65,10 @@ module.exports = {
 		}
 		if (!order.payment) {
 			return res.status(200).send({
-				status: 'success',
+				status: 'error',
 				data: {
-					paymentStatus: false,
-					message: '未付款',
+					status: false,
+					message: '無付款紀錄',
 				},
 			});
 		}
