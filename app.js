@@ -63,6 +63,7 @@ app.use(function (req, res, next) {
 const resErrorProd = (err, res) => {
 	if (err.isOperational) {
 		res.status(err.statusCode).json({
+			status: 'error',
 			message: err.message,
 		});
 	} else {
