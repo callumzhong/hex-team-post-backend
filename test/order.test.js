@@ -169,7 +169,7 @@ describe('api/order', () => {
 			})();
 		});
 
-		it('它應該有餘額的情況下，成功購買私密日記訂單 ', (done) => {
+		it('它應該有餘額的情況下，成功訂閱私密日記訂單 ', (done) => {
 			(async () => {
 				const user = await User.findOne();
 				const post = await Post.findOne({ type: 'person' });
