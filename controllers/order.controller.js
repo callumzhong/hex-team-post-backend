@@ -57,6 +57,27 @@ module.exports = {
 		}
 		return Success(res, '購買成功');
 	},
+	createdPaySubscriptionUser: async (req, res, next) => {
+		const { subscriptionUserId, productId } = req.body;
+		if (!subscriptionUserId) {
+			return appError(400, '請輸入被訂閱用戶ID', next);
+		}
+		if (!productId) {
+			return appError(400, '請輸入產品ID', next);
+		}
+
+		const order = await OrderService.createdPaySubscriptionUser(
+			{
+				subscriptionUserId: subscriptionUserId,
+				productId: productId,
+			},
+			req.user,
+		);
+		if (typeof order === 'string') {
+			return appError(400, order, next);
+		}
+		return Success(res, '訂閱成功');
+	},
 	getStatus: async (req, res, next) => {
 		/* #swagger.parameters['orderId'] = {
 				description: '資料格式',

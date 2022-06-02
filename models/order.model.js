@@ -49,6 +49,14 @@ const OrderSchema = new mongoose.Schema(
 			type: Number,
 			required: [true, '請輸入減少代幣數量'],
 		},
+		effectiveOfStart: {
+			type: Date,
+			default: '',
+		},
+		effectiveOfEnd: {
+			type: Date,
+			default: '',
+		},
 	},
 	{
 		versionKey: false,

@@ -14,6 +14,7 @@ router.post(
 	OrderController.created,
 );
 router.post('/pay/private', isAuth, OrderController.createdPayPrivatePost);
+router.post('/pay/subscription', isAuth, OrderController.createdPaySubscriptionUser);
 
 router.get(
 	'/status',

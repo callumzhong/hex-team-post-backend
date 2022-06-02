@@ -3,6 +3,7 @@ const Product = require('../models/product.model');
 const Payment = require('../models/payment.model');
 const Posts = require('../models/posts.model');
 const walletService = require('./wallet.service');
+const User = require('../models/users.model');
 
 const calculateSerialNumber = async () => {
 	const date = new Date();
@@ -18,21 +19,22 @@ const calculateSerialNumber = async () => {
 		timeZone: 'asia/taipei',
 		day: 'numeric',
 	});
-
 	const start = new Date(year, Number(month) - 1, day, 0, 0, 0, 0);
 	const end = new Date(year, Number(month) - 1, day, 23, 59, 59, 999);
 
-	const orderCount = await Order.find({
+	const order = await Order.findOne({
 		createdAt: {
 			$gte: start,
 			$lte: end,
 		},
-	}).count();
+	}).sort({ createdAt: -1 });
 	const serialNumber = [
 		year,
 		month.padStart(2, '0'),
 		day.padStart(2, '0'),
-		String(orderCount + 1).padStart(5, '0'),
+		!order
+			? '00001'
+			: String(+order.serialNumber.slice(8) + 1).padStart(5, '0'),
 	].join('');
 
 	return serialNumber;
@@ -81,6 +83,40 @@ module.exports = {
 			summary: `購買私密日記`,
 			addCoin: 0,
 			reduceCoin: post.pay,
+		});
+		return order;
+	},
+	createdPaySubscriptionUser: async (data, user) => {
+		const { subscriptionUserId, productId } = data;
+		const product = await Product.findById(productId);
+		const subscriptionUser = await User.findById(subscriptionUserId);
+		if (product.type !== 'ticket') {
+			return '產品類型錯誤';
+		}
+		if (!subscriptionUser) {
+			return '被訂閱用戶不存在';
+		}
+		let start = new Date().toISOString().slice(0, 23) + '+08:00';
+		let end = new Date();
+		end.setMonth(end.getMonth() + product.effectiveOfMonthNumber);
+		end = end.toISOString().slice(0, 23) + '+08:00';
+
+		const serialNumber = await calculateSerialNumber();
+		const walletAmount = await walletService.getCurrentWallet(user.id);
+		if (product.coin > walletAmount) {
+			return '餘額不足';
+		}
+
+		const order = await Order.create({
+			user: user.id,
+			inverseUser: subscriptionUser.id,
+			serialNumber: serialNumber,
+			type: 'SUBSCRIPTION_POST',
+			summary: `訂閱用戶`,
+			addCoin: 0,
+			reduceCoin: product.coin,
+			effectiveOfStart: start,
+			effectiveOfEnd: end,
 		});
 		return order;
 	},
