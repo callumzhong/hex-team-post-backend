@@ -124,7 +124,7 @@ module.exports = {
 		}
 		let serialNumber = await calculateSerialNumber();
 
-		Order.create({
+		await Order.create({
 			user: subscriptionUser.id,
 			inverseUser: user.id,
 			serialNumber: serialNumber,

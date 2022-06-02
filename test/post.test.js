@@ -25,7 +25,9 @@ describe('api/posts', () => {
 		});
 		it('它應該建立私密日記', (done) => {
 			(async () => {
-				const user = await User.findOne();
+				const user = await User.find({}).then((documents) => {
+					return documents[documents.length - 1];
+				});
 				const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
 					expiresIn: process.env.JWT_EXPIRES_DAY,
 				});
@@ -35,7 +37,7 @@ describe('api/posts', () => {
 					contentType: 'photography',
 					image: 'https://i.imgur.com/0F374vh.jpeg',
 					content: '這是一隻刺蝟',
-					pay: 10,
+					pay: 50,
 				};
 				chai
 					.request(app)
