@@ -528,6 +528,60 @@
         ]
       }
     },
+    "/api/posts/like/{id}": {
+      "post": {
+        "tags": [
+          "posts"
+        ],
+        "summary": "新增like貼文(對應設計11頁)OK",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {},
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "posts"
+        ],
+        "summary": "刪除like貼文(對應設計11頁)OK",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {},
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
     "/api/user/check": {
       "get": {
         "tags": [
@@ -555,7 +609,7 @@
         "tags": [
           "user"
         ],
-        "summary": "取得個人頁面-設定(對應設計18頁)  *",
+        "summary": "取得個人頁面-設定(對應設計18頁)   *",
         "description": "",
         "parameters": [
           {

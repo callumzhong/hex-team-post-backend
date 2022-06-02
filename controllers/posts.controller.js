@@ -203,6 +203,32 @@ module.exports = {
 			return ErrorHandler(err,req,res,next); 
 		}
 	},	
+	createdlike: async (req, res, next) => {
+		try{
+			const userid=req.params.id;	
+			if(userid==undefined){
+				return ErrorHandler(new Error("Post Id有誤"),req,res,next);
+			}	
+		const newPost=await postService.Addlike(req);
+		Success(res,newPost);
+		}
+		catch(err){
+			return ErrorHandler(err,req,res,next); 
+		}
+	},
+	unlike: async (req, res, next) => {
+		try{
+			const userid=req.params.id;	
+			if(userid==undefined){
+				return ErrorHandler(new Error("Post Id有誤"),req,res,next);
+			}	
+		const newPost=await postService.unlike(req);
+		Success(res,newPost);
+		}
+		catch(err){
+			return ErrorHandler(err,req,res,next); 
+		}
+	},
 	getPrivatebyAuth: async (req, res, next) => {
 		
 		try{

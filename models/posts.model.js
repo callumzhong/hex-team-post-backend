@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const PostConn = require('../connections/post.connection');
+const User = require('./users.model');
 
 const PostSchema = new mongoose.Schema(
 	{
@@ -66,6 +67,11 @@ PostSchema.pre(/^find/, function (next) {
 	this.populate({
 		path: 'comments',
 		select: 'comment',
+	});
+	this.populate({
+		path: 'likes',
+		model: User
+		//select: 'comment',
 	});
 
 	next();

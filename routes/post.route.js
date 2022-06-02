@@ -4,7 +4,7 @@ const PostController = require('../controllers/posts.controller');
 const { isAuth } = require('../service/auth.service');
 
 router.get(
-	'/',isAuth,
+	'/', isAuth,
 	/**
 	 * #swagger.tags = ['posts']
 	 * #swagger.summary = '取得依分頁取得貼文OK'
@@ -48,7 +48,7 @@ router.get(
 	PostController.getOne,
 );
 router.get(
-	'/private/:id',	
+	'/private/:id',
 	/**
 	 * #swagger.tags = ['posts']
 	 * #swagger.summary = '取得一般私密貼文(前10筆) OK'
@@ -76,6 +76,16 @@ router.post(
 	 * #swagger.security = [{ "apiKeyAuth": [] }]
 	 */
 	PostController.createdPrivate,
+);
+router.post(
+	'/like/:id', 
+	isAuth,
+	/**
+	 * #swagger.tags = ['posts']
+	 * #swagger.summary = '新增like貼文(對應設計11頁)OK'
+	 * #swagger.security = [{ "apiKeyAuth": [] }]
+	 */
+	 PostController.createdlike
 );
 router.put(
 	'/:id',
@@ -106,6 +116,16 @@ router.delete(
 	 * #swagger.security = [{ "apiKeyAuth": [] }]
 	 */
 	PostController.deleteOne,
+);
+router.delete(
+	'/like/:id', 
+	isAuth,
+	/**
+	 * #swagger.tags = ['posts']
+	 * #swagger.summary = '刪除like貼文(對應設計11頁)OK'
+	 * #swagger.security = [{ "apiKeyAuth": [] }]
+	 */
+	 PostController.unlike
 );
 
 module.exports = router;

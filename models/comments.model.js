@@ -19,7 +19,7 @@ const commentSchema = new mongoose.Schema(
 		},
 	},
 	{
-		//versionKey: false,
+		versionKey: false,
 		timestamps: true,
 		toJSON: { virtuals: true },
 		toObject: { virtuals: true },
@@ -29,8 +29,13 @@ const commentSchema = new mongoose.Schema(
 commentSchema.pre(/^find/, function (next) {
 	this.populate({
 		path: 'user',
-		select: 'name id photo createdAt',
+		//select: 'name id photo createdAt',
 	});
+
+	// this.populate({
+	// 	path: 'post',
+	// 	//select: 'name id photo createdAt',
+	// });
 
 	next();
 });

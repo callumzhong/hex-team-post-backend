@@ -94,6 +94,19 @@ module.exports = {
 		});
 		return newPost;
 	},
+	//新增like
+	Addlike:async(req)=>{
+		const updPost=await Post.findByIdAndUpdate(req.params.id,
+			{$addToSet: { likes:   req.user.id  } },{new:true})
+		
+		return updPost;
+	},
+	//刪除like
+	unlike: async(req)=>{
+		const updPost=await Post.findByIdAndUpdate(req.params.id,
+			{$pull: { likes:  req.user.id   } },{new:true})
+		return updPost;
+	},
 	//新增私密
 	addPrivatePost:async(req)=>{
 		const newPost = await Post.create({
