@@ -13,6 +13,8 @@ router.post(
 	 */
 	OrderController.created,
 );
+router.post('/pay/private', isAuth, OrderController.createdPayPrivatePost);
+
 router.get(
 	'/status',
 	/**

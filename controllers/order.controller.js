@@ -1,3 +1,4 @@
+const { appError, Success } = require('../service/appError');
 const OrderService = require('../service/order.service');
 module.exports = {
 	created: async (req, res, next) => {
@@ -44,6 +45,18 @@ module.exports = {
 			},
 		});
 	},
+	createdPayPrivatePost: async (req, res, next) => {
+		const { user, body } = req;
+		if (!body.postId) {
+			return appError(400, '請輸入貼文ID', next);
+		}
+
+		const order = await OrderService.createdPayPrivatePost(body.postId, user);
+		if (typeof order === 'string') {
+			return appError(400, order, next);
+		}
+		return Success(res, '購買成功');
+	},
 	getStatus: async (req, res, next) => {
 		/* #swagger.parameters['orderId'] = {
 				description: '資料格式',
@@ -82,12 +95,9 @@ module.exports = {
 				},
 		} 
 		*/
-		return res.status(200).send({
-			status: 'success',
-			data: {
-				status: order.payment.status,
-				message: order.payment.message,
-			},
+		return Success(res, {
+			status: order.payment.status,
+			message: order.payment.message,
 		});
 	},
 };
