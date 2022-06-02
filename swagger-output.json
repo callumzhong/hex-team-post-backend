@@ -1512,7 +1512,21 @@
         ],
         "summary": "取得所有產品",
         "description": "",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "string": {
+                  "type": "string",
+                  "example": "coin || ticket"
+                }
+              }
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -1634,15 +1648,163 @@
     },
     "/api/order/pay/private": {
       "post": {
+        "tags": [
+          "order"
+        ],
+        "summary": "購買貼文",
         "description": "",
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
             "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "資料格式",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "postId": {
+                  "type": "string",
+                  "example": "ObjectId"
+                }
+              },
+              "required": [
+                "postId"
+              ]
+            }
           }
         ],
-        "responses": {}
+        "responses": {
+          "200": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "success"
+                },
+                "data": {
+                  "type": "string",
+                  "example": "購買成功"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "error"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "錯誤訊息"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            },
+            "description": "Bad Request"
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/order/pay/subscription": {
+      "post": {
+        "tags": [
+          "order"
+        ],
+        "summary": "訂閱貼文",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "資料格式",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "subscriptionUserId": {
+                  "type": "string",
+                  "example": "訂閱用戶 ID"
+                },
+                "productId": {
+                  "type": "string",
+                  "example": "票券類型產品Id"
+                }
+              },
+              "required": [
+                "subscriptionUserId",
+                "productId"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "success"
+                },
+                "data": {
+                  "type": "string",
+                  "example": "訂閱成功"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "error"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "錯誤訊息"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            },
+            "description": "Bad Request"
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       }
     },
     "/api/order/status": {

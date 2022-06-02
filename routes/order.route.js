@@ -13,8 +13,26 @@ router.post(
 	 */
 	OrderController.created,
 );
-router.post('/pay/private', isAuth, OrderController.createdPayPrivatePost);
-router.post('/pay/subscription', isAuth, OrderController.createdPaySubscriptionUser);
+router.post(
+	'/pay/private',
+	isAuth,
+	/**
+	 * #swagger.tags = ['order']
+	 * #swagger.summary = '購買貼文'
+	 * #swagger.security = [{ "apiKeyAuth": [] }]
+	 */
+	OrderController.createdPayPrivatePost,
+);
+router.post(
+	'/pay/subscription',
+	isAuth,
+	/**
+	 * #swagger.tags = ['order']
+	 * #swagger.summary = '訂閱貼文'
+	 * #swagger.security = [{ "apiKeyAuth": [] }]
+	 */
+	OrderController.createdPaySubscriptionUser,
+);
 
 router.get(
 	'/status',

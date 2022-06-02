@@ -46,6 +46,27 @@ module.exports = {
 		});
 	},
 	createdPayPrivatePost: async (req, res, next) => {
+		/* #swagger.parameters['obj'] = {
+				in: 'body',
+				description: '資料格式',
+				schema:{
+						$postId:'ObjectId',
+				}
+		}*/
+		/* #swagger.responses[200] = {
+				schema:{
+						status: 'success',
+						data: '購買成功'
+				},
+		} 
+		*/
+		/* #swagger.responses[400] = {
+				schema:{
+						status: 'error',
+						message: '錯誤訊息'
+				},
+		} 
+		*/
 		const { user, body } = req;
 		if (!body.postId) {
 			return appError(400, '請輸入貼文ID', next);
@@ -58,6 +79,28 @@ module.exports = {
 		return Success(res, '購買成功');
 	},
 	createdPaySubscriptionUser: async (req, res, next) => {
+		/* #swagger.parameters['obj'] = {
+				in: 'body',
+				description: '資料格式',
+				schema:{
+						$subscriptionUserId:'訂閱用戶 ID',
+						$productId:'票券類型產品Id'
+				}
+		}*/
+		/* #swagger.responses[200] = {
+				schema:{
+						status: 'success',
+						data: '訂閱成功'
+				},
+		} 
+		*/
+		/* #swagger.responses[400] = {
+				schema:{
+						status: 'error',
+						message: '錯誤訊息'
+				},
+		} 
+		*/
 		const { subscriptionUserId, productId } = req.body;
 		if (!subscriptionUserId) {
 			return appError(400, '請輸入被訂閱用戶ID', next);
