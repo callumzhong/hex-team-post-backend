@@ -5,10 +5,10 @@ const doc = {
 		cersion: '1.0.0',
 		description: 'Rest API documentation',
 	},
-	host: 'hex-post-team-api-server.herokuapp.com',
-	schemes: ['https'],
-	// host: 'localhost:3000',
-	// schemes: ['http'],	
+	// host: 'hex-post-team-api-server.herokuapp.com',
+	// schemes: ['https'],
+	host: 'localhost:3000',
+	schemes: ['http'],
 	securityDefinitions: {
 		apiKeyAuth: {
 			type: 'apiKey',

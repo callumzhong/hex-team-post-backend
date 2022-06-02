@@ -6,10 +6,10 @@
     "description": "Rest API documentation",
     "version": "1.0.0"
   },
-  "host": "hex-post-team-api-server.herokuapp.com",
+  "host": "localhost:3000",
   "basePath": "/",
   "schemes": [
-    "https"
+    "http"
   ],
   "securityDefinitions": {
     "apiKeyAuth": {
@@ -1630,6 +1630,19 @@
             "apiKeyAuth": []
           }
         ]
+      }
+    },
+    "/api/order/pay/private": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {}
       }
     },
     "/api/order/status": {
