@@ -1,20 +1,13 @@
 'use strict';
-if (process.env.NODE_ENV !== 'test') {
-	require('dotenv').config({
-		path: './config.env',
-	});
-} else {
-	require('dotenv').config({
-		path: './test.env',
-	});
-}
+require('dotenv').config({
+	path: './config.env',
+});
 
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
-const morgan = require('morgan');
 
 const userRouter = require('./routes/user.route');
 const uploadRouter = require('./routes/upload.route');
@@ -27,7 +20,7 @@ const paymentRouter = require('./routes/payment.route');
 const productRouter = require('./routes/products.route');
 const walletRouter = require('./routes/wallet.route');
 const orderRouter = require('./routes/order.route');
-const newebpayRouter = require('./routes/newebpay.route.js');
+const newebpayRouter = require('./routes/newebpay.route');
 const swaggerUi = require('swagger-ui-express');
 const swaggerFile = require('./swagger-output.json');
 const app = express();
@@ -35,12 +28,6 @@ const app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-
-// //don't show the log when it is test
-// if (process.env.NODE_ENV !== 'test') {
-// 	//use morgan to log at command line
-// 	app.use(morgan('combined')); //'combined' outputs the Apache style LOGs
-// }
 
 app.use(cors());
 app.use(logger('dev'));

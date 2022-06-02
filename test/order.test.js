@@ -1,6 +1,6 @@
-require('dotenv').config();
-//During the test the env variable is set to test
-process.env.NODE_ENV = 'test';
+require('dotenv').config({
+	path: './test.env',
+});
 
 const mongoose = require('mongoose');
 const Order = require('../models/order.model');
@@ -60,8 +60,10 @@ describe('Order', () => {
 					.end((err, res) => {
 						res.should.have.status(200);
 						res.body.should.be.a('object');
-						res.body.status.should.be.eql('success');
-						res.body.data.should.be.a('object');
+						res.body.should.have.property('status');
+						res.body.should.have.property('data');
+						res.body.data.should.have.property('status');
+						res.body.data.should.have.property('message');
 						done();
 					});
 			});
