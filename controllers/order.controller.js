@@ -1,3 +1,4 @@
+const { appError, Success } = require('../service/appError');
 const OrderService = require('../service/order.service');
 module.exports = {
 	created: async (req, res, next) => {
@@ -44,6 +45,82 @@ module.exports = {
 			},
 		});
 	},
+	createdPayPrivatePost: async (req, res, next) => {
+		/* #swagger.parameters['obj'] = {
+				in: 'body',
+				description: '資料格式',
+				schema:{
+						$postId:'ObjectId',
+				}
+		}*/
+		/* #swagger.responses[200] = {
+				schema:{
+						status: 'success',
+						data: '購買成功'
+				},
+		} 
+		*/
+		/* #swagger.responses[400] = {
+				schema:{
+						status: 'error',
+						message: '錯誤訊息'
+				},
+		} 
+		*/
+		const { user, body } = req;
+		if (!body.postId) {
+			return appError(400, '請輸入貼文ID', next);
+		}
+
+		const order = await OrderService.createdPayPrivatePost(body.postId, user);
+		if (typeof order === 'string') {
+			return appError(400, order, next);
+		}
+		return Success(res, '購買成功');
+	},
+	createdPaySubscriptionUser: async (req, res, next) => {
+		/* #swagger.parameters['obj'] = {
+				in: 'body',
+				description: '資料格式',
+				schema:{
+						$subscriptionUserId:'訂閱用戶 ID',
+						$productId:'票券類型產品Id'
+				}
+		}*/
+		/* #swagger.responses[200] = {
+				schema:{
+						status: 'success',
+						data: '訂閱成功'
+				},
+		} 
+		*/
+		/* #swagger.responses[400] = {
+				schema:{
+						status: 'error',
+						message: '錯誤訊息'
+				},
+		} 
+		*/
+		const { subscriptionUserId, productId } = req.body;
+		if (!subscriptionUserId) {
+			return appError(400, '請輸入被訂閱用戶ID', next);
+		}
+		if (!productId) {
+			return appError(400, '請輸入產品ID', next);
+		}
+
+		const order = await OrderService.createdPaySubscriptionUser(
+			{
+				subscriptionUserId: subscriptionUserId,
+				productId: productId,
+			},
+			req.user,
+		);
+		if (typeof order === 'string') {
+			return appError(400, order, next);
+		}
+		return Success(res, '訂閱成功');
+	},
 	getStatus: async (req, res, next) => {
 		/* #swagger.parameters['orderId'] = {
 				description: '資料格式',
@@ -82,12 +159,9 @@ module.exports = {
 				},
 		} 
 		*/
-		return res.status(200).send({
-			status: 'success',
-			data: {
-				status: order.payment.status,
-				message: order.payment.message,
-			},
+		return Success(res, {
+			status: order.payment.status,
+			message: order.payment.message,
 		});
 	},
 };

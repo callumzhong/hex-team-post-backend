@@ -7,6 +7,13 @@ const OrderSchema = new mongoose.Schema(
 			ref: 'user',
 			required: [true, '請輸入用戶'],
 		},
+		/**
+		 * 他人用戶 (賣家 or 買家)
+		 */
+		inverseUser: {
+			type: mongoose.Types.ObjectId,
+			ref: 'user',
+		},
 		payment: {
 			type: mongoose.Types.ObjectId,
 			ref: 'payment',
@@ -14,6 +21,10 @@ const OrderSchema = new mongoose.Schema(
 		product: {
 			type: mongoose.Types.ObjectId,
 			ref: 'product',
+		},
+		post: {
+			type: mongoose.Types.ObjectId,
+			ref: 'post',
 		},
 		serialNumber: {
 			type: String,
@@ -23,7 +34,7 @@ const OrderSchema = new mongoose.Schema(
 		},
 		type: {
 			type: String,
-			enum: ['ADD_CREDIT', 'REDUCE_CREDIT', 'INCOME'],
+			enum: ['ADD_CREDIT', 'SINGLE_POST', 'SUBSCRIPTION_POST', 'INCOME'],
 			required: [true, '請輸入訂單種類'],
 		},
 		summary: {
@@ -37,6 +48,14 @@ const OrderSchema = new mongoose.Schema(
 		reduceCoin: {
 			type: Number,
 			required: [true, '請輸入減少代幣數量'],
+		},
+		effectiveOfStart: {
+			type: Date,
+			default: '',
+		},
+		effectiveOfEnd: {
+			type: Date,
+			default: '',
 		},
 	},
 	{

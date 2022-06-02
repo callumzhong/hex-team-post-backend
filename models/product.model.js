@@ -6,6 +6,11 @@ const productSchema = new mongoose.Schema(
 			type: String,
 			required: [true, '請輸入品名'],
 		},
+		type: {
+			type: String,
+			enum: ['coin', 'ticket'],
+			required: [true, '類型 type 未填寫'],
+		},
 		coin: {
 			type: Number,
 			required: [true, '請輸入代幣'],
@@ -23,6 +28,10 @@ const productSchema = new mongoose.Schema(
 		tag: {
 			type: String,
 			default: '',
+		},
+		effectiveOfMonthNumber: {
+			type: Number,
+			default: 999,
 		},
 	},
 	{

@@ -3,7 +3,7 @@ const Order = require('../models/order.model');
 const Payment = require('../models/payment.model');
 module.exports = {
 	getCurrentWallet: async (userId) => {
-		const UserAddCoins = await Order.aggregate([
+		const userAddCoins = await Order.aggregate([
 			{
 				$lookup: {
 					from: 'payments',
@@ -27,7 +27,7 @@ module.exports = {
 			},
 		]).then((data) => data.reduce((prev, curr) => prev + curr.totalAddCoin, 0));
 
-		const UserUsageCoins = await Order.aggregate([
+		const userUsageCoins = await Order.aggregate([
 			{
 				$match: {
 					user: Types.ObjectId(userId),
@@ -50,6 +50,6 @@ module.exports = {
 			),
 		);
 
-		return UserAddCoins + UserUsageCoins;
+		return userAddCoins + userUsageCoins;
 	},
 };
