@@ -1563,6 +1563,84 @@
         ]
       }
     },
+    "/api/wallet/record/add-credit": {
+      "get": {
+        "tags": [
+          "wallet"
+        ],
+        "summary": "取得儲值紀錄",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/wallet/record/pay": {
+      "get": {
+        "tags": [
+          "wallet"
+        ],
+        "summary": "取得購買/訂閱紀錄",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/wallet/record/income": {
+      "get": {
+        "tags": [
+          "wallet"
+        ],
+        "summary": "取得銷售紀錄",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
     "/api/order/": {
       "post": {
         "tags": [

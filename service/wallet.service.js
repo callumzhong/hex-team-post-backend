@@ -1,6 +1,5 @@
 const { Types } = require('mongoose');
 const Order = require('../models/order.model');
-const Payment = require('../models/payment.model');
 module.exports = {
 	getCurrentWallet: async (userId) => {
 		const userAddCoins = await Order.aggregate([
@@ -51,5 +50,59 @@ module.exports = {
 		);
 
 		return userAddCoins + userUsageCoins;
+	},
+	getAddCreditRecord: async (userId) => {
+		const records = await Order.find({
+			user: userId,
+			type: 'ADD_CREDIT',
+		}).then((documents) => {
+			return documents.map((document) => ({
+				summary: document.summary,
+				createdAt: document.createdAt,
+				status: document.payment.status,
+				amountNTD: document.product.price - document.product.discount,
+				amountCoin: document.addCoin,
+				serialNumber: document.serialNumber,
+			}));
+		});
+		return records;
+	},
+	getPayRecord: async (userId) => {
+		const records = await Order.find({
+			user: userId,
+			type: {
+				$in: ['SINGLE_POST', 'SUBSCRIPTION_POST'],
+			},
+		}).then((documents) => {
+			return documents.map((document) => ({
+				summary: document.summary,
+				postId: document.post,
+				createdAt: document.createdAt,
+				status: true,
+				name: document.inverseUser.name,
+				amountCoin: document.addCoin,
+				serialNumber: document.serialNumber,
+			}));
+		});
+		return records;
+	},
+	getIncomeRecord: async (userId) => {
+		const records = await Order.find({
+			user: userId,
+			type: {
+				$in: ['INCOME'],
+			},
+		}).then((documents) => {
+			return documents.map((document) => ({
+				summary: document.summary,
+				postId: document.post,
+				createdAt: document.createdAt,
+				status: true,
+				name: document.inverseUser.name,
+				amountCoin: document.addCoin,
+				serialNumber: document.serialNumber,
+			}));
+		});
+		return records;
 	},
 };

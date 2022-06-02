@@ -62,11 +62,12 @@ module.exports = {
 	},
 	createdPayPrivatePost: async (postId, user) => {
 		const post = await Posts.findById(postId);
-		const serialNumber = await calculateSerialNumber();
-
 		if (!post) return '查無貼文';
 		if (post.pay === 0) {
 			return '貼文費用 0 請通知客服處理';
+		}
+		if (post.user === user.id) {
+			return '無法購買自己的貼文';
 		}
 
 		const walletAmount = await walletService.getCurrentWallet(user.id);
@@ -74,6 +75,19 @@ module.exports = {
 			return '餘額不足';
 		}
 
+		let serialNumber = await calculateSerialNumber();
+		await Order.create({
+			user: post.user,
+			inverseUser: user.id,
+			post: post.id,
+			serialNumber: serialNumber,
+			type: 'INCOME',
+			summary: `私密日記收益`,
+			addCoin: post.pay,
+			reduceCoin: 0,
+		});
+
+		serialNumber = await calculateSerialNumber();
 		const order = await Order.create({
 			user: user.id,
 			inverseUser: post.user,
@@ -93,6 +107,9 @@ module.exports = {
 		if (product.type !== 'ticket') {
 			return '產品類型錯誤';
 		}
+		if (subscriptionUserId === user.id) {
+			return '無法訂閱自己';
+		}
 		if (!subscriptionUser) {
 			return '被訂閱用戶不存在';
 		}
@@ -101,12 +118,25 @@ module.exports = {
 		end.setMonth(end.getMonth() + product.effectiveOfMonthNumber);
 		end = end.toISOString().slice(0, 23) + '+08:00';
 
-		const serialNumber = await calculateSerialNumber();
 		const walletAmount = await walletService.getCurrentWallet(user.id);
 		if (product.coin > walletAmount) {
 			return '餘額不足';
 		}
+		let serialNumber = await calculateSerialNumber();
 
+		await Order.create({
+			user: subscriptionUser.id,
+			inverseUser: user.id,
+			serialNumber: serialNumber,
+			type: 'INCOME',
+			summary: `訂閱收益`,
+			addCoin: product.coin,
+			reduceCoin: 0,
+			effectiveOfStart: start,
+			effectiveOfEnd: end,
+		});
+
+		serialNumber = await calculateSerialNumber();
 		const order = await Order.create({
 			user: user.id,
 			inverseUser: subscriptionUser.id,

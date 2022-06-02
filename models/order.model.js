@@ -68,10 +68,15 @@ OrderSchema.pre(/^find/, function (next) {
 	this.populate({
 		path: 'product',
 		select: 'name price discount',
-	}).populate({
-		path: 'payment',
-		select: 'status message',
-	});
+	})
+		.populate({
+			path: 'payment',
+			select: 'status message',
+		})
+		.populate({
+			path: 'inverseUser',
+			select: 'name',
+		});
 
 	next();
 });
