@@ -3,6 +3,10 @@ if (process.env.NODE_ENV !== 'test') {
 	require('dotenv').config({
 		path: './config.env',
 	});
+} else {
+	require('dotenv').config({
+		path: './test.env',
+	});
 }
 
 const express = require('express');
