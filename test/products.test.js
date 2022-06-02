@@ -10,14 +10,14 @@ const should = chai.should();
 
 chai.use(chaiHttp);
 //Our parent block
-describe('Products', () => {
+describe('api/products', () => {
 	// beforeEach((done) => {
 	// 	//Before each test we empty the database
 	// });
 	/*
 	 * Test the /GET route
 	 */
-	describe('/GET products', () => {
+	describe('/GET', () => {
 		it('它應該得到所有產品', (done) => {
 			chai
 				.request(app)
