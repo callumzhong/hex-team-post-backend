@@ -80,7 +80,9 @@ describe('api/wallet', () => {
 	describe('/GET', () => {
 		it('它應該得到日記銷售紀錄', (done) => {
 			(async () => {
-				const user = await User.findOne();
+				const user = await User.find().then((documents) => {
+					return documents[documents.length - 1];
+				});
 				const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
 					expiresIn: process.env.JWT_EXPIRES_DAY,
 				});
