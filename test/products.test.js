@@ -1,6 +1,3 @@
-require('dotenv').config({
-	path: './test.env',
-});
 const mongoose = require('mongoose');
 //Require the dev-dependencies
 const chai = require('chai');

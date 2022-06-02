@@ -1,7 +1,3 @@
-require('dotenv').config({
-	path: './test.env',
-});
-
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 //Require the dev-dependencies
