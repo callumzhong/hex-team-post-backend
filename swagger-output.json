@@ -6,10 +6,10 @@
     "description": "Rest API documentation",
     "version": "1.0.0"
   },
-  "host": "localhost:3000",
+  "host": "hex-post-team-api-server.herokuapp.com",
   "basePath": "/",
   "schemes": [
-    "http"
+    "https"
   ],
   "securityDefinitions": {
     "apiKeyAuth": {
@@ -609,7 +609,7 @@
         "tags": [
           "user"
         ],
-        "summary": "取得個人頁面-設定(對應設計18頁)   *",
+        "summary": "取得個人頁面-設定(對應設計18頁)  *",
         "description": "",
         "parameters": [
           {

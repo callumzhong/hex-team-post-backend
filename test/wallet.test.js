@@ -43,7 +43,6 @@ describe('api/wallet', () => {
 					.get('/api/wallet/record/add-credit')
 					.set('authorization', token)
 					.end((err, res) => {
-						console.log(res.body);
 						res.should.have.status(200);
 						res.body.should.be.a('object');
 						res.body.status.should.be.eql('success');
@@ -66,7 +65,6 @@ describe('api/wallet', () => {
 					.get('/api/wallet/record/pay')
 					.set('authorization', token)
 					.end((err, res) => {
-						console.log(res.body);
 						res.should.have.status(200);
 						res.body.should.be.a('object');
 						res.body.status.should.be.eql('success');
@@ -91,7 +89,6 @@ describe('api/wallet', () => {
 					.get('/api/wallet/record/income')
 					.set('authorization', token)
 					.end((err, res) => {
-						console.log(res.body);
 						res.should.have.status(200);
 						res.body.should.be.a('object');
 						res.body.status.should.be.eql('success');
