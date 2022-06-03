@@ -4,6 +4,8 @@ require('dotenv').config({
 });
 
 const express = require('express');
+const expressJSDocSwagger = require('express-jsdoc-swagger');
+const options = require('./swagger-options');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
@@ -21,9 +23,9 @@ const productRouter = require('./routes/products.route');
 const walletRouter = require('./routes/wallet.route');
 const orderRouter = require('./routes/order.route');
 const newebpayRouter = require('./routes/newebpay.route');
-const swaggerUi = require('swagger-ui-express');
-const swaggerFile = require('./swagger-output.json');
 const app = express();
+
+expressJSDocSwagger(app)(options);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -48,7 +50,6 @@ app.use('/api/payment', paymentRouter);
 app.use('/api/products', productRouter);
 app.use('/api/wallet', walletRouter);
 app.use('/api/order', orderRouter);
-app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 // 404 錯誤
 app.use(function (req, res, next) {

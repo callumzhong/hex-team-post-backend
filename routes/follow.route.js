@@ -1,53 +1,137 @@
 var express = require('express');
 const followController = require('../controllers/follow.controller');
 const { isAuth } = require('../service/auth.service');
-const { route } = require('./user.route');
 var router = express.Router();
 
-router.get(
-	'/',
-	isAuth,
-	/**
-	 * #swagger.tags = ['follow']
-	 * #swagger.summary = '取得個人追蹤名單OK'
-	 * #swagger.security = [{ "apiKeyAuth": [] }]
-	 */
-	followController.getAll
-	);
-	router.get('/:id',
 /**
-	 * #swagger.tags = ['follow']
-	 * #swagger.summary = '取得某人追蹤名單OK'
-	 */
-	followController.getOne,
-);
-router.get('/:id/Follows',
-	/**
-	 * #swagger.tags = ['follow']
-	 * #swagger.summary = '取得某人追蹤數OK'
-	 */
-	followController.getUserFollowCount
-	);
+ * @typedef {object} AddFollow
+ * @property {string} followuser - userId
+ */
 
-
-router.post('/',isAuth,
 /**
-	 * #swagger.tags = ['follow']
-	 * #swagger.summary = '加入追蹤(對應設計4頁)OK'
-	 * #swagger.security = [{ "apiKeyAuth": [] }]
-	 */
-	followController.created,
-);
+ * GET /api/follow
+ * @tags follow
+ * @summary 取得個人追蹤名單OK
+ * @security apiKeyAuth
+ * @return {object} 200 - success response
+ * @example response - 200
+{
+  "status": true,
+  "data": [
+    {
+      "_id": "6291e520cbbe05860f8d8c15",
+      "user": "628f8c9bb1e02d4b681c8fe9",
+      "followuser": [
+        {
+          "_id": "628f8b08634ef4666583501b",
+          "name": "Ray",
+          "photo": "1",
+          "createdAt": "2022-05-26T14:13:28.064Z"
+        }
+      ],
+      "createdAt": "2022-05-28T09:02:24.177Z",
+      "__v": 0
+    }
+  ]
+}
+ */
+router.get('/', isAuth, followController.getAll);
 
-router.delete(
-	'/:followuser',
-	isAuth,
-	/**
-	 * #swagger.tags = ['follow']
-	 * #swagger.summary = '取消追蹤OK'
-	 * #swagger.security = [{ "apiKeyAuth": [] }]
-	 */
-	followController.delete,
-);
+/**
+ * GET /api/follow/{id}
+ * @tags follow
+ * @summary 取得某人追蹤名單OK
+ * @param {string} id.path.required - userId
+ * @return {object} 200 - success response
+ * @example response - 200
+{
+  "status": true,
+  "data": [
+    {
+      "_id": "6291e520cbbe05860f8d8c15",
+      "user": "628f8c9bb1e02d4b681c8fe9",
+      "followuser": [
+        {
+          "_id": "628f8b08634ef4666583501b",
+          "name": "Ray",
+          "photo": "1",
+          "createdAt": "2022-05-26T14:13:28.064Z"
+        }
+      ],
+      "createdAt": "2022-05-28T09:02:24.177Z",
+      "__v": 0
+    }
+  ]
+}
+ */
+router.get('/:id', followController.getOne);
+
+/**
+ * GET /api/follow/{id}/Follows
+ * @tags follow
+ * @summary 取得某人追蹤數OK
+ * @param {string} id.path.required - userId
+ */
+router.get('/:id/Follows', followController.getUserFollowCount);
+
+/**
+ * POST /api/follow
+ * @tags follow
+ * @summary 加入追蹤(對應設計4頁)OK
+ * @security apiKeyAuth
+ * @param {AddFollow} request.body.required - follow info
+ * @example request
+{
+  "followuser": "6291e520cbbe05860f8d8c15"
+}
+ * @return {object} 200 - success response
+ * @example response - 200
+{
+  "status": true,
+  "data": {
+    "_id": "6291e520cbbe05860f8d8c15",
+    "user": "628f8c9bb1e02d4b681c8fe9",
+    "followuser": [
+      {
+        "_id": "628f8b08634ef4666583501b",
+        "name": "Ray",
+        "photo": "1",
+        "createdAt": "2022-05-26T14:13:28.064Z"
+      }
+    ],
+    "createdAt": "2022-05-28T09:02:24.177Z",
+    "__v": 0
+  }
+}
+ */
+router.post('/', isAuth, followController.created);
+
+/**
+ * DELETE /api/follow/{followuser}
+ * @tags follow
+ * @summary 取消追蹤OK
+ * @security apiKeyAuth
+ * @param {string} followuser.path.required - userId
+ * @return {object} 200 - success response
+ * @example response - 200
+{
+  "status": true,
+  "data": {
+    "_id": "6291e520cbbe05860f8d8c15",
+    "user": "628f8c9bb1e02d4b681c8fe9",
+    "followuser": [
+      {
+        "_id": "628f8b08634ef4666583501b",
+        "name": "Ray",
+        "photo": "1",
+        "createdAt": "2022-05-26T14:13:28.064Z"
+      }
+    ],
+    "createdAt": "2022-05-28T09:02:24.177Z",
+    "__v": 0
+  }
+}
+ */
+router.delete('/:followuser', isAuth, followController.delete);
 
 module.exports = router;
