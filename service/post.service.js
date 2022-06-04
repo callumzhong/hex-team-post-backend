@@ -60,13 +60,20 @@ module.exports = {
 		return await Post.find({user,type:{$in:['group']}}).populate({
 			path: 'comments',
 			select: 'comment user'
-		  }).sort({createdAt:-1}).limit(10);
+		  })
+		  .populate({
+			path: 'user',
+			select: 'name photo gender'
+		}).sort({createdAt:-1}).limit(10);
 	},
 	getOne: async (req) => {
 		return await Post.findOne({_id:req.params.id}).populate({
 			path: 'comments',
 			select: 'comment user'
-		  });
+		  }) .populate({
+			path: 'user',
+			select: 'name photo gender'
+			});
 	},
 	created: async (req) => {		
 		const newPost = await Post.create({
@@ -127,7 +134,12 @@ module.exports = {
 			content: req.body.content,
 			contentType:req.body.contentType			
 		},{new:true});
-		return updPost;
+		const newpost = await Post.find({_id:req.params.id}).sort({createdAt:-1})
+			.populate({
+				path: 'user',
+				select: 'name photo gender'
+			}).limit(10);
+		return newpost;
 	},
 	deleteAll: async (req) => {
 		return await Post.deleteMany({user:req.user.id});
@@ -153,10 +165,16 @@ module.exports = {
 	},
 	getPrivatebyUserID:async(user)=>{
 		//取得個人貼文
-		const posts=await Post.find({user,type:{$in:['person']}}).sort({createdAt:-1}).limit(10);
-		posts.forEach(post=>{
-			post.image=process.env.mockimage;
-		});
+		const posts=await Post.find({user,type:{$in:['person']}})
+		.populate({
+			path: 'user',
+			select: 'name photo gender'
+		})
+		.sort({createdAt:-1})
+		.limit(10);
+		// posts.forEach(post=>{
+		// 	post.image=process.env.mockimage;
+		// });
 		return posts;
 	},
 };

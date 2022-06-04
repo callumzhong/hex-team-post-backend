@@ -13,7 +13,7 @@ module.exports = {
 			if (comment == undefined) {
 				return ErrorHandler(new Error('留言內容有誤'), req, res, next);
 			}
-			const Newcomment = await commentService.created(req);
+			const Newcomment = await commentService.created(req);			
 			Success(res, Newcomment);
 		} catch (err) {
 			return ErrorHandler(err, req, res, next);
