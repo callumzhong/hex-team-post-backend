@@ -143,6 +143,14 @@ module.exports = {
 		//取得個人貼文
 		return await Post.find({user,type:{$in:['person']}}).count();
 	},
+	getPostLikeCount: async(user)=>{
+			//取得某個人的like數
+			const data=await Post.find({user})
+			.populate("likes");
+			if(data){
+				return data[0].followers.length;
+			} else return 0;
+	},
 	getPrivatebyUserID:async(user)=>{
 		//取得個人貼文
 		const posts=await Post.find({user,type:{$in:['person']}}).sort({createdAt:-1}).limit(10);

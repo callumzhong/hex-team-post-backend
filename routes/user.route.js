@@ -201,4 +201,14 @@ router.get('/:id', UsersController.GetUserById);
  */
 router.delete('/:email', UsersController.delUser);
 
+router.patch(
+	'/',isAuth,
+	/**
+	 * #swagger.tags = ['user']
+	 * #swagger.summary = '修改使用者 OK'
+	 * #swagger.security = [{ "apiKeyAuth": [] }]
+	 */
+	UsersController.EditUser,
+);
+
 module.exports = router;
