@@ -59,6 +59,31 @@ var router = express.Router();
 router.get('/check', isAuth, UsersController.checkUser);
 
 /**
+ * GET /api/user/subscribed
+ * @tags user
+ * @summary 取得已訂閱用戶
+ * @security apiKeyAuth
+ * @return {object} 200 - success response
+ * @example response - 200
+{
+  "status": "success",
+  "data": [
+    {
+      "id": "userId",
+      "name": "username"
+    }
+  ]
+}
+ * @return {object} 400 - error response
+ * @example response - 400
+{
+  "status": "success",
+  "message": "尚未授權"
+}
+ */
+router.get('/subscribed', isAuth, UsersController.getSubscribedUsers);
+
+/**
  * GET /api/user
  * @tags user
  * @summary 取得個人頁面-設定(對應設計18頁)
@@ -200,7 +225,7 @@ router.get('/:id', UsersController.GetUserById);
  * @param {string} email.path.required - user email
  */
 router.delete('/:email', UsersController.delUser);
-	/**
+/**
 	 * PATCH /api/user/
    * @tags user
    * @summary 修改使用者 OK   
@@ -237,6 +262,6 @@ router.delete('/:email', UsersController.delUser);
       }
     }
 	 */
-router.patch('/',isAuth,UsersController.EditUser);
+router.patch('/', isAuth, UsersController.EditUser);
 
 module.exports = router;
