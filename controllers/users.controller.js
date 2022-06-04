@@ -55,6 +55,29 @@ const users = {
 			return ErrorHandler(err, req, res, next);
 		}
 	},
+	//修改
+	async EditUser(req, res, next) {
+		let {  name, birthday, gender, photo,memo } =
+				req.body;
+				/* #swagger.parameters['obj'] = {
+                    in: 'body',
+                    description: '修改使用者',
+                    schema:{
+						name:"123",
+                        photo:"",
+                        birthday:"2022-01-01",
+                        gender:"male || female",                            
+                        memo:'test'
+                    }
+                }*/
+		const updUser= await Users.findByIdAndUpdate(req.user.id, {			
+			name,
+			birthday,
+			gender,
+			photo,memo
+		},{new:true});
+		return Success(res, updUser);;
+	},
 	//登入
 	async singin(req, res, next) {
 		/**
@@ -293,7 +316,7 @@ const users = {
 				postCounts: await postService.getPostCountbyGroup(_id),
 				follows: await followService.getUserFollowCount(_id),
 				privateposts: await postService.getPostCountbyGroup(_id),
-				likes: 0,
+				likes: await postService.getPostLikeCount(_id),
 			};
 			Success(res, result);
 		} catch (err) {

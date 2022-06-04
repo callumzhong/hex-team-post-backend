@@ -23,6 +23,7 @@ router.get(
 	 */
 	UsersController.GetUser,
 );
+
 router.post(
 	'/sign-in',
 	/**
@@ -72,6 +73,8 @@ router.get('/:id',
 	UsersController.GetUserById
 );
 
+
+
 router.delete(
 	'/:email',
 	/**
@@ -79,6 +82,16 @@ router.delete(
 	 * #swagger.summary = '刪除使用者 (軟刪除)'
 	 */
 	UsersController.delUser,
+);
+
+router.patch(
+	'/',isAuth,
+	/**
+	 * #swagger.tags = ['user']
+	 * #swagger.summary = '修改使用者 OK'
+	 * #swagger.security = [{ "apiKeyAuth": [] }]
+	 */
+	UsersController.EditUser,
 );
 
 module.exports = router;

@@ -760,6 +760,56 @@
           }
         ],
         "responses": {}
+      },
+      "patch": {
+        "tags": [
+          "user"
+        ],
+        "summary": "修改使用者 OK",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "修改使用者",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "123"
+                },
+                "photo": {
+                  "type": "string",
+                  "example": ""
+                },
+                "birthday": {
+                  "type": "string",
+                  "example": "2022-01-01"
+                },
+                "gender": {
+                  "type": "string",
+                  "example": "male || female"
+                },
+                "memo": {
+                  "type": "string",
+                  "example": "test"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {},
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       }
     },
     "/api/user/sign-in": {
