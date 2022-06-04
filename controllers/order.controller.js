@@ -2,29 +2,6 @@ const { appError, Success } = require('../service/appError');
 const OrderService = require('../service/order.service');
 module.exports = {
 	created: async (req, res, next) => {
-		/* #swagger.parameters['obj'] = {
-				in: 'body',
-				description: '資料格式',
-				schema:{
-						$productId:'ObjectId',
-				}
-		}*/
-		/* #swagger.responses[201] = {
-				schema:{
-						status: 'success',
-						data: {
-								id:'Order Id'
-						}
-				},
-		} 
-		*/
-		/* #swagger.responses[400] = {
-				schema:{
-						status: 'error',
-						message: '錯誤訊息'
-				},
-		} 
-		*/
 		if (!req.body.productId) {
 			return res.status(400).send({
 				status: 'error',
@@ -46,27 +23,6 @@ module.exports = {
 		});
 	},
 	createdPayPrivatePost: async (req, res, next) => {
-		/* #swagger.parameters['obj'] = {
-				in: 'body',
-				description: '資料格式',
-				schema:{
-						$postId:'ObjectId',
-				}
-		}*/
-		/* #swagger.responses[200] = {
-				schema:{
-						status: 'success',
-						data: '購買成功'
-				},
-		} 
-		*/
-		/* #swagger.responses[400] = {
-				schema:{
-						status: 'error',
-						message: '錯誤訊息'
-				},
-		} 
-		*/
 		const { user, body } = req;
 		if (!body.postId) {
 			return appError(400, '請輸入貼文ID', next);
@@ -122,43 +78,24 @@ module.exports = {
 		return Success(res, '訂閱成功');
 	},
 	getStatus: async (req, res, next) => {
-		/* #swagger.parameters['orderId'] = {
-				description: '資料格式',
-				schema:String
-		}*/
 		if (!req.query.orderId) {
-			return res.status(400).send({
-				status: 'error',
-				message: '請輸入訂單編號',
-			});
+			return appError(400, '請輸入訂單編號', next);
 		}
 		const order = await OrderService.getStatus(req.query.orderId);
 
 		if (!order) {
-			return res.status(400).send({
-				status: 'error',
-				message: '查無訂單',
-			});
+			return appError(400, '查無訂單', next);
 		}
 		if (!order.payment) {
-			return res.status(200).send({
-				status: 'error',
-				data: {
+			return appError(
+				200,
+				{
 					status: false,
 					message: '無付款紀錄',
 				},
-			});
+				next,
+			);
 		}
-		/* #swagger.responses[200] = {
-				schema:{
-						status: 'success',
-						data: {
-							status:true,
-							message:'授權成功'
-						}
-				},
-		} 
-		*/
 		return Success(res, {
 			status: order.payment.status,
 			message: order.payment.message,

@@ -3,33 +3,27 @@ const commentController = require('../controllers/comment.controller');
 const { isAuth } = require('../service/auth.service');
 var router = express.Router();
 
-router.post(
-	'/:PostId/comment',
-	isAuth,
-	/**
-	 * #swagger.tags = ['comment']
-	 * #swagger.summary = '文章留言 OK'
-	 * #swagger.security = [{ "apiKeyAuth": [] }]
-	 */
-	/**
-             * 
-             * #swagger.parameters['obj'] = {
-                    in: 'body',
-                    description: '資料格式',
-                    schema:{
-                        $comment:'留言'
-                    }
-                }*/
-	commentController.created,
-);
-router.delete(
-	'/:id',
-	isAuth,
-	/**
-	 * #swagger.tags = ['comment']
-	 * #swagger.summary = '文章留言刪除 OK'
-	 * #swagger.security = [{ "apiKeyAuth": [] }]
-	 */
-	commentController.delete,
-);
+/**
+ * A comment
+ * @typedef {object} Comment
+ * @property {string} comment.required - 留言
+ */
+
+/**
+ * POST /api/comment/{PostId}/comment
+ * @tags comment
+ * @summary 文章留言 OK
+ * @security apiKeyAuth
+ * @param {Comment} request.body.required - comment info
+ * @param {string} PostId.path.required - 貼文編號
+ */
+router.post('/:PostId/comment', isAuth, commentController.created);
+/**
+ * DELETE /api/comment/{id}
+ * @tags comment
+ * @summary 文章留言刪除 OK
+ * @security apiKeyAuth
+ * @param {string} id.path.required - 留言編號
+ */
+router.delete('/:id', isAuth, commentController.delete);
 module.exports = router;

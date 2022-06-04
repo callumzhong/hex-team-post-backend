@@ -11,33 +11,22 @@ const postService = require('../service/post.service');
 const followService = require('../service/follow.service');
 
 const users = {
-	//* #swagger.security = [{ "apiKeyAuth": [] }]
 	async CreateUser(req, res, next) {
-		/**
-		 * #swagger.tags = ['user - 使用者']
-		 * #swagger.summary = '註冊使用者'
-		 */
 		try {
 			const UserCount = await Users.find().count();
 			if (UserCount === 500) {
 				return ErrorHandler(new Error('超過會員上限!'), req, res, next);
 			}
-			let { email, password, confirmPassword, name, birthday, gender, photo,memo } =
-				req.body;
-			/* #swagger.parameters['obj'] = {
-                    in: 'body',
-                    description: '資料格式',
-                    schema:{
-                        $name:'Ray',
-                        $email:"123@123.com",
-                        photo:"",
-                        birthday:"2022-01-01",
-                        gender:"male || female",                            
-                        $password:"12345678",
-                        $confirmPassword:"12345678",
-						memo:'test'
-                    }
-                }*/
+			let {
+				email,
+				password,
+				confirmPassword,
+				name,
+				birthday,
+				gender,
+				photo,
+				memo,
+			} = req.body;
 
 			// 加密密碼
 			password = await bcrypt.hash(req.body.password, 12);
@@ -48,7 +37,7 @@ const users = {
 				birthday,
 				gender,
 				photo,
-				memo
+				memo,
 			});
 			generateSendJWT(newUser, 200, res);
 		} catch (err) {
@@ -57,20 +46,7 @@ const users = {
 	},
 	//登入
 	async singin(req, res, next) {
-		/**
-		 * #swagger.tags = ['user - 使用者']
-		 * #swagger.summary = '使用者登入'
-		 */
 		try {
-			/* #swagger.parameters['obj'] = {
-                    in: 'body',
-                    description: '資料格式',
-                    schema:{
-                        $email:'123@123.com',
-                        $password:"12345678"                        
-                    }
-                }*/
-
 			const { email, password } = req.body;
 			if (!email || !password) {
 				return ErrorHandler(new Error('帳號密碼不可為空'), req, res, next);
@@ -93,14 +69,6 @@ const users = {
 	},
 	async delUser(req, res, next) {
 		try {
-			/* #swagger.parameters['obj'] = {
-
-                    in: 'body',
-                    description: '資料格式',
-                    schema:{
-                        $email:'123@123.com'                                             
-                    }
-                }*/
 			const email = req.params.email;
 			const user = await Users.findOne({ email, delflag: false });
 			if (!user) {
@@ -119,15 +87,6 @@ const users = {
 	},
 	async updatePassword(req, res, next) {
 		try {
-			/* 
-             #swagger.parameters['obj'] = {
-                    in: 'body',
-                    description: '資料格式',
-                    schema:{
-                        $password:'12345678',
-                        $confirmPassword:"12345678"                        
-                    }
-                }*/
 			const { password, confirmPassword } = req.body;
 			if (password !== confirmPassword) {
 				return ErrorHandler(new Error('密碼不一致！'), req, res, next);
@@ -143,14 +102,6 @@ const users = {
 	},
 	async forgotPassword(req, res, next) {
 		try {
-			/* 
-            #swagger.parameters['obj'] = {
-                   in: 'body',
-                   description: '資料格式',
-                   schema:{
-                       $email:'123@12333.com'                                         
-                   }
-               }*/
 			const { email } = req.body;
 			if (!email) {
 				return ErrorHandler(new Error('email未填寫！'), req, res, next);
@@ -176,25 +127,8 @@ const users = {
 					},
 					(err, info) => {
 						if (err) {
-							/* #swagger.responses[400] = {
-                            schema:{
-                                status:'ERROR',
-                                message:'smtp 錯誤訊息'
-                    },
-                            description: "忘記密碼，發信失敗" 
-                        }*/
 							return ErrorHandler(err, req, res, next);
 						}
-						/* #swagger.responses[200] = {
-                        schema:{
-                            status: 'true',
-                            data: {
-                                message:'忘記密碼，發送mail成功!'
-                            }
-                        },
-                        description: "忘記密碼，發信成功"
-                    } 
-                    */
 
 						Success(res, { message: '忘記密碼，發送mail成功!' });
 					},
@@ -221,28 +155,6 @@ const users = {
 			// 	path: 'posts',
 			// 	select: 'type content image likes pay tags createdAt',
 			// });
-			/* #swagger.responses[200] = {
-		  	schema: {
-                    "status": true,
-                    "data": {
-                        "user": {
-                        "_id": "628f8c9bb1e02d4b681c8fe9",
-                        "name": "Ray",
-                        "email": "123@123.com",
-                        "photo": "123",
-                        "gender": "male",
-                        "birthday": "2022-01-01T00:00:00.000Z",
-                        "delflag": false,
-                        "createdAt": "2022-05-26T14:20:11.616Z",
-                        "updatedAt": "2022-05-26T14:20:11.616Z"
-                        },
-                        "postCount": 0,
-                        "follow": 0,
-                        "privatepost": 0,
-                        "order": 0
-                    }
-                    },
-				description: "取得個人頁面資料" } */
 			const result = {
 				user: userdata,
 				postCounts: await postService.getPostCountbyGroup(req.user.id),
@@ -266,28 +178,6 @@ const users = {
 				path: 'posts',
 				select: 'type content image likes pay tags',
 			});
-			/* #swagger.responses[200] = {
-		  	schema: {
-                    "status": true,
-                    "data": {
-                        "user": {
-                        "_id": "628f8c9bb1e02d4b681c8fe9",
-                        "name": "Ray",
-                        "email": "123@123.com",
-                        "photo": "123",
-                        "gender": "male",
-                        "birthday": "2022-01-01T00:00:00.000Z",
-                        "delflag": false,
-                        "createdAt": "2022-05-26T14:20:11.616Z",
-                        "updatedAt": "2022-05-26T14:20:11.616Z"
-                        },
-                        "postCount": 0,
-                        "follow": 0,
-                        "privatepost": 0,
-                        "order": 0
-                    }
-                    },
-				description: "取得個人頁面資料" } */
 			const result = {
 				user: userdata,
 				postCounts: await postService.getPostCountbyGroup(_id),
@@ -300,7 +190,7 @@ const users = {
 			//return ErrorHandler(err,req,res,next);
 			return ErrorHandler(new Error('尚未授權'), req, res, next);
 		}
-	}
+	},
 };
 
 module.exports = users;

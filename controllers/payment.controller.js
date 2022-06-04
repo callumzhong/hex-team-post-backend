@@ -2,16 +2,15 @@ const User = require('../models/users.model');
 const ErrorHandler = require('../service/errorHandler');
 const PaymentService = require('../service/payment.service');
 const CustomizeError = require('../errors/customizeError');
+const { appError } = require('../service/appError');
 module.exports = {
 	getPayment: async (req, res, next) => {
 		if (!req.query.orderId) {
-			ErrorHandler(new CustomizeError('請輸入訂單編號'), req, res, next);
-			return;
+			return appError(400, '請輸入訂單編號', next);
 		}
 		const formParams = await PaymentService.createdPayment(req.query.orderId);
 		if (typeof formParams === 'string') {
-			ErrorHandler(new CustomizeError(formParams), req, res, next);
-			return;
+			return appError(400, formParams, next);
 		}
 		return res.render('payment', {
 			model: {

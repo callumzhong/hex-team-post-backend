@@ -5,15 +5,6 @@ const ErrorHandler = require('../service/errorHandler');
 module.exports = {
 	created: async (req, res, next) => {
 		try {
-			/**
-             * 
-             * #swagger.parameters['obj'] = {
-                    in: 'body',
-                    description: '資料格式',
-                    schema:{
-                        $comment:'留言'
-                    }
-                }*/
 			const { comment } = req.body;
 			const PostId = req.params.PostId;
 			if (PostId == undefined) {
