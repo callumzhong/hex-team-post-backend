@@ -200,5 +200,43 @@ router.get('/:id', UsersController.GetUserById);
  * @param {string} email.path.required - user email
  */
 router.delete('/:email', UsersController.delUser);
+	/**
+	 * PATCH /api/user/
+   * @tags user
+   * @summary 修改使用者 OK   
+   * @security apiKeyAuth
+   * @param {SignIn} request.body.required - SignIn info
+   * @example request
+    {
+      "name":"123",
+      "photo": "",
+      "birthday": "2022-01-01",
+      "gender": "male",
+      "memo": "test"
+    }
+    * @return {object} 200 - success response
+    * @example response - 200
+    {
+      "status": "success",
+      "data": {
+        "followers": [],
+        "_id": "628f8c9bb1e02d4b681c8fe9",
+        "name": "123",
+        "email": "123@123.com",
+        "photo": "",
+        "gender": "male",
+        "birthday": "2022-01-01T00:00:00.000Z",
+        "delflag": false,
+        "createdAt": "2022-05-26T14:20:11.616Z",
+        "updatedAt": "2022-06-03T16:21:04.073Z",
+        "following": [
+          "628f8b08634ef4666583501b"
+        ],
+        "memo": "test",
+        "id": "628f8c9bb1e02d4b681c8fe9"
+      }
+    }
+	 */
+router.patch('/',isAuth,UsersController.EditUser);
 
 module.exports = router;

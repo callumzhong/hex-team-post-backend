@@ -104,14 +104,14 @@ router.get('/private/', isAuth, PostController.getPrivatebyAuth);
  * @param {string} userId.path.required - userId
  */
 router.get('/:Userid', PostController.getUserAll);
-
 /**
- * GET /api/posts/{id}
+ * GET /api/posts/getOne/{id}
  * @tags posts
- * @summary 取得指定 ID 貼文(前10筆) OK
+ * @summary 取得指定 ID 貼文 OK
  * @param {string} id.path.required - PostId
  */
-router.get('/:id', PostController.getOne);
+ router.get('/getOne/:id', PostController.getOne);
+
 /**
  * GET /api/posts/private/{id}
  * @tags posts
