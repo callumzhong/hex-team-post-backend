@@ -90,6 +90,41 @@ router.get('/', isAuth, PostController.getPagination);
 router.get('/normal', PostController.getPaginationBynormal);
 
 /**
+ * GET /api/posts/diary
+ * @tags posts
+ * @summary 取得私密日記本貼文依分頁 (已排除登入者私密貼文)
+ * @security apiKeyAuth
+ * @param {string} page.query - 分頁數
+ * @param {string} q.query - 查詢
+ * @param {string} sort.query - 請輸入 asc || desc 兩種排序
+ * @param {string} like.query - user id 查看我按讚的文章
+ * @return {object} 200 - success response
+ * @example response - 200
+{
+  "data": [
+    {
+      "_id": "6274caa22a6bd4d1ecd8af05",
+      "tags": [
+        "旅遊"
+      ],
+      "type": "group",
+      "image": "https://unsplash.com/photos/gKXKBY-C-Dk",
+      "content": "今天去看貓",
+      "likes": 99,
+      "comments": 1
+    }
+  ],
+  "pagination": {
+    "total_pages": 1,
+    "current_page": 1,
+    "has_pre": false,
+    "has_next": false
+  }
+}
+ */
+router.get('/diary', isAuth, PostController.getPaginationByDiary);
+
+/**
  * GET /api/posts/private
  * @tags posts
  * @summary 取得個人私密貼文(前10筆) OK
@@ -110,7 +145,16 @@ router.get('/:Userid', PostController.getUserAll);
  * @summary 取得指定 ID 貼文 OK
  * @param {string} id.path.required - PostId
  */
- router.get('/getOne/:id', PostController.getOne);
+router.get('/getOne/:id', PostController.getOne);
+
+/**
+ * GET /api/posts/getOne/{id}/verified
+ * @tags posts
+ * @summary 取得指定 ID 貼文 (需登入)
+ * @security apiKeyAuth
+ * @param {string} id.path.required - PostId
+ */
+router.get('/getOne/:id/verified', isAuth, PostController.getOneByHasSignIn);
 
 /**
  * GET /api/posts/private/{id}
