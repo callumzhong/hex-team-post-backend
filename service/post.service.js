@@ -1,4 +1,5 @@
 const Post = require('../models/posts.model');
+const { post } = require('../routes/user.route');
 
 module.exports = {
 	getPagination: async (req) => {
@@ -26,7 +27,36 @@ module.exports = {
 				select: 'name photo gender'
 			}).skip((page-1) * 10).limit(10);	
 		
-		return data;
+		
+		
+		return data ;
+	},
+	getPaginationData:async(req)=>{
+		const user=req.user.id;
+		let page=req.query.page;
+		let search=req.query.q;
+		let sort=req.query.sort;
+		let like=req.query.like;
+		
+		if(page == undefined) page = 1;
+		if(sort == undefined) sort = -1;
+		else sort=(sort=='asc')?1:-1;
+		if(search == undefined) search = '';
+		
+		let query={user,type:{$in:['group']}};
+		if(search !== '') {
+			query['content']={$regex: search};
+		}
+		if(like !== undefined)
+			query['likes']={$in: [like]};
+
+		let pagination={};
+		const count =await Post.find(query).count();
+		pagination['total_pages'] = count;
+		pagination['current_page']= page;
+		pagination['has_pre']= page==1?false: page<count;
+		pagination['has_next']= page==count?false: page<count;
+		return pagination;
 	},
 	getPaginationbynormal: async (req) => {		
 		let page=req.query.page;

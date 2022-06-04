@@ -1,12 +1,14 @@
-const { appError, Success } = require('../service/appError');
+const { appError, Success, SuccessPagination } = require('../service/appError');
 const ErrorHandler = require('../service/errorHandler');
 const postService = require('../service/post.service');
 module.exports = {
 	getPagination: async (req, res, next) => {
 		try {
 			const Post = await postService.getPagination(req);
+			const PostPagination =await postService.getPaginationData(req);
 			if (Post) {
-				Success(res, Post);
+				//Success(res, Post);
+				SuccessPagination(res,Post,PostPagination);
 			} else {
 				return ErrorHandler(new Error('取得文章失敗'), req, res, next);
 			}
