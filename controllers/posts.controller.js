@@ -26,6 +26,18 @@ module.exports = {
 			return ErrorHandler(err, req, res, next);
 		}
 	},
+	getPaginationByDiary: async (req, res, next) => {
+		try {
+			const Post = await postService.getPaginationByDiary(req);
+			if (Post) {
+				Success(res, Post);
+			} else {
+				return ErrorHandler(new Error('取得文章失敗'), req, res, next);
+			}
+		} catch (err) {
+			return ErrorHandler(err, req, res, next);
+		}
+	},
 	getOne: async (req, res, next) => {
 		/* #swagger.responses[200] = {
 		  	schema: {"$ref": "#/definitions/Post"},
@@ -35,6 +47,24 @@ module.exports = {
 				return ErrorHandler(new Error('文章id有誤'), req, res, next);
 			}
 			const Post = await postService.getOne(req);
+			if (Post) {
+				Success(res, Post);
+			} else {
+				return ErrorHandler(new Error('取得文章失敗'), req, res, next);
+			}
+		} catch (err) {
+			return ErrorHandler(err, req, res, next);
+		}
+	},
+	getOneByHasSignIn: async (req, res, next) => {
+		/* #swagger.responses[200] = {
+		  	schema: {"$ref": "#/definitions/Post"},
+				description: "取得單筆資料" } */
+		try {
+			if (req.params.id == undefined) {
+				return ErrorHandler(new Error('文章id有誤'), req, res, next);
+			}
+			const Post = await postService.getOneByHasSignIn(req);
 			if (Post) {
 				Success(res, Post);
 			} else {
