@@ -9,6 +9,7 @@ const { Success } = require('../service/appError');
 const emailService = require('../service/email/email.service');
 const postService = require('../service/post.service');
 const followService = require('../service/follow.service');
+const userService = require('../service/user.service');
 
 const users = {
 	async CreateUser(req, res, next) {
@@ -216,6 +217,14 @@ const users = {
 		} catch (err) {
 			//return ErrorHandler(err,req,res,next);
 			return ErrorHandler(new Error('尚未授權'), req, res, next);
+		}
+	},
+	async getSubscribedUsers(req, res, next) {
+		try {
+			const users = await userService.getSubscribedUsers(req.user);
+			return Success(res, users);
+		} catch (err) {
+			return next(err);
 		}
 	},
 };
