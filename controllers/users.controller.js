@@ -9,6 +9,7 @@ const { Success } = require('../service/appError');
 const emailService = require('../service/email/email.service');
 const postService = require('../service/post.service');
 const followService = require('../service/follow.service');
+const userService = require('../service/user.service');
 
 const users = {
 	async CreateUser(req, res, next) {
@@ -46,9 +47,8 @@ const users = {
 	},
 	//修改
 	async EditUser(req, res, next) {
-		let {  name, birthday, gender, photo,memo } =
-				req.body;
-				/* #swagger.parameters['obj'] = {
+		let { name, birthday, gender, photo, memo } = req.body;
+		/* #swagger.parameters['obj'] = {
                     in: 'body',
                     description: '修改使用者',
                     schema:{
@@ -59,13 +59,18 @@ const users = {
                         memo:'test'
                     }
                 }*/
-		const updUser= await Users.findByIdAndUpdate(req.user.id, {			
-			name,
-			birthday,
-			gender,
-			photo,memo
-		},{new:true});
-		return Success(res, updUser);;
+		const updUser = await Users.findByIdAndUpdate(
+			req.user.id,
+			{
+				name,
+				birthday,
+				gender,
+				photo,
+				memo,
+			},
+			{ new: true },
+		);
+		return Success(res, updUser);
 	},
 	//登入
 	async singin(req, res, next) {
@@ -212,6 +217,14 @@ const users = {
 		} catch (err) {
 			//return ErrorHandler(err,req,res,next);
 			return ErrorHandler(new Error('尚未授權'), req, res, next);
+		}
+	},
+	async getSubscribedUsers(req, res, next) {
+		try {
+			const users = await userService.getSubscribedUsers(req.user);
+			return Success(res, users);
+		} catch (err) {
+			return next(err);
 		}
 	},
 };
