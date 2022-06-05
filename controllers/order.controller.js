@@ -87,14 +87,13 @@ module.exports = {
 			return appError(400, '查無訂單', next);
 		}
 		if (!order.payment) {
-			return appError(
-				200,
-				{
+			return res.status(200).json({
+				status: 'error',
+				data: {
 					status: false,
 					message: '無付款紀錄',
 				},
-				next,
-			);
+			});
 		}
 		return Success(res, {
 			status: order.payment.status,
