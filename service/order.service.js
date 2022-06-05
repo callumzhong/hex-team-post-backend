@@ -151,7 +151,10 @@ module.exports = {
 		return order;
 	},
 	getStatus: async (orderId) => {
-		const order = await Order.findById(orderId);
+		const order = await Order.findById(orderId).populate({
+			path: 'payment',
+			select: 'status message',
+		});
 		return order;
 	},
 };

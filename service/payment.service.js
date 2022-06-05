@@ -48,4 +48,22 @@ module.exports = {
 
 		return await Payment.findOneAndUpdate(filter, update);
 	},
+	getPaymentOrder: async (merchantOrderNo) => {
+		const order = await Order.find({
+			payment: {
+				$exists: true,
+			},
+		})
+			.populate({
+				path: 'payment',
+				select: 'status message merchantOrderNo',
+				match: {
+					merchantOrderNo: merchantOrderNo,
+				},
+			})
+			.then((orders) => {
+				return orders[0];
+			});
+		return order;
+	},
 };
