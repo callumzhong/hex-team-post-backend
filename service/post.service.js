@@ -40,7 +40,6 @@ const getBoughtOrder = async (userId) => {
 	});
 };
 
-
 module.exports = {
 	getPagination: async (req) => {
 		const user = req.user.id;
@@ -64,40 +63,38 @@ module.exports = {
 			.sort({ createdAt: sort })
 			.populate({
 				path: 'user',
-				select: 'name photo gender'
-			}).skip((page-1) * 10).limit(10);	
-		
-		
-		
-		return data ;
+				select: 'name photo gender',
+			})
+			.skip((page - 1) * 10)
+			.limit(10);
+
+		return data;
 	},
-	getPaginationData:async(req)=>{
-		const user=req.user.id;
-		let page=req.query.page;
-		let search=req.query.q;
-		let sort=req.query.sort;
-		let like=req.query.like;
-		
-		if(page == undefined) page = 1;
-		if(sort == undefined) sort = -1;
-		else sort=(sort=='asc')?1:-1;
-		if(search == undefined) search = '';
-		
-		let query={user,type:{$in:['group']}};
-		if(search !== '') {
-			query['content']={$regex: search};
+	getPaginationData: async (req) => {
+		const user = req.user.id;
+		let page = req.query.page;
+		let search = req.query.q;
+		let sort = req.query.sort;
+		let like = req.query.like;
+
+		if (page == undefined) page = 1;
+		if (sort == undefined) sort = -1;
+		else sort = sort == 'asc' ? 1 : -1;
+		if (search == undefined) search = '';
+
+		let query = { user, type: { $in: ['group'] } };
+		if (search !== '') {
+			query['content'] = { $regex: search };
 		}
-		if(like !== undefined)
-			query['likes']={$in: [like]};
+		if (like !== undefined) query['likes'] = { $in: [like] };
 
-		let pagination={};
-		const count =await Post.find(query).count();
+		let pagination = {};
+		const count = await Post.find(query).count();
 		pagination['total_pages'] = count;
-		pagination['current_page']= page;
-		pagination['has_pre']= page==1?false: page<count;
-		pagination['has_next']= page==count?false: page<count;
+		pagination['current_page'] = page;
+		pagination['has_pre'] = page == 1 ? false : page < count;
+		pagination['has_next'] = page == count ? false : page < count;
 		return pagination;
-
 	},
 	getPaginationByDiary: async (req) => {
 		let page = req.query.page;
@@ -142,8 +139,10 @@ module.exports = {
 								(i) => i.postId === post.id || i.userId === post.user.id,
 							) !== -1
 						) {
+							post.isLocked = false;
 							return post;
 						}
+						post.isLocked = true;
 						post.image = process.env.mockimage;
 						return post;
 					});
@@ -154,7 +153,6 @@ module.exports = {
 			data,
 			paging: pagination,
 		};
-
 	},
 	getPaginationbynormal: async (req) => {
 		let page = req.query.page;
@@ -231,7 +229,10 @@ module.exports = {
 					) === -1
 				) {
 					post.image = process.env.mockimage;
+					post.isLocked = true;
+					return post;
 				}
+				post.isLocked = false;
 				return post;
 			});
 	},
@@ -332,7 +333,6 @@ module.exports = {
 		const data = await Post.find({ user }).populate('likes');
 		if (data) {
 			return data[0].followers.length;
-
 		} else return 0;
 	},
 	getPrivatebyUserID: async (user) => {
