@@ -46,9 +46,8 @@ const users = {
 	},
 	//修改
 	async EditUser(req, res, next) {
-		let {  name, birthday, gender, photo,memo } =
-				req.body;
-				/* #swagger.parameters['obj'] = {
+		let { name, birthday, gender, photo, memo } = req.body;
+		/* #swagger.parameters['obj'] = {
                     in: 'body',
                     description: '修改使用者',
                     schema:{
@@ -59,13 +58,18 @@ const users = {
                         memo:'test'
                     }
                 }*/
-		const updUser= await Users.findByIdAndUpdate(req.user.id, {			
-			name,
-			birthday,
-			gender,
-			photo,memo
-		},{new:true});
-		return Success(res, updUser);;
+		const updUser = await Users.findByIdAndUpdate(
+			req.user.id,
+			{
+				name,
+				birthday,
+				gender,
+				photo,
+				memo,
+			},
+			{ new: true },
+		);
+		return Success(res, updUser);
 	},
 	//登入
 	async singin(req, res, next) {
