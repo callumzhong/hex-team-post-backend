@@ -40,6 +40,7 @@ const getBoughtOrder = async (userId) => {
 	});
 };
 
+
 module.exports = {
 	getPagination: async (req) => {
 		const user = req.user.id;
@@ -96,6 +97,7 @@ module.exports = {
 		pagination['has_pre']= page==1?false: page<count;
 		pagination['has_next']= page==count?false: page<count;
 		return pagination;
+
 	},
 	getPaginationByDiary: async (req) => {
 		let page = req.query.page;
@@ -152,6 +154,7 @@ module.exports = {
 			data,
 			paging: pagination,
 		};
+
 	},
 	getPaginationbynormal: async (req) => {
 		let page = req.query.page;
