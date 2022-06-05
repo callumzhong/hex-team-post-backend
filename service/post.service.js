@@ -180,7 +180,7 @@ module.exports = {
 		//取得某個人的like數
 		const data = await Post.find({ user }).populate('likes').exec();
 		if (data && data.length !== 0) {
-			return data[0].followers.length;
+			return data[0].user?.followers?.length ?? 0;
 		} else return 0;
 	},
 	getPrivatebyUserID: async (user) => {
