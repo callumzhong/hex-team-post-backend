@@ -302,6 +302,7 @@ module.exports = {
 		const data = await Post.find({ user }).populate('likes');
 		if (data) {
 			return data[0].followers.length;
+
 		} else return 0;
 	},
 	getPrivatebyUserID: async (user) => {
