@@ -232,6 +232,7 @@ describe('api/order', () => {
 					.request(app)
 					.get(`/api/order/status?orderId=${order.id}`)
 					.end((err, res) => {
+						console.log(res.body);
 						res.should.have.status(200);
 						res.body.should.be.a('object');
 						res.body.should.have.property('status');

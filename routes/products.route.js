@@ -8,6 +8,6 @@ const router = express.Router();
  * @summary 取得所有產品
  * @param {string} type.query.required - 請輸入 coin || ticket 其一類型
  */
-router.get(productController.getAll);
+router.get('/', productController.getAll);
 
 module.exports = router;
