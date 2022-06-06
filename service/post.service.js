@@ -1,5 +1,6 @@
 const Post = require('../models/posts.model');
 const Order = require('../models/order.model');
+const User = require('../models/users.model');
 
 const calculatePagination = async (query, pageSize = 10) => {
 	const postCount = await Post.find(query).count();
@@ -349,4 +350,22 @@ module.exports = {
 		// });
 		return posts;
 	},
+	getOrderlikes: async(req)=>{
+		//const orderlikes = await Post.find({"$where":"this.likes.length>0"});
+		const orderlikes = await Post.aggregate([{
+			$project :{
+				user:1
+				,likes:1
+				,likeSize:{$size:"$likes"}}
+			},{
+					$match:{
+						likeSize:{$gt:0}
+					}
+				},{
+					$sort:{likeSize:-1}
+				}
+		]).limit(10);
+		await Post.populate(orderlikes,{path: 'user'});
+		return orderlikes;
+	}
 };

@@ -75,6 +75,29 @@ router.get('/:id', followController.getOne);
 router.get('/:id/Follows', followController.getUserFollowCount);
 
 /**
+ * GET /api/follow/orders/followers
+ * @tags follow
+ * @summary 取得追蹤前10排名(追蹤推薦)
+ * @return {object} 200 - success response
+ * @example response - 200
+{
+  "status": "success",
+  "data": [
+    {
+      "_id": "628c84d55e2ce69036fa90aa",
+      "name": "Ray",
+      "photo": "",
+      "followers": [
+        "628e4bbfad29e4c054c9f380",
+        "6298f3663b84eb47c3e1a7ea"
+      ],
+      "followersSize": 2
+    }]
+ }
+ */
+router.get('/orders/followers', followController.getUserFollowOrder);
+
+/**
  * POST /api/follow
  * @tags follow
  * @summary 加入追蹤(對應設計4頁)OK

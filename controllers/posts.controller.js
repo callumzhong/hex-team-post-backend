@@ -210,7 +210,6 @@ module.exports = {
 			return ErrorHandler(err, req, res, next);
 		}
 	},
-
 	deleteOne: async (req, res, next) => {
 		/* #swagger.responses[200] = {
 				description: "刪除成功" 
@@ -233,4 +232,12 @@ module.exports = {
 			return ErrorHandler(err, req, res, next);
 		}
 	},
+	getOrderlikes: async(req,res,next)=>{
+		try{
+			const orderlikes = await postService.getOrderlikes(req);
+			Success(res, orderlikes);
+		} catch (err) {
+			return ErrorHandler(err, req, res, next);
+		}
+	}
 };

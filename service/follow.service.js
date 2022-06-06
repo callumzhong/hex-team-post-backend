@@ -60,4 +60,23 @@ module.exports = {
 			return data[0].followers?.length ?? 0;
 		} else return 0;
 	},
+	getUserFollowOrder: async() => {
+		//取得某個人的追蹤數
+		//const orderfollowers = await Users.find().populate('followers');
+		const orderfollowers = await Users.aggregate([{
+			$project :{
+				name:1
+				,photo:1
+				,followers:1
+				,followersSize:{$size:"$followers"}}
+			},{
+					$match:{
+						followersSize:{$gt:0}
+					}
+				},{
+					$sort:{followersSize:-1}
+				}
+		]).limit(10);
+		return orderfollowers;
+	},
 };
