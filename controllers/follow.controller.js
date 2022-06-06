@@ -66,4 +66,12 @@ module.exports = {
 			return ErrorHandler(err, req, res, next);
 		}
 	},
+	getUserFollowOrder: async (req, res, next) => {
+		try {
+			const followOrder = await followService.getUserFollowOrder();
+			Success(res, followOrder);
+		} catch (err) {
+			return ErrorHandler(err, req, res, next);
+		}
+	}
 };

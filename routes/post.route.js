@@ -1,4 +1,5 @@
 const express = require('express');
+const postsController = require('../controllers/posts.controller');
 const router = express.Router();
 const PostController = require('../controllers/posts.controller');
 const { isAuth } = require('../service/auth.service');
@@ -146,7 +147,49 @@ router.get('/:Userid', PostController.getUserAll);
  * @param {string} id.path.required - PostId
  */
 router.get('/getOne/:id', PostController.getOne);
-
+/**
+ * GET /api/posts/order/likes
+ * @tags posts
+ * @summary 取得熱門創作者 
+ * @return {object} 200 - success response
+ * @example response - 200
+ {
+  "status": "success",
+  "data": [
+    {
+      "_id": "6298df453b84eb47c3e1a60b",
+      "user": {
+        "_id": "628e4bbfad29e4c054c9f380",
+        "name": "曾",
+        "email": "lionmo2391@gmail.com",
+        "gender": "male",
+        "birthday": "2022-05-13T00:00:00.000Z",
+        "delflag": false,
+        "createdAt": "2022-05-25T15:31:11.774Z",
+        "updatedAt": "2022-06-05T13:59:49.015Z",
+        "following": [
+          "6291e520cbbe05860f8d8c15",
+          "628c84d55e2ce69036fa90aa",
+          "6298f3d93b84eb47c3e1a806",
+          "6298f3663b84eb47c3e1a7ea",
+          "6290d6365f4b4c5971539031"
+        ],
+        "followers": [
+          "6298f3663b84eb47c3e1a7ea"
+        ],
+        "photo": "https://i.imgur.com/ZSwaVpt.jpg",
+        "id": "628e4bbfad29e4c054c9f380"
+      },
+      "likes": [
+        "6290d6365f4b4c5971539031",
+        "6298f3663b84eb47c3e1a7ea",
+        "628e4bbfad29e4c054c9f380"
+      ],
+      "likeSize": 3
+    }]
+  }
+ */
+router.get('/order/likes',postsController.getOrderlikes);
 /**
  * GET /api/posts/getOne/{id}/verified
  * @tags posts
