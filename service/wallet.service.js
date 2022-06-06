@@ -55,16 +55,21 @@ module.exports = {
 		const records = await Order.find({
 			user: userId,
 			type: 'ADD_CREDIT',
-		}).then((documents) => {
-			return documents.map((document) => ({
-				summary: document.summary,
-				createdAt: document.createdAt,
-				status: document.payment.status,
-				amountNTD: document.product.price - document.product.discount,
-				amountCoin: document.addCoin,
-				serialNumber: document.serialNumber,
-			}));
-		});
+		})
+			.populate({
+				path: 'payment',
+				select: 'status message merchantOrderNo',
+			})
+			.then((documents) => {
+				return documents.map((document) => ({
+					summary: document.summary,
+					createdAt: document.createdAt,
+					status: document.payment.status,
+					amountNTD: document.product.price - document.product.discount,
+					amountCoin: document.addCoin,
+					serialNumber: document.serialNumber,
+				}));
+			});
 		return records;
 	},
 	getPayRecord: async (userId) => {

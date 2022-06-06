@@ -32,7 +32,11 @@ module.exports = {
 		}
 		return res.status(200).json();
 	},
-	postPaymentBlank: (req, res, next) => {
-		return res.render('paymentCallback');
+	postPaymentBlank: async (req, res, next) => {
+		const payment = await PaymentService.detectPayment(req.body.TradeInfo);
+		const order = await PaymentService.getPaymentOrder(payment.merchantOrderNo);
+		const url = `${process.env.FRONT_END_HOST_URL}/#/order-success?orderId=${order.id}`;
+		console.log(url);
+		return res.redirect(url);
 	},
 };
