@@ -4,8 +4,7 @@ module.exports = {
 	getAll: async (id) => {
 		//取得所有追蹤
 		return await await Users.find({ _id: id }).populate({
-			path: 'following',
-			select: 'name _id',
+			path: 'following'
 		});
 	},
 	created: async (req) => {
