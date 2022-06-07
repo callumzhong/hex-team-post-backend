@@ -239,5 +239,13 @@ module.exports = {
 		} catch (err) {
 			return ErrorHandler(err, req, res, next);
 		}
+	},
+	getOrderUsers :async(req,res,next)=>{
+		try{
+			const orderlikes = await postService.getOrderUsers(req);
+			Success(res, orderlikes);
+		} catch (err) {
+			return ErrorHandler(err, req, res, next);
+		}
 	}
 };

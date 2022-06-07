@@ -150,7 +150,7 @@ router.get('/getOne/:id', PostController.getOne);
 /**
  * GET /api/posts/order/likes
  * @tags posts
- * @summary 取得熱門創作者 
+ * @summary 取得熱門文章
  * @return {object} 200 - success response
  * @example response - 200
  {
@@ -190,6 +190,67 @@ router.get('/getOne/:id', PostController.getOne);
   }
  */
 router.get('/order/likes',postsController.getOrderlikes);
+/**
+ * GET /api/posts/order/users
+ * @tags posts
+ * @summary 取得熱門創作者
+ * @return {object} 200 - success response
+ * @example response - 200
+  {
+    "status": "success",
+    "data": [
+      {
+        "_id": {
+          "_id": "628e4bbfad29e4c054c9f380",
+          "name": "曾",
+          "email": "lionmo2391@gmail.com",
+          "gender": "male",
+          "birthday": "2022-05-13T00:00:00.000Z",
+          "delflag": false,
+          "createdAt": "2022-05-25T15:31:11.774Z",
+          "updatedAt": "2022-06-06T16:30:31.591Z",
+          "following": [
+            "6291e520cbbe05860f8d8c15",
+            "628c84d55e2ce69036fa90aa",
+            "6298f3d93b84eb47c3e1a806",
+            "6298f3663b84eb47c3e1a7ea",
+            "6290d6365f4b4c5971539031"
+          ],
+          "followers": [
+            "6298f3663b84eb47c3e1a7ea"
+          ],
+          "photo": "https://i.imgur.com/m2Fyea9.jpg",
+          "id": "628e4bbfad29e4c054c9f380"
+        },
+        "totalsum": 10
+      },
+      {
+        "_id": {
+          "_id": "6298f3663b84eb47c3e1a7ea",
+          "name": "Ray123",
+          "email": "tingchun0131@gmail.com",
+          "photo": "https://i.imgur.com/734sNQX.jpg",
+          "gender": "male",
+          "birthday": "2022-06-10T00:00:00.000Z",
+          "delflag": false,
+          "following": [
+            "628c84d55e2ce69036fa90aa",
+            "628e4bbfad29e4c054c9f380"
+          ],
+          "followers": [
+            "628e4bbfad29e4c054c9f380"
+          ],
+          "createdAt": "2022-06-02T17:29:10.599Z",
+          "updatedAt": "2022-06-05T10:45:46.459Z",
+          "__v": 0,
+          "id": "6298f3663b84eb47c3e1a7ea"
+        },
+        "totalsum": 1
+      }
+    ]
+  }
+ */ 
+router.get('/order/users',postsController.getOrderUsers);
 /**
  * GET /api/posts/getOne/{id}/verified
  * @tags posts

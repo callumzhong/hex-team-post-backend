@@ -355,7 +355,9 @@ module.exports = {
 		const orderlikes = await Post.aggregate([{
 			$project :{
 				user:1
-				,likes:1
+				,image:1
+				,content:1
+				
 				,likeSize:{$size:"$likes"}}
 			},{
 					$match:{
@@ -364,8 +366,27 @@ module.exports = {
 				},{
 					$sort:{likeSize:-1}
 				}
-		]).limit(10);
-		await Post.populate(orderlikes,{path: 'user'});
+				,{$limit:10}
+		]);
+		await Post.populate(orderlikes,{path: 'user',select:'name photo'});
+		return orderlikes;
+	},
+	getOrderUsers: async(req)=>{
+		//const orderlikes = await Post.find({"$where":"this.likes.length>0"});
+		const orderlikes = await Post.aggregate([{
+			$project :
+				{
+					user:1
+					,likeSize:{$size:"$likes"}
+				}
+			}
+			,{$match:{likeSize:{$gt:0}}}
+			,{$group:{_id:'$user','totalsum':{$sum:'$likeSize'}}}
+			,{$sort:{totalsum:-1}}			
+			,{$limit:10}
+		]);
+		
+		await Post.populate(orderlikes,{path: '_id',model:'user'});
 		return orderlikes;
 	}
 };
