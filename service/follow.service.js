@@ -1,4 +1,6 @@
+const Post = require('../models/posts.model');
 const Users = require('../models/users.model');
+const postService = require('./post.service');
 
 module.exports = {
 	getAll: async (id) => {
@@ -78,4 +80,28 @@ module.exports = {
 		]).limit(10);
 		return orderfollowers;
 	},
+	getUserFollowPosts:async(req)=>{
+		//取得追蹤者貼文calculatePagination
+		const id=req.user.id;		
+		
+		const userdata = await Users.find({_id: id}).select('following')
+		;
+		let data = [];
+
+		if(userdata.length>0){
+			let search = req.query.q;
+			if (search == undefined) search = '';
+
+			let query = { user:{$in:userdata[0].following} }; //, type: { $in: ['group'] }
+			if (search !== '') {
+				query['content'] = { $regex: search };
+			}
+		
+			return await postService.getfollowPost(query,req);
+		}else {
+			return {message:'沒有追蹤者。'};
+		}
+		//const postdata=await Post.find();
+		
+	}
 };

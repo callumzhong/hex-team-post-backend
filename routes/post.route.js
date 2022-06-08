@@ -276,6 +276,17 @@ router.get('/getOne/:id/verified', isAuth, PostController.getOneByHasSignIn);
  * @param {string} sort.query - 請輸入 asc || desc 兩種排序
  */
 router.get('/private/:id', PostController.getPrivatebyUserID);
+/**
+ * GET /api/posts/private/Auth/{id}
+ * @tags posts
+ * @summary 取得一般私密貼文(前10筆) OK 
+ * @param {string} id.path.required - userId
+ * @param {string} page.query - 分頁數
+ * @param {string} q.query - 查詢
+ * @param {string} sort.query - 請輸入 asc || desc 兩種排序
+ * @security apiKeyAuth
+ */
+router.get('/private/Auth/:id',isAuth, PostController.getPrivateforAuthUser);
 
 /**
  * POST /api/posts

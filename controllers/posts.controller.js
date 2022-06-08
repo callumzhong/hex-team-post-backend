@@ -164,9 +164,19 @@ module.exports = {
 	},
 	getPrivatebyUserID: async (req, res, next) => {
 		try {
-			
-
-			const Post = await postService.getPrivatebyUserID(req);
+			//私密 公開權模糊
+			const Post = await postService.getPrivateforUser(req);
+			if (Post) {
+				Success(res, Post);
+			}
+		} catch (err) {
+			return ErrorHandler(err, req, res, next);
+		}
+	},
+	getPrivateforAuthUser: async (req, res, next) => {
+		try {
+			//登入者有購買顯示，沒有權模糊
+			const Post = await postService.getPrivateforAuthUser(req);
 			if (Post) {
 				Success(res, Post);
 			}

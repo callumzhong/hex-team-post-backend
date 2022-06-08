@@ -73,5 +73,13 @@ module.exports = {
 		} catch (err) {
 			return ErrorHandler(err, req, res, next);
 		}
+	},
+	getUserFollowPosts: async (req, res, next) => {
+		try {
+			const data = await followService.getUserFollowPosts(req);
+			Success(res, data);
+		} catch (err) {
+			return ErrorHandler(err, req, res, next);
+		}
 	}
 };
