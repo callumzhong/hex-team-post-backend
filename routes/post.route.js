@@ -129,6 +129,9 @@ router.get('/diary', isAuth, PostController.getPaginationByDiary);
  * GET /api/posts/private
  * @tags posts
  * @summary 取得個人私密貼文(前10筆) OK
+ * @param {string} page.query - 分頁數
+ * @param {string} q.query - 查詢
+ * @param {string} sort.query - 請輸入 asc || desc 兩種排序
  * @security apiKeyAuth
  */
 router.get('/private/', isAuth, PostController.getPrivatebyAuth);
@@ -138,6 +141,9 @@ router.get('/private/', isAuth, PostController.getPrivatebyAuth);
  * @tags posts
  * @summary 一般帶入使用者ID(前10筆) OK2
  * @param {string} userId.path.required - userId
+ * @param {string} page.query - 分頁數
+ * @param {string} q.query - 查詢
+ * @param {string} sort.query - 請輸入 asc || desc 兩種排序
  */
 router.get('/:Userid', PostController.getUserAll);
 /**
@@ -263,8 +269,11 @@ router.get('/getOne/:id/verified', isAuth, PostController.getOneByHasSignIn);
 /**
  * GET /api/posts/private/{id}
  * @tags posts
- * @summary 取得一般私密貼文(前10筆) OK
+ * @summary 取得一般私密貼文(前10筆) OK 
  * @param {string} id.path.required - userId
+ * @param {string} page.query - 分頁數
+ * @param {string} q.query - 查詢
+ * @param {string} sort.query - 請輸入 asc || desc 兩種排序
  */
 router.get('/private/:id', PostController.getPrivatebyUserID);
 

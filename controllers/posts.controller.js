@@ -4,11 +4,9 @@ const postService = require('../service/post.service');
 module.exports = {
 	getPagination: async (req, res, next) => {
 		try {
-			const Post = await postService.getPagination(req);
-			const PostPagination =await postService.getPaginationData(req);
+			const Post = await postService.getPagination(req);			
 			if (Post) {
-				//Success(res, Post);
-				SuccessPagination(res,Post,PostPagination);
+				Success(res, Post);				
 			} else {
 				return ErrorHandler(new Error('取得文章失敗'), req, res, next);
 			}
@@ -154,9 +152,9 @@ module.exports = {
 	},
 	getPrivatebyAuth: async (req, res, next) => {
 		try {
-			let user = req.user.id;
+			
 
-			const Post = await postService.getPrivatebyUserID(user);
+			const Post = await postService.getPrivatebyUserID(req);
 			if (Post) {
 				Success(res, Post);
 			}
@@ -166,9 +164,9 @@ module.exports = {
 	},
 	getPrivatebyUserID: async (req, res, next) => {
 		try {
-			let user = req.params.id;
+			
 
-			const Post = await postService.getPrivatebyUserID(user);
+			const Post = await postService.getPrivatebyUserID(req);
 			if (Post) {
 				Success(res, Post);
 			}

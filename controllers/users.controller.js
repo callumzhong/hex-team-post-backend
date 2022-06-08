@@ -193,7 +193,7 @@ const users = {
 			Success(res, result);
 		} catch (err) {
 			//return ErrorHandler(err,req,res,next);
-			return ErrorHandler(new Error('尚未授權'), req, res, next);
+			return ErrorHandler(err, req, res, next);
 		}
 	},
 	async GetUserById(req, res, next) {
@@ -216,7 +216,7 @@ const users = {
 			Success(res, result);
 		} catch (err) {
 			//return ErrorHandler(err,req,res,next);
-			return ErrorHandler(new Error('尚未授權'), req, res, next);
+			return ErrorHandler(err, req, res, next);
 		}
 	},
 	async getSubscribedUsers(req, res, next) {
@@ -224,7 +224,7 @@ const users = {
 			const users = await userService.getSubscribedUsers(req.user);
 			return Success(res, users);
 		} catch (err) {
-			return next(err);
+			return ErrorHandler(err, req, res, next);
 		}
 	},
 };
