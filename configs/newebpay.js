@@ -4,8 +4,8 @@ const merchantID = process.env.MERCHANT_ID; // 商店編號
 const hashKey = process.env.HASH_KEY; // API 金鑰
 const hashIV = process.env.HASH_IV; // API 金鑰
 const payGateWay = 'https://ccore.newebpay.com/MPG/mpg_gateway'; // 付款網址
-const returnURL = `${hostURL}/api/payment/callback?from=ReturnURL`; // 支付完成跳轉網址
-const notifyURL = `${hostURL}/api/payment/callback?from=NotifyURL`; // 支付通知網址
+const returnURL = `${hostURL}/newebpay/blank`; // 支付完成跳轉網址
+const notifyURL = `${hostURL}/newebpay/callback`; // 支付通知網址
 const clientBackURL = `${hostURL}`; // 支付取消跳轉網址
 
 const plainTextData = (tradeInfo) => {

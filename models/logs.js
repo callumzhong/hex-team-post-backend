@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const LogsConn = require('../connections/logsConn');
+const LogsConn = require('../connections/logs.connection');
 
 const logSchema = new mongoose.Schema(
 	{

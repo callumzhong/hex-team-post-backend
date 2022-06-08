@@ -4,24 +4,28 @@ require('dotenv').config({
 });
 
 const express = require('express');
+const expressJSDocSwagger = require('express-jsdoc-swagger');
+const options = require('./swagger-options');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
 
-const userRouter = require('./routes/userRoute');
-const uploadRouter = require('./routes/uploadRoute');
-const followRouter = require('./routes/follow');
+const userRouter = require('./routes/user.route');
+const uploadRouter = require('./routes/upload.route');
+const followRouter = require('./routes/follow.route');
 const indexRouter = require('./routes/index');
-const postRouter = require('./routes/postRoute');
-const emailRouter = require('./routes/email');
-const paymentRouter = require('./routes/payment');
-const productRouter = require('./routes/products');
-const walletRouter = require('./routes/wallet');
-const swaggerUi = require('swagger-ui-express');
-const swaggerFile = require('./swagger-output.json');
-const Order = require('./models/orderModel');
+const postRouter = require('./routes/post.route');
+const commendRouter = require('./routes/comment.route');
+const emailRouter = require('./routes/email.route');
+const paymentRouter = require('./routes/payment.route');
+const productRouter = require('./routes/products.route');
+const walletRouter = require('./routes/wallet.route');
+const orderRouter = require('./routes/order.route');
+const newebpayRouter = require('./routes/newebpay.route');
 const app = express();
+
+expressJSDocSwagger(app)(options);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -35,15 +39,17 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use('/newebpay', newebpayRouter);
 app.use('/api/posts', postRouter);
 app.use('/api/user', userRouter);
+app.use('/api/comment', commendRouter);
 app.use('/api/upload', uploadRouter);
 app.use('/api/follow', followRouter);
 app.use('/api/email', emailRouter);
 app.use('/api/payment', paymentRouter);
 app.use('/api/products', productRouter);
 app.use('/api/wallet', walletRouter);
-app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+app.use('/api/order', orderRouter);
 
 // 404 錯誤
 app.use(function (req, res, next) {
@@ -58,6 +64,7 @@ app.use(function (req, res, next) {
 const resErrorProd = (err, res) => {
 	if (err.isOperational) {
 		res.status(err.statusCode).json({
+			status: 'error',
 			message: err.message,
 		});
 	} else {
