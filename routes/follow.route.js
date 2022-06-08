@@ -65,6 +65,16 @@ router.get('/', isAuth, followController.getAll);
 }
  */
 router.get('/:id', followController.getOne);
+/**
+ * GET /api/follow/auth/followposts
+ * @tags follow
+ * @summary 取得個人追蹤者貼文
+ * @security apiKeyAuth
+ * @param {string} page.query - 分頁數
+ * @param {string} q.query - 查詢
+ * @param {string} sort.query - 請輸入 asc || desc 兩種排序
+ */ 
+router.get('/auth/followposts',isAuth, followController.getUserFollowPosts);
 
 /**
  * GET /api/follow/{id}/Follows

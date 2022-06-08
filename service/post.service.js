@@ -374,6 +374,7 @@ module.exports = {
 			return data[0].likeslength;
 		} else return 0;
 	},
+	//私密 綁登入者確認是否購買
 	getPrivatebyUserID: async (req) => {
 		//取得個人貼文		
 		let user = req.user?.id;
@@ -426,6 +427,99 @@ module.exports = {
 		// });
 		return {data,Pagination};
 	},
+	//私密 公開權模糊
+	getPrivateforUser: async(req)=>{
+		const user=req.params.id;
+		let page = req.query.page;
+		let search = req.query.q;
+		let sort = req.query.sort;		
+
+		if (page == undefined) page = 1;
+		if (sort == undefined) sort = -1;
+		else sort = sort == 'asc' ? 1 : -1;
+		if (search == undefined) search = '';
+
+		let query = { user,type: { $in: ['person'] } };
+		if (search !== '') {
+			query['content'] = { $regex: search };
+		}		
+		//const bought = await getBoughtOrder(user);
+		const pageSize = 10;
+		const Pagination = await calculatePagination(query, pageSize);
+		let data = [];
+		if (Pagination.total_pages > 0) {
+			data= await Post.find(query)
+			.populate({
+				path: 'user',
+				select: 'name photo gender',
+			})
+			.sort({ createdAt: -1 })
+			.skip((page - 1) * pageSize)
+			.limit(pageSize)
+			.then((posts) => {
+				return posts.map((post) => {
+					post.isLocked = true;
+					post.image = process.env.mockimage;
+					return post;
+				});
+			});
+		}
+		// posts.forEach(post=>{
+		// 	post.image=process.env.mockimage;
+		// });
+		return {data,Pagination};
+	},
+	//私密 綁登入者確認是否購買
+	getPrivateforAuthUser: async(req)=>{
+		const user=req.user.id;
+		const puser=req.params.id;
+		let page = req.query.page;
+		let search = req.query.q;
+		let sort = req.query.sort;		
+
+		if (page == undefined) page = 1;
+		if (sort == undefined) sort = -1;
+		else sort = sort == 'asc' ? 1 : -1;
+		if (search == undefined) search = '';
+
+		let query = { user:puser,type: { $in: ['person'] } };
+		if (search !== '') {
+			query['content'] = { $regex: search };
+		}		
+		const bought = await getBoughtOrder(user);
+		const pageSize = 10;
+		const Pagination = await calculatePagination(query, pageSize);
+		let data = [];
+		if (Pagination.total_pages > 0) {
+			data= await Post.find(query)
+			.populate({
+				path: 'user',
+				select: 'name photo gender',
+			})
+			.sort({ createdAt: -1 })
+			.skip((page - 1) * pageSize)
+			.limit(pageSize)
+			.then((posts) => {
+				return posts.map((post) => {
+					return posts.map((post) => {
+						if (
+							bought.findIndex(
+								(i) => i.postId === post.id || i.userId === post.user.id,
+							) !== -1
+						) {
+							post.isLocked = false;
+							return post;
+						}
+						post.isLocked = true;
+						post.image = process.env.mockimage;
+						return post;
+				});
+			});
+		});
+		}
+		
+		return {data,Pagination};
+	},
 	getOrderlikes: async(req)=>{
 		//const orderlikes = await Post.find({"$where":"this.likes.length>0"});
 		const orderlikes = await Post.aggregate([{
@@ -464,5 +558,47 @@ module.exports = {
 		
 		await Post.populate(orderlikes,{path: '_id',model:'user'});
 		return orderlikes;
+	},
+	getfollowPost:async(query,req)=>{
+		
+		//追蹤者貼文
+		let page = req.query.page;
+		let sort = req.query.sort;
+
+		if (page == undefined) page = 1;
+		if (sort == undefined) sort = -1;
+		else sort = sort == 'asc' ? 1 : -1;
+
+		const user=req.user.id; // 登入者id
+		const bought = await getBoughtOrder(user);
+		const pageSize = 10;
+		const Pagination = await calculatePagination(query, pageSize);
+		let data = [];
+		if (Pagination.total_pages > 0) {
+			data= await Post.find(query)
+			.populate({
+				path: 'user',
+				select: 'name photo gender',
+			})
+			.sort({ createdAt: -1 })
+			.skip((page - 1) * pageSize)
+			.limit(pageSize)
+			.then((posts) => {
+				return posts.map((post) => {
+					if (
+						bought.findIndex(
+							(i) => i.postId === post.id || i.userId === post.user.id,
+						) !== -1
+					) {
+						post.isLocked = false;
+						return post;
+					}
+					post.isLocked = true;
+					post.image = process.env.mockimage;
+					return post;
+				});
+			});
+		}
+		return {data,Pagination};
 	}
 };
