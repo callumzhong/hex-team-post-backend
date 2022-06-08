@@ -55,7 +55,7 @@ module.exports = {
 	getUserFollowCount: async (user) => {
 		//取得某個人的追蹤數
 		const data = await Users.find({ _id: user }).populate('followers');
-		if (data && data.length !== 0) {
+		if (data && data?.length !== 0) {
 			return data[0].followers?.length ?? 0;
 		} else return 0;
 	},
