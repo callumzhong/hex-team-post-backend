@@ -393,7 +393,7 @@ module.exports = {
 	getPrivatebyUserID: async (req) => {
 		//取得個人貼文
 		let user = req.user?.id;
-		if (user == undefined) user = req.params.id;
+		// if (user == undefined) user = req.params.id;
 		let page = req.query.page;
 		let search = req.query.q;
 		let sort = req.query.sort;
@@ -407,7 +407,8 @@ module.exports = {
 		if (search !== '') {
 			query['content'] = { $regex: search };
 		}
-		const bought = await getBoughtOrder(user);
+		// 取個人不必取得購買訂單匹配
+		// const bought = await getBoughtOrder(user);
 		const pageSize = 10;
 		const Pagination = await calculatePagination(query, pageSize);
 		let data = [];
@@ -423,16 +424,7 @@ module.exports = {
 				.lean()
 				.then((posts) => {
 					return posts.map((post) => {
-						if (
-							bought.findIndex(
-								(i) => i.postId === post.id || i.userId === post.user.id,
-							) !== -1
-						) {
-							post.isLocked = false;
-							return post;
-						}
-						post.isLocked = true;
-						post.image = process.env.mockimage;
+						post.isLocked = false;
 						return post;
 					});
 				});
@@ -518,19 +510,17 @@ module.exports = {
 				.lean()
 				.then((posts) => {
 					return posts.map((post) => {
-						return posts.map((post) => {
-							if (
-								bought.findIndex(
-									(i) => i.postId === post.id || i.userId === post.user.id,
-								) !== -1
-							) {
-								post.isLocked = false;
-								return post;
-							}
-							post.isLocked = true;
-							post.image = process.env.mockimage;
+						if (
+							bought.findIndex(
+								(i) => i.postId === post.id || i.userId === post.user.id,
+							) !== -1
+						) {
+							post.isLocked = false;
 							return post;
-						});
+						}
+						post.isLocked = true;
+						post.image = process.env.mockimage;
+						return post;
 					});
 				});
 		}
