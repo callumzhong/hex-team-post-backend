@@ -14,7 +14,6 @@ const productSchema = new mongoose.Schema(
 		coin: {
 			type: Number,
 			required: [true, '請輸入代幣'],
-			unique: true,
 		},
 		price: {
 			type: Number,
