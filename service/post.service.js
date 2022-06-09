@@ -3,7 +3,7 @@ const Order = require('../models/order.model');
 const User = require('../models/users.model');
 const { default: mongoose } = require('mongoose');
 
-const calculatePagination = async (query, pageSize = 10) => {
+const calculatePagination = async (query, pageSize = 10,page=1) => {
 	const postCount = await Post.find(query).count();
 	const totalPages = Math.ceil(postCount / pageSize);
 	const result = {
@@ -16,7 +16,7 @@ const calculatePagination = async (query, pageSize = 10) => {
 		return result;
 	}
 
-	result.current_page = postCount > totalPages ? totalPages : postCount;
+	result.current_page = page > totalPages ? totalPages : page;
 	result.total_pages = totalPages;
 	result.has_pre = result.current_page > 1 ? true : false;
 	result.has_next = result.current_page >= totalPages ? false : true;
@@ -61,7 +61,7 @@ module.exports = {
 		}
 		if (like !== undefined) query['likes'] = { $in: [like] };
 		const pageSize = 10;
-		const Pagination = await calculatePagination(query, pageSize);
+		const Pagination = await calculatePagination(query, pageSize,parseInt(page));
 		let data = [];
 
 		if (Pagination.total_pages > 0) {
@@ -150,7 +150,7 @@ module.exports = {
 		}
 
 		const pageSize = 10;
-		const pagination = await calculatePagination(query, pageSize);
+		const pagination = await calculatePagination(query, pageSize,parseInt(page));
 		let data = [];
 		if (pagination.total_pages > 0 && filterBought.$or.length > 0) {
 			data = await Post.find({
@@ -194,7 +194,7 @@ module.exports = {
 		}
 		if (like !== undefined) query['likes'] = { $in: [like] };
 		const pageSize = 10;
-		const Pagination = await calculatePagination(query, pageSize);
+		const Pagination = await calculatePagination(query, pageSize,parseInt(page));
 		let data = [];
 		if (Pagination.total_pages > 0) {
 			data = await Post.find(query)
@@ -226,7 +226,7 @@ module.exports = {
 		}
 
 		const pageSize = 10;
-		const Pagination = await calculatePagination(query, pageSize);
+		const Pagination = await calculatePagination(query, pageSize,parseInt(page));
 		let data = [];
 		if (Pagination.total_pages > 0) {
 			data = await Post.find(query)
@@ -410,7 +410,7 @@ module.exports = {
 		// 取個人不必取得購買訂單匹配
 		// const bought = await getBoughtOrder(user);
 		const pageSize = 10;
-		const Pagination = await calculatePagination(query, pageSize);
+		const Pagination = await calculatePagination(query, pageSize,parseInt(page));
 		let data = [];
 		if (Pagination.total_pages > 0) {
 			data = await Post.find(query)
@@ -452,7 +452,7 @@ module.exports = {
 		}
 		//const bought = await getBoughtOrder(user);
 		const pageSize = 10;
-		const Pagination = await calculatePagination(query, pageSize);
+		const Pagination = await calculatePagination(query, pageSize,parseInt(page));
 		let data = [];
 		if (Pagination.total_pages > 0) {
 			data = await Post.find(query)
@@ -496,7 +496,7 @@ module.exports = {
 		}
 		const bought = await getBoughtOrder(user);
 		const pageSize = 10;
-		const Pagination = await calculatePagination(query, pageSize);
+		const Pagination = await calculatePagination(query, pageSize,parseInt(page));
 		let data = [];
 		if (Pagination.total_pages > 0) {
 			data = await Post.find(query)
@@ -582,7 +582,7 @@ module.exports = {
 		const user = req.user.id; // 登入者id
 		const bought = await getBoughtOrder(user);
 		const pageSize = 10;
-		const Pagination = await calculatePagination(query, pageSize);
+		const Pagination = await calculatePagination(query, pageSize, parseInt(page));
 		let data = [];
 		if (Pagination.total_pages > 0) {
 			data = await Post.find(query)
@@ -596,19 +596,23 @@ module.exports = {
 				.lean()
 				.then((posts) => {
 					return posts.map((post) => {
-						if (
-							bought.findIndex(
-								(i) => i.postId === post.id || i.userId === post.user.id,
-							) !== -1
-						) {
-							post.isLocked = false;
+						if(post.type==='person')
+						{
+							if (
+								bought.findIndex((i) => i.postId === post.id || i.userId === post.user.id,) !== -1
+							) {
+								post.isLocked = false;
+								return post;
+							}
+							post.isLocked = true;
+							post.image = process.env.mockimage;
+							return post;
+						}else {
 							return post;
 						}
-						post.isLocked = true;
-						post.image = process.env.mockimage;
-						return post;
 					});
-				});
+				})
+				;
 		}
 		return { data, Pagination };
 	},
