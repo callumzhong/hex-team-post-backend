@@ -66,17 +66,16 @@ module.exports = {
 
 		if (Pagination.total_pages > 0) {
 			data = await Post.find(query)
-			.sort({ createdAt: sort })
-			.populate({
-				path: 'user',
-				select: 'name photo gender',
-			})
-			.skip((page - 1) * pageSize)
-			.limit(pageSize);
-			}
-		
+				.sort({ createdAt: sort })
+				.populate({
+					path: 'user',
+					select: 'name photo gender',
+				})
+				.skip((page - 1) * pageSize)
+				.limit(pageSize);
+		}
 
-		return {data,Pagination};
+		return { data, Pagination };
 	},
 	getPaginationData: async (req) => {
 		const user = req.user.id;
@@ -126,13 +125,37 @@ module.exports = {
 		if (like !== undefined) query['likes'] = { $in: [like] };
 
 		const bought = await getBoughtOrder(req.user.id);
+		const filterBought = {
+			$or: [],
+		};
+
+		if (bought.some((i) => i.userId.trim())) {
+			filterBought.$or.push({
+				user: {
+					$in: bought
+						.filter((buy) => buy.userId.trim())
+						.map((item) => item.userId),
+				},
+			});
+		}
+
+		if (bought.some((i) => i.postId.trim())) {
+			filterBought.$or.push({
+				id: {
+					$in: bought
+						.filter((buy) => buy.postId.trim())
+						.map((item) => item.postId),
+				},
+			});
+		}
 
 		const pageSize = 10;
 		const pagination = await calculatePagination(query, pageSize);
 		let data = [];
-
-		if (pagination.total_pages > 0) {
-			data = await Post.find(query)
+		if (pagination.total_pages > 0 && filterBought.$or.length > 0) {
+			data = await Post.find({
+				$and: [query, filterBought],
+			})
 				.sort({ createdAt: sort })
 				.populate({
 					path: 'user',
@@ -140,18 +163,10 @@ module.exports = {
 				})
 				.skip((page - 1) * pageSize)
 				.limit(pageSize)
+				.lean()
 				.then((posts) => {
 					return posts.map((post) => {
-						if (
-							bought.findIndex(
-								(i) => i.postId === post.id || i.userId === post.user.id,
-							) !== -1
-						) {
-							post.isLocked = false;
-							return post;
-						}
 						post.isLocked = true;
-						post.image = process.env.mockimage;
 						return post;
 					});
 				});
@@ -191,7 +206,7 @@ module.exports = {
 				.skip((page - 1) * pageSize)
 				.limit(pageSize);
 		}
-		return {data,Pagination};
+		return { data, Pagination };
 	},
 	getAll: async () => {},
 	getUserAll: async (req) => {
@@ -199,36 +214,35 @@ module.exports = {
 		let page = req.query.page;
 		let search = req.query.q;
 		let sort = req.query.sort;
-		
 
 		if (page == undefined) page = 1;
 		if (sort == undefined) sort = -1;
 		else sort = sort == 'asc' ? 1 : -1;
 		if (search == undefined) search = '';
 
-		let query = {user, type: { $in: ['group'] } };
+		let query = { user, type: { $in: ['group'] } };
 		if (search !== '') {
 			query['content'] = { $regex: search };
 		}
-		
+
 		const pageSize = 10;
 		const Pagination = await calculatePagination(query, pageSize);
 		let data = [];
 		if (Pagination.total_pages > 0) {
-		data= await Post.find(query)
-			.populate({
-				path: 'comments',
-				select: 'comment user',
-			})
-			.populate({
-				path: 'user',
-				select: 'name photo gender',
-			})
-			.sort({ createdAt: -1 })
-			.skip((page - 1) * pageSize)
-			.limit(pageSize);
+			data = await Post.find(query)
+				.populate({
+					path: 'comments',
+					select: 'comment user',
+				})
+				.populate({
+					path: 'user',
+					select: 'name photo gender',
+				})
+				.sort({ createdAt: -1 })
+				.skip((page - 1) * pageSize)
+				.limit(pageSize);
 		}
-		return {data,Pagination};
+		return { data, Pagination };
 	},
 	getOne: async (req) => {
 		return await Post.findOne({ _id: req.params.id })
@@ -253,6 +267,7 @@ module.exports = {
 				path: 'user',
 				select: 'name photo gender',
 			})
+			.lean()
 			.then((post) => {
 				if (
 					post.user.id !== userId &&
@@ -355,7 +370,7 @@ module.exports = {
 	},
 	getPostCountbyGroup: async (user) => {
 		//取得個人貼文
-		return await Post.find({ user, type:'group'  }).count();
+		return await Post.find({ user, type: 'group' }).count();
 	},
 	getPostCountbyPerson: async (user) => {
 		//取得個人貼文
@@ -365,142 +380,48 @@ module.exports = {
 		//取得某個人的like數
 		//const data =await Post.find({user});
 		const data = await Post.aggregate([
-			{$match:{user:mongoose.Types.ObjectId(user)}},
-			{$group:{_id:'$user','likeslength':{ "$sum": {$size:'$likes'}}}}
+			{ $match: { user: mongoose.Types.ObjectId(user) } },
+			{ $group: { _id: '$user', likeslength: { $sum: { $size: '$likes' } } } },
 			//,{$group:{_id:'$user','totalsum':{$sum:'$likeSize'}}}
-			//,{$sort:{totalsum:-1}}						
+			//,{$sort:{totalsum:-1}}
 		]);
-		if (data.length>0) {
+		if (data.length > 0) {
 			return data[0].likeslength;
 		} else return 0;
 	},
 	//私密 綁登入者確認是否購買
 	getPrivatebyUserID: async (req) => {
-		//取得個人貼文		
+		//取得個人貼文
 		let user = req.user?.id;
-		if(user==undefined)
-		user=req.params.id;
+		if (user == undefined) user = req.params.id;
 		let page = req.query.page;
 		let search = req.query.q;
-		let sort = req.query.sort;		
+		let sort = req.query.sort;
 
 		if (page == undefined) page = 1;
 		if (sort == undefined) sort = -1;
 		else sort = sort == 'asc' ? 1 : -1;
 		if (search == undefined) search = '';
 
-		let query = { user,type: { $in: ['person'] } };
+		let query = { user, type: { $in: ['person'] } };
 		if (search !== '') {
 			query['content'] = { $regex: search };
-		}		
+		}
 		const bought = await getBoughtOrder(user);
 		const pageSize = 10;
 		const Pagination = await calculatePagination(query, pageSize);
 		let data = [];
 		if (Pagination.total_pages > 0) {
-			data= await Post.find(query)
-			.populate({
-				path: 'user',
-				select: 'name photo gender',
-			})
-			.sort({ createdAt: -1 })
-			.skip((page - 1) * pageSize)
-			.limit(pageSize)
-			.then((posts) => {
-				return posts.map((post) => {
-					if (
-						bought.findIndex(
-							(i) => i.postId === post.id || i.userId === post.user.id,
-						) !== -1
-					) {
-						post.isLocked = false;
-						return post;
-					}
-					post.isLocked = true;
-					post.image = process.env.mockimage;
-					return post;
-				});
-			});
-		}
-		// posts.forEach(post=>{
-		// 	post.image=process.env.mockimage;
-		// });
-		return {data,Pagination};
-	},
-	//私密 公開權模糊
-	getPrivateforUser: async(req)=>{
-		const user=req.params.id;
-		let page = req.query.page;
-		let search = req.query.q;
-		let sort = req.query.sort;		
-
-		if (page == undefined) page = 1;
-		if (sort == undefined) sort = -1;
-		else sort = sort == 'asc' ? 1 : -1;
-		if (search == undefined) search = '';
-
-		let query = { user,type: { $in: ['person'] } };
-		if (search !== '') {
-			query['content'] = { $regex: search };
-		}		
-		//const bought = await getBoughtOrder(user);
-		const pageSize = 10;
-		const Pagination = await calculatePagination(query, pageSize);
-		let data = [];
-		if (Pagination.total_pages > 0) {
-			data= await Post.find(query)
-			.populate({
-				path: 'user',
-				select: 'name photo gender',
-			})
-			.sort({ createdAt: -1 })
-			.skip((page - 1) * pageSize)
-			.limit(pageSize)
-			.then((posts) => {
-				return posts.map((post) => {
-					post.isLocked = true;
-					post.image = process.env.mockimage;
-					return post;
-				});
-			});
-		}
-		// posts.forEach(post=>{
-		// 	post.image=process.env.mockimage;
-		// });
-		return {data,Pagination};
-	},
-	//私密 綁登入者確認是否購買
-	getPrivateforAuthUser: async(req)=>{
-		const user=req.user.id;
-		const puser=req.params.id;
-		let page = req.query.page;
-		let search = req.query.q;
-		let sort = req.query.sort;		
-
-		if (page == undefined) page = 1;
-		if (sort == undefined) sort = -1;
-		else sort = sort == 'asc' ? 1 : -1;
-		if (search == undefined) search = '';
-
-		let query = { user:puser,type: { $in: ['person'] } };
-		if (search !== '') {
-			query['content'] = { $regex: search };
-		}		
-		const bought = await getBoughtOrder(user);
-		const pageSize = 10;
-		const Pagination = await calculatePagination(query, pageSize);
-		let data = [];
-		if (Pagination.total_pages > 0) {
-			data= await Post.find(query)
-			.populate({
-				path: 'user',
-				select: 'name photo gender',
-			})
-			.sort({ createdAt: -1 })
-			.skip((page - 1) * pageSize)
-			.limit(pageSize)
-			.then((posts) => {
-				return posts.map((post) => {
+			data = await Post.find(query)
+				.populate({
+					path: 'user',
+					select: 'name photo gender',
+				})
+				.sort({ createdAt: -1 })
+				.skip((page - 1) * pageSize)
+				.limit(pageSize)
+				.lean()
+				.then((posts) => {
 					return posts.map((post) => {
 						if (
 							bought.findIndex(
@@ -513,54 +434,153 @@ module.exports = {
 						post.isLocked = true;
 						post.image = process.env.mockimage;
 						return post;
+					});
 				});
-			});
-		});
 		}
-		
-		return {data,Pagination};
+		// posts.forEach(post=>{
+		// 	post.image=process.env.mockimage;
+		// });
+		return { data, Pagination };
 	},
-	getOrderlikes: async(req)=>{
+	//私密 公開權模糊
+	getPrivateforUser: async (req) => {
+		const user = req.params.id;
+		let page = req.query.page;
+		let search = req.query.q;
+		let sort = req.query.sort;
+
+		if (page == undefined) page = 1;
+		if (sort == undefined) sort = -1;
+		else sort = sort == 'asc' ? 1 : -1;
+		if (search == undefined) search = '';
+
+		let query = { user, type: { $in: ['person'] } };
+		if (search !== '') {
+			query['content'] = { $regex: search };
+		}
+		//const bought = await getBoughtOrder(user);
+		const pageSize = 10;
+		const Pagination = await calculatePagination(query, pageSize);
+		let data = [];
+		if (Pagination.total_pages > 0) {
+			data = await Post.find(query)
+				.populate({
+					path: 'user',
+					select: 'name photo gender',
+				})
+				.sort({ createdAt: -1 })
+				.skip((page - 1) * pageSize)
+				.limit(pageSize)
+				.lean()
+				.then((posts) => {
+					return posts.map((post) => {
+						post.isLocked = true;
+						post.image = process.env.mockimage;
+						return post;
+					});
+				});
+		}
+		// posts.forEach(post=>{
+		// 	post.image=process.env.mockimage;
+		// });
+		return { data, Pagination };
+	},
+	//私密 綁登入者確認是否購買
+	getPrivateforAuthUser: async (req) => {
+		const user = req.user.id;
+		const puser = req.params.id;
+		let page = req.query.page;
+		let search = req.query.q;
+		let sort = req.query.sort;
+
+		if (page == undefined) page = 1;
+		if (sort == undefined) sort = -1;
+		else sort = sort == 'asc' ? 1 : -1;
+		if (search == undefined) search = '';
+
+		let query = { user: puser, type: { $in: ['person'] } };
+		if (search !== '') {
+			query['content'] = { $regex: search };
+		}
+		const bought = await getBoughtOrder(user);
+		const pageSize = 10;
+		const Pagination = await calculatePagination(query, pageSize);
+		let data = [];
+		if (Pagination.total_pages > 0) {
+			data = await Post.find(query)
+				.populate({
+					path: 'user',
+					select: 'name photo gender',
+				})
+				.sort({ createdAt: -1 })
+				.skip((page - 1) * pageSize)
+				.limit(pageSize)
+				.lean()
+				.then((posts) => {
+					return posts.map((post) => {
+						return posts.map((post) => {
+							if (
+								bought.findIndex(
+									(i) => i.postId === post.id || i.userId === post.user.id,
+								) !== -1
+							) {
+								post.isLocked = false;
+								return post;
+							}
+							post.isLocked = true;
+							post.image = process.env.mockimage;
+							return post;
+						});
+					});
+				});
+		}
+
+		return { data, Pagination };
+	},
+	getOrderlikes: async (req) => {
 		//const orderlikes = await Post.find({"$where":"this.likes.length>0"});
-		const orderlikes = await Post.aggregate([{
-			$project :{
-				user:1
-				,image:1
-				,content:1
-				
-				,likeSize:{$size:"$likes"}}
-			},{
-					$match:{
-						likeSize:{$gt:0}
-					}
-				},{
-					$sort:{likeSize:-1}
-				}
-				,{$limit:10}
+		const orderlikes = await Post.aggregate([
+			{
+				$project: {
+					user: 1,
+					image: 1,
+					content: 1,
+
+					likeSize: { $size: '$likes' },
+				},
+			},
+			{
+				$match: {
+					likeSize: { $gt: 0 },
+				},
+			},
+			{
+				$sort: { likeSize: -1 },
+			},
+			{ $limit: 10 },
 		]);
-		await Post.populate(orderlikes,{path: 'user',select:'name photo'});
+		await Post.populate(orderlikes, { path: 'user', select: 'name photo' });
 		return orderlikes;
 	},
-	getOrderUsers: async(req)=>{
+	getOrderUsers: async (req) => {
 		//const orderlikes = await Post.find({"$where":"this.likes.length>0"});
-		const orderlikes = await Post.aggregate([{
-			$project :
-				{
-					user:1
-					,likeSize:{$size:"$likes"}
-				}
-			}
-			,{$match:{likeSize:{$gt:0}}}
-			,{$group:{_id:'$user','totalsum':{$sum:'$likeSize'}}}
-			,{$sort:{totalsum:-1}}			
-			,{$limit:10}
+		const orderlikes = await Post.aggregate([
+			{
+				$project: {
+					user: 1,
+					likeSize: { $size: '$likes' },
+				},
+			},
+			{ $match: { likeSize: { $gt: 0 } } },
+			{ $group: { _id: '$user', totalsum: { $sum: '$likeSize' } } },
+			{ $sort: { totalsum: -1 } },
+			{ $limit: 10 },
 		]);
-		
-		await Post.populate(orderlikes,{path: '_id',model:'user'});
+
+		await Post.populate(orderlikes, { path: '_id', model: 'user' });
 		return orderlikes;
 	},
-	getfollowPost:async(query,req)=>{
-		
+	getfollowPost: async (query, req) => {
 		//追蹤者貼文
 		let page = req.query.page;
 		let sort = req.query.sort;
@@ -569,36 +589,37 @@ module.exports = {
 		if (sort == undefined) sort = -1;
 		else sort = sort == 'asc' ? 1 : -1;
 
-		const user=req.user.id; // 登入者id
+		const user = req.user.id; // 登入者id
 		const bought = await getBoughtOrder(user);
 		const pageSize = 10;
 		const Pagination = await calculatePagination(query, pageSize);
 		let data = [];
 		if (Pagination.total_pages > 0) {
-			data= await Post.find(query)
-			.populate({
-				path: 'user',
-				select: 'name photo gender',
-			})
-			.sort({ createdAt: -1 })
-			.skip((page - 1) * pageSize)
-			.limit(pageSize)
-			.then((posts) => {
-				return posts.map((post) => {
-					if (
-						bought.findIndex(
-							(i) => i.postId === post.id || i.userId === post.user.id,
-						) !== -1
-					) {
-						post.isLocked = false;
+			data = await Post.find(query)
+				.populate({
+					path: 'user',
+					select: 'name photo gender',
+				})
+				.sort({ createdAt: -1 })
+				.skip((page - 1) * pageSize)
+				.limit(pageSize)
+				.lean()
+				.then((posts) => {
+					return posts.map((post) => {
+						if (
+							bought.findIndex(
+								(i) => i.postId === post.id || i.userId === post.user.id,
+							) !== -1
+						) {
+							post.isLocked = false;
+							return post;
+						}
+						post.isLocked = true;
+						post.image = process.env.mockimage;
 						return post;
-					}
-					post.isLocked = true;
-					post.image = process.env.mockimage;
-					return post;
+					});
 				});
-			});
 		}
-		return {data,Pagination};
-	}
+		return { data, Pagination };
+	},
 };
