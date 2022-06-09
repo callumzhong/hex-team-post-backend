@@ -92,7 +92,7 @@ module.exports = {
 			let search = req.query.q;
 			if (search == undefined) search = '';
 
-			let query = { user:{$in:userdata[0].following} }; //, type: { $in: ['group'] }
+			let query = { user:{$in:userdata[0].following} , type: { $in: ['group'] }}; //
 			if (search !== '') {
 				query['content'] = { $regex: search };
 			}
