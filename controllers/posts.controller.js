@@ -255,5 +255,14 @@ module.exports = {
 		} catch (err) {
 			return ErrorHandler(err, req, res, next);
 		}
+	},
+	getUserLikes :async(req,res,next)=>{
+		//取得使用者典籍喜歡
+		try{
+			const userlikes = await postService.getUserLikes(req);
+			Success(res, userlikes);
+		} catch (err) {
+			return ErrorHandler(err, req, res, next);
+		}
 	}
 };

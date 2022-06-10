@@ -55,6 +55,16 @@ const { isAuth } = require('../service/auth.service');
 }
  */
 router.get('/', isAuth, PostController.getPagination);
+/**
+ * GET /api/posts/user/likes
+ * @tags posts
+ * @summary 取得登入者喜歡文章
+ * @security apiKeyAuth
+ * @param {string} page.query - 分頁數
+ * @param {string} q.query - 查詢
+ * @param {string} sort.query - 請輸入 asc || desc 兩種排序 
+ */
+router.get('/user/likes', isAuth, PostController.getUserLikes);
 
 /**
  * GET /api/posts/normal

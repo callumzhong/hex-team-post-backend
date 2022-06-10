@@ -676,4 +676,46 @@ module.exports = {
 		}
 		return { data, Pagination };
 	},
+	getUserLikes: async (req) => {
+		const user=req.user.id;
+		let page = req.query.page;
+		let search = req.query.q;
+		let sort = req.query.sort;
+
+		if (page == undefined) page = 1;
+		if (sort == undefined) sort = -1;
+		else sort = sort == 'asc' ? 1 : -1;
+		if (search == undefined) search = '';
+
+		let query = { likes: {$in:user}, type: { $in: ['group'] } };
+		if (search !== '') {
+			query['content'] = { $regex: search };
+		}
+		const pageSize = 10;
+		const Pagination = await calculatePagination(
+			query,
+			pageSize,
+			parseInt(page),
+		);
+		let data = [];
+		if (Pagination.total_pages > 0) {
+			data = await Post.find(query)
+				.populate({
+					path: 'user',
+					select: 'name photo gender',
+				})
+				.sort({ createdAt:sort })
+				.skip((page - 1) * pageSize)
+				.limit(pageSize)
+				.lean()
+				.then((posts) => {
+					return posts.map((post) => {
+						post.isLocked = false;
+						return post;
+					});
+				});
+		}
+		
+		return { data, Pagination };
+	}
 };
