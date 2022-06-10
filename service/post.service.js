@@ -3,6 +3,7 @@ const Order = require('../models/order.model');
 const User = require('../models/users.model');
 const { default: mongoose } = require('mongoose');
 
+
 const calculatePagination = async (query, pageSize = 10,page=1) => {
 	const postCount = await Post.find(query).count();
 	const totalPages = Math.ceil(postCount / pageSize);
@@ -28,9 +29,7 @@ const getBoughtOrder = async (userId) => {
 	const toDay = new Date().toISOString();
 	return await Order.find({
 		user: userId,
-		type: {
-			$in: ['SINGLE_POST', 'SUBSCRIPTION_POST'],
-		},
+		type: {$in: ['SINGLE_POST', 'SUBSCRIPTION_POST']},
 	}).then((items) => {
 		return items.map((item) => ({
 			userId:
@@ -41,6 +40,26 @@ const getBoughtOrder = async (userId) => {
 		}));
 	});
 };
+const getBoughtInverseUser = async(userid)=>{
+	const inverseUser= await Order.find({
+		user:userid,
+		type: {$in: [ 'SUBSCRIPTION_POST']},
+		effectiveOfEnd :{$gte:new Date()}		
+	});
+	let iuser=[];
+	inverseUser.forEach(element => {
+		iuser.push(element.inverseUser);
+	});
+	const postdata= await Post.find({user:{$in:iuser}}).select('_id');
+	return postdata;
+}
+
+const getBoughtPostId= async(user)=>{
+	return await Order.find({
+		user,
+		type: {$in: ['SINGLE_POST']}		
+	}).select('post');
+}
 
 module.exports = {
 	getPagination: async (req) => {
@@ -114,9 +133,7 @@ module.exports = {
 		if (search == undefined) search = '';
 
 		let query = {
-			user: {
-				$ne: req.user.id,
-			},
+			user: {$ne: req.user.id,},
 			type: { $in: ['person'] },
 		};
 		if (search !== '') {
@@ -124,38 +141,48 @@ module.exports = {
 		}
 		if (like !== undefined) query['likes'] = { $in: [like] };
 
-		const bought = await getBoughtOrder(req.user.id);
-		const filterBought = {
-			$or: [],
-		};
+		const boughtUser=await getBoughtInverseUser(req.user.id);
+		const boughtPost=await getBoughtPostId(req.user.id);
+		let postid=[];
+		boughtUser.forEach((i)=>{
+			postid.push(i._id);
+		})
+		boughtPost.forEach((i)=>{
+			postid.push(i._id);
+		})
+		//query['user']={$in:boughtUser};
+		query['_id']={$in:postid};
 
-		if (bought.some((i) => i.userId.trim())) {
-			filterBought.$or.push({
-				user: {
-					$in: bought
-						.filter((buy) => buy.userId.trim())
-						.map((item) => item.userId),
-				},
-			});
-		}
+		// const bought = await getBoughtOrder(req.user.id);
+		// const filterBought = {
+		// 	$or: [],
+		// };
 
-		if (bought.some((i) => i.postId.trim())) {
-			filterBought.$or.push({
-				id: {
-					$in: bought
-						.filter((buy) => buy.postId.trim())
-						.map((item) => item.postId),
-				},
-			});
-		}
+		// if (bought.some((i) => i.userId.trim())) {
+		// 	filterBought.$or.push({
+		// 		user: {
+		// 			$in: bought
+		// 				.filter((buy) => buy.userId.trim())
+		// 				.map((item) => item.userId),
+		// 		},
+		// 	});
+		// }
 
+		// if (bought.some((i) => i.postId.trim())) {
+		// 	filterBought.$or.push({
+		// 		id: {
+		// 			$in: bought
+		// 				.filter((buy) => buy.postId.trim())
+		// 				.map((item) => item.postId),
+		// 		},
+		// 	});
+		// }
+		
 		const pageSize = 10;
 		const pagination = await calculatePagination(query, pageSize,parseInt(page));
 		let data = [];
-		if (pagination.total_pages > 0 && filterBought.$or.length > 0) {
-			data = await Post.find({
-				$and: [query, filterBought],
-			})
+		if (pagination.total_pages > 0 ) {
+			data = await Post.find(query)
 				.sort({ createdAt: sort })
 				.populate({
 					path: 'user',
@@ -164,12 +191,13 @@ module.exports = {
 				.skip((page - 1) * pageSize)
 				.limit(pageSize)
 				.lean()
-				.then((posts) => {
-					return posts.map((post) => {
-						post.isLocked = true;
-						return post;
-					});
-				});
+				// .then((posts) => {
+				// 	return posts.map((post) => {
+				// 		post.isLocked = true;
+				// 		return post;
+				// 	});
+				// });
+				;
 		}
 
 		return {
