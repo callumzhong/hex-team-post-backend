@@ -5,6 +5,17 @@ const Posts = require('../models/posts.model');
 const walletService = require('./wallet.service');
 const User = require('../models/users.model');
 
+const makeId = (length) => {
+	var result = '';
+	var characters =
+		'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	var charactersLength = characters.length;
+	for (var i = 0; i < length; i++) {
+		result += characters.charAt(Math.floor(Math.random() * charactersLength));
+	}
+	return result;
+};
+
 const calculateSerialNumber = async () => {
 	const date = new Date();
 	const year = date.toLocaleString('en-US', {
@@ -38,7 +49,7 @@ const calculateSerialNumber = async () => {
 			: String(Number(order.serialNumber.slice(8)) + 1).padStart(5, '0'),
 	].join('');
 
-	return serialNumber;
+	return `${makeId(3)}-${serialNumber}`;
 };
 
 module.exports = {
