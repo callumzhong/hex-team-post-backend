@@ -49,7 +49,7 @@ const getBoughtInverseUser = async(userid)=>{
 	inverseUser.forEach(element => {
 		iuser.push(element.inverseUser);
 	});
-	const postdata= await Post.find({user:{$in:iuser}}).select('_id');
+	const postdata= await Post.find({user:{$in:iuser},type:'person'}).select('_id');
 	return postdata;
 }
 
@@ -151,7 +151,7 @@ module.exports = {
 			postid.push(i._id);
 		})
 		boughtPost.forEach((i)=>{
-			postid.push(i._id);
+			postid.push(i.post._id);
 		})
 		//query['user']={$in:boughtUser};
 		query['_id']={$in:postid};
@@ -198,7 +198,6 @@ module.exports = {
 				})
 				.skip((page - 1) * pageSize)
 				.limit(pageSize)
-				.lean()
 				.then((posts) => {
 					return posts.map((post) => {
 						post.isLocked = true;
@@ -311,7 +310,6 @@ module.exports = {
 				path: 'user',
 				select: 'name photo gender',
 			})
-			.lean()
 			.then((post) => {
 				if (
 					post.user.id !== userId &&
@@ -469,7 +467,6 @@ module.exports = {
 				.sort({ createdAt:sort })
 				.skip((page - 1) * pageSize)
 				.limit(pageSize)
-				.lean()
 				.then((posts) => {
 					return posts.map((post) => {
 						post.isLocked = false;
@@ -515,7 +512,6 @@ module.exports = {
 				.sort({ createdAt: sort })
 				.skip((page - 1) * pageSize)
 				.limit(pageSize)
-				.lean()
 				.then((posts) => {
 					return posts.map((post) => {
 						post.isLocked = true;
@@ -562,13 +558,12 @@ module.exports = {
 				})
 				.sort({ createdAt: sort })
 				.skip((page - 1) * pageSize)
-				.limit(pageSize)
-				.lean()
+				.limit(pageSize)				
 				.then((posts) => {
 					return posts.map((post) => {
 						if (
 							bought.findIndex(
-								(i) => i.postId === post.id || i.userId === post.user.id,
+								(i) => i.postId=== post.id || i.userId === post.user.id,
 							) !== -1
 						) {
 							post.isLocked = false;
@@ -653,7 +648,6 @@ module.exports = {
 				.sort({ createdAt: sort })
 				.skip((page - 1) * pageSize)
 				.limit(pageSize)
-				.lean()
 				.then((posts) => {
 					return posts.map((post) => {
 						if (post.type === 'person') {
@@ -707,7 +701,6 @@ module.exports = {
 				.sort({ createdAt:sort })
 				.skip((page - 1) * pageSize)
 				.limit(pageSize)
-				.lean()
 				.then((posts) => {
 					return posts.map((post) => {
 						post.isLocked = false;
