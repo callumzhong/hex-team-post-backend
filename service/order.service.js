@@ -27,14 +27,15 @@ const calculateSerialNumber = async () => {
 			$gte: start,
 			$lte: end,
 		},
-	}).sort({ createdAt: -1 });
+	}).sort({ serialNumber: -1 });
+
 	const serialNumber = [
 		year,
 		month.padStart(2, '0'),
 		day.padStart(2, '0'),
 		!order
 			? '00001'
-			: String(+order.serialNumber.slice(8) + 1).padStart(5, '0'),
+			: String(Number(order.serialNumber.slice(8)) + 1).padStart(5, '0'),
 	].join('');
 
 	return serialNumber;
@@ -46,6 +47,9 @@ module.exports = {
 		const product = await Product.findById(productId);
 		if (!product) {
 			return false;
+		}
+		if (product.type !== 'coin') {
+			return '產品類型錯誤';
 		}
 
 		const order = await Order.create({

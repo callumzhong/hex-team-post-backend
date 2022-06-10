@@ -2,25 +2,35 @@ const { appError, Success } = require('../service/appError');
 const OrderService = require('../service/order.service');
 module.exports = {
 	created: async (req, res, next) => {
-		if (!req.body.productId) {
-			return res.status(400).send({
-				status: 'error',
-				message: '請輸入產品編號',
+		try {
+			if (!req.body.productId) {
+				return res.status(400).send({
+					status: 'error',
+					message: '請輸入產品編號',
+				});
+			}
+			const order = await OrderService.created(req.body.productId, req.user);
+			if (!order) {
+				return res.status(400).json({
+					status: 'error',
+					message: '產生訂單失敗',
+				});
+			}
+			if (typeof order === 'string') {
+				return res.status(400).json({
+					status: 'error',
+					message: 'order',
+				});
+			}
+			return res.status(201).json({
+				status: 'success',
+				data: {
+					orderId: order._id,
+				},
 			});
+		} catch (error) {
+			next(error);
 		}
-		const order = await OrderService.created(req.body.productId, req.user);
-		if (!order) {
-			return res.status(400).send({
-				status: 'error',
-				message: '產生訂單失敗',
-			});
-		}
-		return res.status(201).send({
-			status: 'success',
-			data: {
-				orderId: order._id,
-			},
-		});
 	},
 	createdPayPrivatePost: async (req, res, next) => {
 		const { user, body } = req;
