@@ -238,7 +238,7 @@ module.exports = {
 					path: 'user',
 					select: 'name photo gender',
 				})
-				.sort({ createdAt: -1 })
+				.sort({ createdAt: sort })
 				.skip((page - 1) * pageSize)
 				.limit(pageSize);
 		}
@@ -418,7 +418,7 @@ module.exports = {
 					path: 'user',
 					select: 'name photo gender',
 				})
-				.sort({ createdAt: -1 })
+				.sort({ createdAt:sort })
 				.skip((page - 1) * pageSize)
 				.limit(pageSize)
 				.lean()
@@ -460,7 +460,7 @@ module.exports = {
 					path: 'user',
 					select: 'name photo gender',
 				})
-				.sort({ createdAt: -1 })
+				.sort({ createdAt: sort })
 				.skip((page - 1) * pageSize)
 				.limit(pageSize)
 				.lean()
@@ -504,7 +504,7 @@ module.exports = {
 					path: 'user',
 					select: 'name photo gender',
 				})
-				.sort({ createdAt: -1 })
+				.sort({ createdAt: sort })
 				.skip((page - 1) * pageSize)
 				.limit(pageSize)
 				.lean()
@@ -590,7 +590,7 @@ module.exports = {
 					path: 'user',
 					select: 'name photo gender',
 				})
-				.sort({ createdAt: -1 })
+				.sort({ createdAt: sort })
 				.skip((page - 1) * pageSize)
 				.limit(pageSize)
 				.lean()
