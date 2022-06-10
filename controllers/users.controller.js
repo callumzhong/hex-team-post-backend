@@ -187,8 +187,8 @@ const users = {
 				user: userdata,
 				postCounts: await postService.getPostCountbyGroup(req.user.id),
 				follows: await followService.getUserFollowCount(req.user.id),
-				privateposts: await postService.getPostCountbyGroup(req.user.id),
-				likes: 0,
+				privateposts: await postService.getPostCountbyPerson(req.user.id),
+				likes: await postService.getPostLikeCount(req.user.id),
 			};
 			Success(res, result);
 		} catch (err) {
@@ -210,7 +210,7 @@ const users = {
 				user: userdata,
 				postCounts: await postService.getPostCountbyGroup(_id),
 				follows: await followService.getUserFollowCount(_id),
-				privateposts: await postService.getPostCountbyGroup(_id),
+				privateposts: await postService.getPostCountbyPerson(_id),
 				likes: await postService.getPostLikeCount(_id),
 			};
 			Success(res, result);
