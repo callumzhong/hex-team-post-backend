@@ -5,6 +5,17 @@ const Posts = require('../models/posts.model');
 const walletService = require('./wallet.service');
 const User = require('../models/users.model');
 
+const makeId = (length) => {
+	var result = '';
+	var characters =
+		'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	var charactersLength = characters.length;
+	for (var i = 0; i < length; i++) {
+		result += characters.charAt(Math.floor(Math.random() * charactersLength));
+	}
+	return result;
+};
+
 const calculateSerialNumber = async () => {
 	const date = new Date();
 	const year = date.toLocaleString('en-US', {
@@ -38,7 +49,29 @@ const calculateSerialNumber = async () => {
 			: String(Number(order.serialNumber.slice(8)) + 1).padStart(5, '0'),
 	].join('');
 
-	return serialNumber;
+	return `${makeId(3)}-${serialNumber}`;
+};
+
+const checkPayedOrder = async (type, userId, target) => {
+	if (type === 'SUBSCRIPTION_POST') {
+		return await Order.find({
+			type: {
+				$in: ['SUBSCRIPTION_POST'],
+			},
+			user: userId,
+			inverseUser: target,
+			effectiveOfEnd: { $gte: new Date() },
+		}).count();
+	}
+	if (type === 'SINGLE_POST') {
+		return await Order.find({
+			type: {
+				$in: ['SINGLE_POST'],
+			},
+			user: userId,
+			post: target,
+		}).count();
+	}
 };
 
 module.exports = {
@@ -66,12 +99,16 @@ module.exports = {
 	},
 	createdPayPrivatePost: async (postId, user) => {
 		const post = await Posts.findById(postId);
+		const isPayed = await checkPayedOrder('SINGLE_POST', user.id, postId);
 		if (!post) return '查無貼文';
 		if (post.pay === 0) {
 			return '貼文費用 0 請通知客服處理';
 		}
 		if (post.user === user.id) {
 			return '無法購買自己的貼文';
+		}
+		if (isPayed) {
+			return '已經購買過該篇貼文';
 		}
 
 		const walletAmount = await walletService.getCurrentWallet(user.id);
@@ -108,6 +145,12 @@ module.exports = {
 		const { subscriptionUserId, productId } = data;
 		const product = await Product.findById(productId);
 		const subscriptionUser = await User.findById(subscriptionUserId);
+		const isPayed = await checkPayedOrder(
+			'SUBSCRIPTION_POST',
+			user.id,
+			subscriptionUserId,
+		);
+
 		if (product.type !== 'ticket') {
 			return '產品類型錯誤';
 		}
@@ -116,6 +159,9 @@ module.exports = {
 		}
 		if (!subscriptionUser) {
 			return '被訂閱用戶不存在';
+		}
+		if (!isPayed) {
+			return '已訂閱過用戶';
 		}
 		let start = new Date().toISOString().slice(0, 23) + '+08:00';
 		let end = new Date();
