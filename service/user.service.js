@@ -14,6 +14,8 @@ module.exports = {
 			return orders.map((order) => ({
 				id: order.inverseUser.id,
 				name: order.inverseUser.name,
+				photo: order.inverseUser.photo,
+				effectiveOfEnd: new Date(order.effectiveOfEnd),
 			}));
 		});
 

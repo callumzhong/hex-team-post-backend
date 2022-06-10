@@ -3,7 +3,7 @@ const Order = require('../models/order.model');
 const User = require('../models/users.model');
 const { default: mongoose } = require('mongoose');
 
-const calculatePagination = async (query, pageSize = 10,page=1) => {
+const calculatePagination = async (query, pageSize = 10, page = 1) => {
 	const postCount = await Post.find(query).count();
 	const totalPages = Math.ceil(postCount / pageSize);
 	const result = {
@@ -61,7 +61,11 @@ module.exports = {
 		}
 		if (like !== undefined) query['likes'] = { $in: [like] };
 		const pageSize = 10;
-		const Pagination = await calculatePagination(query, pageSize,parseInt(page));
+		const Pagination = await calculatePagination(
+			query,
+			pageSize,
+			parseInt(page),
+		);
 		let data = [];
 
 		if (Pagination.total_pages > 0) {
@@ -114,9 +118,6 @@ module.exports = {
 		if (search == undefined) search = '';
 
 		let query = {
-			user: {
-				$ne: req.user.id,
-			},
 			type: { $in: ['person'] },
 		};
 		if (search !== '') {
@@ -126,35 +127,36 @@ module.exports = {
 
 		const bought = await getBoughtOrder(req.user.id);
 		const filterBought = {
-			$or: [],
+			userId: [],
+			postId: [],
 		};
 
-		if (bought.some((i) => i.userId.trim())) {
-			filterBought.$or.push({
-				user: {
-					$in: bought
-						.filter((buy) => buy.userId.trim())
-						.map((item) => item.userId),
-				},
-			});
-		}
-
-		if (bought.some((i) => i.postId.trim())) {
-			filterBought.$or.push({
-				id: {
-					$in: bought
-						.filter((buy) => buy.postId.trim())
-						.map((item) => item.postId),
-				},
-			});
+		if (bought.length > 0) {
+			bought.reduce((prev, curr) => {
+				if (curr.userId.trim()) {
+					filterBought.userId.push({ user: curr.userId });
+				}
+				if (curr.postId.trim()) {
+					filterBought.postId.push({ user: curr.postId });
+				}
+			}, []);
 		}
 
 		const pageSize = 10;
-		const pagination = await calculatePagination(query, pageSize,parseInt(page));
+		const pagination = await calculatePagination(
+			query,
+			pageSize,
+			parseInt(page),
+		);
+		const filter = [];
 		let data = [];
-		if (pagination.total_pages > 0 && filterBought.$or.length > 0) {
+		if (
+			pagination.total_pages > 0 &&
+			(filterBought.postId.length > 0 || filterBought.userId.length > 0)
+		) {
 			data = await Post.find({
-				$and: [query, filterBought],
+				$or: [...filterBought.userId, ...filterBought.postId],
+				$and: [query],
 			})
 				.sort({ createdAt: sort })
 				.populate({
@@ -166,7 +168,7 @@ module.exports = {
 				.lean()
 				.then((posts) => {
 					return posts.map((post) => {
-						post.isLocked = true;
+						post.isLocked = false;
 						return post;
 					});
 				});
@@ -194,7 +196,11 @@ module.exports = {
 		}
 		if (like !== undefined) query['likes'] = { $in: [like] };
 		const pageSize = 10;
-		const Pagination = await calculatePagination(query, pageSize,parseInt(page));
+		const Pagination = await calculatePagination(
+			query,
+			pageSize,
+			parseInt(page),
+		);
 		let data = [];
 		if (Pagination.total_pages > 0) {
 			data = await Post.find(query)
@@ -226,7 +232,11 @@ module.exports = {
 		}
 
 		const pageSize = 10;
-		const Pagination = await calculatePagination(query, pageSize,parseInt(page));
+		const Pagination = await calculatePagination(
+			query,
+			pageSize,
+			parseInt(page),
+		);
 		let data = [];
 		if (Pagination.total_pages > 0) {
 			data = await Post.find(query)
@@ -410,7 +420,11 @@ module.exports = {
 		// 取個人不必取得購買訂單匹配
 		// const bought = await getBoughtOrder(user);
 		const pageSize = 10;
-		const Pagination = await calculatePagination(query, pageSize,parseInt(page));
+		const Pagination = await calculatePagination(
+			query,
+			pageSize,
+			parseInt(page),
+		);
 		let data = [];
 		if (Pagination.total_pages > 0) {
 			data = await Post.find(query)
@@ -452,7 +466,11 @@ module.exports = {
 		}
 		//const bought = await getBoughtOrder(user);
 		const pageSize = 10;
-		const Pagination = await calculatePagination(query, pageSize,parseInt(page));
+		const Pagination = await calculatePagination(
+			query,
+			pageSize,
+			parseInt(page),
+		);
 		let data = [];
 		if (Pagination.total_pages > 0) {
 			data = await Post.find(query)
@@ -496,7 +514,11 @@ module.exports = {
 		}
 		const bought = await getBoughtOrder(user);
 		const pageSize = 10;
-		const Pagination = await calculatePagination(query, pageSize,parseInt(page));
+		const Pagination = await calculatePagination(
+			query,
+			pageSize,
+			parseInt(page),
+		);
 		let data = [];
 		if (Pagination.total_pages > 0) {
 			data = await Post.find(query)
@@ -582,7 +604,11 @@ module.exports = {
 		const user = req.user.id; // 登入者id
 		const bought = await getBoughtOrder(user);
 		const pageSize = 10;
-		const Pagination = await calculatePagination(query, pageSize, parseInt(page));
+		const Pagination = await calculatePagination(
+			query,
+			pageSize,
+			parseInt(page),
+		);
 		let data = [];
 		if (Pagination.total_pages > 0) {
 			data = await Post.find(query)
@@ -596,10 +622,11 @@ module.exports = {
 				.lean()
 				.then((posts) => {
 					return posts.map((post) => {
-						if(post.type==='person')
-						{
+						if (post.type === 'person') {
 							if (
-								bought.findIndex((i) => i.postId === post.id || i.userId === post.user.id,) !== -1
+								bought.findIndex(
+									(i) => i.postId === post.id || i.userId === post.user.id,
+								) !== -1
 							) {
 								post.isLocked = false;
 								return post;
@@ -607,12 +634,11 @@ module.exports = {
 							post.isLocked = true;
 							post.image = process.env.mockimage;
 							return post;
-						}else {
+						} else {
 							return post;
 						}
 					});
-				})
-				;
+				});
 		}
 		return { data, Pagination };
 	},

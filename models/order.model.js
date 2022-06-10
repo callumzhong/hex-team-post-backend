@@ -70,7 +70,7 @@ OrderSchema.pre(/^find/, function (next) {
 		select: 'name price discount',
 	}).populate({
 		path: 'inverseUser',
-		select: 'name',
+		select: 'name photo',
 	});
 
 	next();
