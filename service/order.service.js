@@ -160,7 +160,7 @@ module.exports = {
 		if (!subscriptionUser) {
 			return '被訂閱用戶不存在';
 		}
-		if (!isPayed) {
+		if (isPayed) {
 			return '已訂閱過用戶';
 		}
 		let start = new Date().toISOString().slice(0, 23) + '+08:00';
