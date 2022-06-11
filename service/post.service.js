@@ -392,6 +392,7 @@ module.exports = {
 				image: req.body.image,
 				content: req.body.content,
 				contentType: req.body.contentType,
+				pay:req.body.pay
 			},
 			{ new: true },
 		);

@@ -10,6 +10,7 @@ const { isAuth } = require('../service/auth.service');
  * @property {string} image.required
  * @property {string} content.required
  * @property {string} contentType.required
+ * @property {number} pay.required
  */
 
 /**
