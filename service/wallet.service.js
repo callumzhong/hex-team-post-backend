@@ -85,7 +85,7 @@ module.exports = {
 				createdAt: document.createdAt,
 				status: true,
 				name: document.inverseUser.name,
-				amountCoin: document.addCoin,
+				amountCoin: document.reduceCoin,
 				serialNumber: document.serialNumber,
 			}));
 		});
