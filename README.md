@@ -18,7 +18,7 @@
 
 ## 主要技術
 
-|          |            |
+|          | 技術       |
 | -------- | ---------- |
 | 核心語言 | Node.js    |
 | 框架     | Express.js |
@@ -27,7 +27,7 @@
 | 單元測試 | Mocha      |
 
 - 此 App 的核心體系為 Node.js + Express.js，以 Yarn 來管理套件。
-- 單元測試部分，並沒完整實作，僅有初步的 金流 API 測試
+- 單元測試部分，僅有初步的金流 API 測試
 - 其他依賴套件請參考專案 [package.json](./package.json)
 
 ## Installation
