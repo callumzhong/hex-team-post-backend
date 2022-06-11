@@ -55,6 +55,9 @@ module.exports = {
 		const records = await Order.find({
 			user: userId,
 			type: 'ADD_CREDIT',
+			payment: {
+				$exists: true,
+			},
 		})
 			.populate({
 				path: 'payment',
